@@ -147,10 +147,6 @@ aim_down={
 ]
 }
 
-[internationalization]
-
-locale/translations_pot_files=PackedStringArray("res://addons/gdquest_welcome_tour/tours/learn-gamedev-from-zero/tour.gd", "res://addons/gdquest_welcome_tour/tours/welcome/welcome.gd", "res://addons/gdquest_welcome_tour/tours/godot-first-tour/godot_first_tour.gd", "res://addons/gdquest_welcome_tour/tours/learn-gamedev-from-zero/assemble_path_of_sorcerers.gd", "res://addons/gdquest_welcome_tour/tours/test/debug_and_tests.gd", "res://addons/godot_tours/tours/godot-first-tour/godot_first_tour.gd", "res://addons/godot_tours/tours/learn-gamedev-from-zero/assemble_path_of_sorcerers.gd", "res://addons/godot_tours/tours/test/debug_and_tests.gd")
-
 [layer_names]
 
 2d_physics/layer_1="Player"
