@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://djuupgygpn614"]
+
+[ext_resource type="Script" path="res://spells/fire_spray.gd" id="1"]
+
+[node name="FireSpray" type="Node2D"]
+script = ExtResource("1")
+random_angle_degrees = 90.0
+max_range = 200.0

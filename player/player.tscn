@@ -1,0 +1,72 @@
+[gd_scene load_steps=10 format=3 uid="uid://dds7yrrx56gcy"]
+
+[ext_resource type="Script" path="res://player/godot_armor.gd" id="1"]
+[ext_resource type="Script" path="res://player/player.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://bw03btxpkxde4" path="res://player/godot_bottom.png" id="3"]
+[ext_resource type="Script" path="res://player/shaking_camera2_d.gd" id="4"]
+[ext_resource type="Texture2D" uid="uid://dekkcmj408pvt" path="res://player/hand_fire.png" id="5"]
+[ext_resource type="PackedScene" path="res://common/shadow.tscn" id="6"]
+[ext_resource type="Script" path="res://player/weapon_pivot.gd" id="7"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 19.0754
+
+[sub_resource type="CircleShape2D" id="2"]
+radius = 19.8725
+
+[node name="Player" type="CharacterBody2D"]
+collision_mask = 66
+motion_mode = 1
+script = ExtResource("2")
+
+[node name="GodotArmor" type="Sprite2D" parent="."]
+z_index = 2
+position = Vector2(-0.474655, 0)
+texture = ExtResource("3")
+offset = Vector2(0.474655, -40.5866)
+script = ExtResource("1")
+
+[node name="WeaponHolder" type="Node2D" parent="."]
+z_index = 1
+position = Vector2(0, -36)
+script = ExtResource("7")
+use_controller = true
+
+[node name="WeaponAnchor" type="Marker2D" parent="WeaponHolder"]
+position = Vector2(66, 0)
+
+[node name="HandLeft" type="Sprite2D" parent="WeaponHolder/WeaponAnchor"]
+position = Vector2(2.39682, -25.0513)
+rotation = -0.247085
+texture = ExtResource("5")
+
+[node name="HandRight" type="Sprite2D" parent="WeaponHolder/WeaponAnchor"]
+position = Vector2(0.560448, 25.8126)
+rotation = 0.0754706
+texture = ExtResource("5")
+flip_v = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="WeaponHolder"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = 2
+shape = SubResource("1")
+
+[node name="ShakingCamera2D" type="Camera2D" parent="."]
+position = Vector2(0, -40.5866)
+script = ExtResource("4")
+
+[node name="ExitDetector2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitDetector2D"]
+shape = SubResource("2")
+
+[node name="Shadow" parent="." instance=ExtResource("6")]
+position = Vector2(0, 34.4444)
+
+[node name="DamageAudio" type="AudioStreamPlayer2D" parent="."]
+
+[connection signal="area_entered" from="ExitDetector2D" to="." method="_on_ExitDetector2D_area_entered"]

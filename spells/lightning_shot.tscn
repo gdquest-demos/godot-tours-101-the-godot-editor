@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://spells/lightning_shot.gd" type="Script" id=1]
+[ext_resource path="res://spells/bullets/lightning_ray.tscn" type="PackedScene" id=2]
+
+[node name="LightningShot" type="Node2D"]
+script = ExtResource( 1 )
+bullet_scene = ExtResource( 2 )
+random_angle_degrees = 5.0
+max_bullet_speed = 3000.0

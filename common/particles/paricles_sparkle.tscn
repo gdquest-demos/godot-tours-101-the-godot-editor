@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://common/particles/sparkle_2.png" type="Texture2D" id=1]
+
+[sub_resource type="Curve" id=4]
+_data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.302885, 0.579545 ), -0.244242, -0.244242, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+curve = SubResource( 4 )
+
+[sub_resource type="ParticleProcessMaterial" id=6]
+emission_shape = 1
+emission_sphere_radius = 32.0
+flag_disable_z = true
+gravity = Vector3( 0, -100, 0 )
+angular_velocity = 180.0
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping = 70.0
+scale = 0.5
+scale_curve = SubResource( 5 )
+
+[node name="PariclesSparkle" type="GPUParticles2D"]
+amount = 3
+randomness = 0.25
+local_coords = false
+process_material = SubResource( 6 )
+texture = ExtResource( 1 )

@@ -1,0 +1,22 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://cqb2wtrubw0n6"]
+
+[ext_resource type="Texture2D" uid="uid://mxg43nh4ra30" path="res://levels/rooms/invisible_wall.png" id="1"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5dqb3"]
+texture = ExtResource("1")
+texture_region_size = Vector2i(128, 128)
+0:0/next_alternative_id = 8
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
+1:0/0 = 0
+1:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+1:0/0/physics_layer_0/angular_velocity = 0.0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, 0, 64, 0, 64, 64, -64, 64)
+
+[resource]
+tile_size = Vector2i(128, 128)
+physics_layer_0/collision_layer = 64
+physics_layer_0/collision_mask = 0
+sources/0 = SubResource("TileSetAtlasSource_5dqb3")

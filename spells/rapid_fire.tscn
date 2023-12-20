@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://spells/rapid_fire.gd" type="Script" id=1]
+
+[node name="RapidFire" type="Node2D"]
+script = ExtResource( 1 )
+max_bullet_speed = 1150.0
+fire_rate = 8.0

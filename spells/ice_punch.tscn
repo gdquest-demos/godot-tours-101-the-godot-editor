@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://spells/bullets/ice_fist.tscn" type="PackedScene" id=1]
+[ext_resource path="res://spells/ice_punch.gd" type="Script" id=2]
+
+[node name="IcePunch" type="Node2D"]
+script = ExtResource( 2 )
+bullet_scene = ExtResource( 1 )
+max_range = 200.0
+max_bullet_speed = 1400.0

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://common/shadow_circle.png" type="Texture2D" id=1]
+
+[node name="Shadow" type="Sprite2D"]
+modulate = Color( 1, 1, 1, 0.356863 )
+show_behind_parent = true
+position = Vector2( 0, 75.031 )
+texture = ExtResource( 1 )

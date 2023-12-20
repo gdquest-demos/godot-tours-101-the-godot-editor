@@ -1,0 +1,119 @@
+[gd_scene load_steps=14 format=3 uid="uid://cfay3xheebusb"]
+
+[ext_resource type="Script" path="res://game.gd" id="1_25vm7"]
+[ext_resource type="Texture2D" uid="uid://51k2u7iwra8e" path="res://levels/rooms/tileset_bridges.png" id="2_lrrw3"]
+[ext_resource type="TileSet" uid="uid://cqb2wtrubw0n6" path="res://levels/rooms/tileset_invisible_walls.tres" id="3_vklf7"]
+[ext_resource type="PackedScene" uid="uid://dds7yrrx56gcy" path="res://player/player.tscn" id="4_idksr"]
+[ext_resource type="PackedScene" uid="uid://cce7r30dfjm4r" path="res://interface/bars/ui_health_bar.tscn" id="4_mukgi"]
+[ext_resource type="PackedScene" uid="uid://dq3p4x4do28l6" path="res://levels/rooms/room_a.tscn" id="5_d5k6w"]
+[ext_resource type="PackedScene" uid="uid://dgayuh42w4v6u" path="res://levels/rooms/room_b.tscn" id="6_d2i4m"]
+[ext_resource type="PackedScene" uid="uid://dw1qted83s8gw" path="res://pickups/weapon_pickup.tscn" id="6_w1fjs"]
+[ext_resource type="PackedScene" uid="uid://cq0mmphkbrvmm" path="res://levels/rooms/room_c.tscn" id="7_g7cph"]
+[ext_resource type="PackedScene" path="res://pickups/health_pickup.tscn" id="7_uk5d2"]
+[ext_resource type="PackedScene" uid="uid://wdey00p3syru" path="res://levels/background/background_blue_sky.tscn" id="11_7e8yr"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_po4yl"]
+texture = ExtResource("2_lrrw3")
+texture_region_size = Vector2i(128, 128)
+0:0/0 = 0
+0:0/0/terrain_set = 0
+0:0/0/terrain = 0
+0:0/0/terrains_peering_bit/bottom_side = 0
+0:0/0/terrains_peering_bit/left_side = 0
+1:0/0 = 0
+1:0/0/terrain_set = 0
+1:0/0/terrain = 0
+1:0/0/terrains_peering_bit/right_side = 0
+1:0/0/terrains_peering_bit/bottom_side = 0
+2:0/0 = 0
+2:0/0/terrain_set = 0
+2:0/0/terrain = 0
+2:0/0/terrains_peering_bit/right_side = 0
+2:0/0/terrains_peering_bit/top_side = 0
+3:0/0 = 0
+3:0/0/terrain_set = 0
+3:0/0/terrain = 0
+3:0/0/terrains_peering_bit/left_side = 0
+3:0/0/terrains_peering_bit/top_side = 0
+0:1/0 = 0
+0:1/0/terrain_set = 0
+0:1/0/terrain = 0
+0:1/0/terrains_peering_bit/right_side = 0
+0:1/0/terrains_peering_bit/left_side = 0
+1:1/0 = 0
+1:1/0/terrain_set = 0
+1:1/0/terrain = 0
+1:1/0/terrains_peering_bit/right_side = 0
+2:1/0 = 0
+2:1/0/terrain_set = 0
+2:1/0/terrain = 0
+2:1/0/terrains_peering_bit/left_side = 0
+3:1/0 = 0
+3:1/0/terrain_set = 0
+3:1/0/terrain = 0
+3:1/0/terrains_peering_bit/bottom_side = 0
+3:1/0/terrains_peering_bit/top_side = 0
+4:1/0 = 0
+4:1/0/terrain_set = 0
+4:1/0/terrain = 0
+4:1/0/terrains_peering_bit/top_side = 0
+5:1/0 = 0
+5:1/0/terrain_set = 0
+5:1/0/terrain = 0
+5:1/0/terrains_peering_bit/bottom_side = 0
+
+[sub_resource type="TileSet" id="TileSet_ci3ya"]
+tile_size = Vector2i(128, 128)
+terrain_set_0/mode = 2
+terrain_set_0/terrain_0/name = "Bridge"
+terrain_set_0/terrain_0/color = Color(0.219608, 0.172549, 0.647059, 1)
+sources/0 = SubResource("TileSetAtlasSource_po4yl")
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_25vm7")
+
+[node name="Bridges" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_ci3ya")
+rendering_quadrant_size = 128
+format = 2
+layer_0/name = "Bridges"
+layer_0/tile_data = PackedInt32Array(262155, 65536, 1, 262156, 0, 1, 262157, 0, 1, 262158, 0, 1, 262159, 0, 0, 393233, 131072, 1, -393193, 327680, 1, -327657, 196608, 1, -262121, 196608, 1, -196585, 196608, 1, -131049, 196608, 1, -65513, 131072, 0, -65512, 0, 1, -65511, 0, 0, 25, 196608, 1, 65561, 262144, 1, 393232, 0, 1, 393231, 131072, 0, 327695, 196608, 1)
+
+[node name="InvisibleWalls" type="TileMap" parent="."]
+tile_set = ExtResource("3_vklf7")
+format = 2
+layer_0/name = "Invisible walls"
+layer_0/tile_data = PackedInt32Array(655367, 0, 0, 327692, 0, 0, 327693, 0, 0, 327694, 0, 0, 393230, 0, 0, 458766, 0, 0, 458767, 0, 0, 458768, 0, 0, 327696, 0, 0, 262160, 0, 0, 196624, 0, 0, 196623, 0, 0, 196622, 0, 0, 196621, 0, 0, 196620, 0, 0, 24, 0, 0, 23, 0, 0, 22, 0, 0, -65514, 0, 0, -131050, 0, 0, -196586, 0, 0, -262122, 0, 0, -262119, 0, 0, -262120, 0, 0, -196584, 0, 0, -131048, 0, 0, -131047, 0, 0, -131046, 0, 0, -65510, 0, 0, 26, 0, 0)
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="UIHealthBar" parent="UILayer" instance=ExtResource("4_mukgi")]
+offset_left = 32.0
+offset_top = 40.0
+offset_right = 381.0
+offset_bottom = 113.0
+
+[node name="Player" parent="." instance=ExtResource("4_idksr")]
+position = Vector2(768, 512)
+
+[node name="RoomA" parent="." instance=ExtResource("5_d5k6w")]
+
+[node name="WeaponPickup" parent="RoomA" instance=ExtResource("6_w1fjs")]
+position = Vector2(1023.56, 385.173)
+
+[node name="WeaponPickup2" parent="RoomA" instance=ExtResource("6_w1fjs")]
+position = Vector2(511.119, 768.586)
+
+[node name="HealthPickup" parent="RoomA" instance=ExtResource("7_uk5d2")]
+position = Vector2(3199.26, 643.667)
+
+[node name="RoomB" parent="." instance=ExtResource("6_d2i4m")]
+position = Vector2(2304, 256)
+
+[node name="RoomC" parent="." instance=ExtResource("7_g7cph")]
+position = Vector2(1792, -2048)
+
+[node name="BackgroundBlueSky" parent="." instance=ExtResource("11_7e8yr")]
+
+[connection signal="health_changed" from="Player" to="UILayer/UIHealthBar" method="set_health"]
