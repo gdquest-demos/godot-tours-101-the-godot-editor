@@ -4,6 +4,6 @@ extends "res://addons/gd-plug/plug.gd"
 
 func _plugging() -> void:
 	plug(
-		"git@github.com:GDQuest/godot-addons.git",
-		{include = ["addons/gdquest_colorpicker_presets"], dev = true}
+		"git@github.com:GDQuest/godot-tours.git",
+		{include = ["addons/godot_tours"]}
 	)
