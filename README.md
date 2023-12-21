@@ -6,6 +6,8 @@ If you're new to gamedev and you want to download the tour and run it, head over
 
 **Minimum required Godot version: Godot 4.2**
 
+![Screenshot of one of the first steps of the tour, showing the running game and a bubble inviting you to run the game.](readme/tour-101-screenshot-01.webp)
+
 ## Support and contributions
 
 Given our limited resources and the work this project represents, it is provided as-is. We hope it will be helpful to you, but we can't offer individual support for it.
