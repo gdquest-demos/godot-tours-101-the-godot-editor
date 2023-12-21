@@ -147,7 +147,7 @@ func steps_020_first_look() -> void:
 	# 0042: playback controls/game preview buttons
 	highlight_controls([interface.run_bar], true)
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
-	bubble_set_avatar_at(Bubble.AvatarAt.RIGHT)
+	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("Runner Buttons")
 	bubble_add_text(["Those buttons in the top-right are the Runner Buttons. You can [b]play[/b] and [b]stop[/b] the game with them."])
 	complete_step()
@@ -190,7 +190,7 @@ func steps_020_first_look() -> void:
 	# 0044: inspector dock
 	highlight_controls([interface.inspector_dock])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER_RIGHT)
-	bubble_set_avatar_at(Bubble.AvatarAt.RIGHT)
+	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("The Inspector")
 	bubble_add_text([
 		"On the right, we have the [b]Inspector Dock[/b]. In this dock, you can view and edit the properties of selected nodes.",
@@ -419,7 +419,7 @@ func steps_050_signals() -> void:
 
 	highlight_controls([interface.node_dock_signals_editor], true)
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER_RIGHT)
-	bubble_set_avatar_at(Bubble.AvatarAt.RIGHT)
+	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("The Node Dock")
 	bubble_add_text([
 		"On the right, you can see the [b]Node Dock[/b]. It lists all the signals of the selected node. In this case, it's the [b]Player[/b] node.",
@@ -429,7 +429,7 @@ func steps_050_signals() -> void:
 
 	highlight_signals(["health_changed"], true)
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
-	bubble_set_avatar_at(Bubble.AvatarAt.RIGHT)
+	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("The health_changed signal")
 	bubble_add_text([
 		"The player node has one especially useful signal: [b]health_changed[/b].",
@@ -440,7 +440,7 @@ func steps_050_signals() -> void:
 	# Highlights the signal connection line
 	highlight_signals(["../UILayer"], true)
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
-	bubble_set_avatar_at(Bubble.AvatarAt.RIGHT)
+	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("The signal connection")
 	bubble_add_text([
 		"Notice the [b]Connected Signal[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.script_signal_connected) + " icon below the signal: it shows that the signal is connected to a piece of code.",
