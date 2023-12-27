@@ -173,7 +173,7 @@ func steps_020_first_look() -> void:
 	bubble_set_title("Scene Dock")
 	bubble_add_text(["At the top-left, you have the [b]Scene Dock[/b]. You can see all the building blocks of a scene here.",
 		"In Godot, these building blocks are called [b]nodes[/b].",
-		" A scene is made up of one or more nodes.",
+		"A scene is made up of one or more nodes.",
 		"There are nodes to draw images, play sounds, design animations, and more.",
 	])
 	complete_step()
@@ -476,7 +476,7 @@ func steps_050_signals() -> void:
 	bubble_set_title("The set_health function")
 	bubble_add_text([
 		"This function updates the display of the player health bar.",
-		"Notice the green [b]Connected Signal[/b]  " + bbcode_generate_icon_image_string(ICONS_MAP.script_signal_connected) + " icon in the left margin of the script editor. When coding a game, it reminds you of existing signal connections.",
+		"Notice the green [b]Connected Signal[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.script_signal_connected) + " icon in the left margin of the script editor. When coding a game, it reminds you of existing signal connections.",
 		"So, each time the player health changes, the [b]Player[/b] node emits the [b]health_changed[/b] signal and, in turn, Godot runs the [b]set_health[/b] function that updates the health bar in the running game.",
 	])
 	complete_step()
