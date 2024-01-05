@@ -77,8 +77,8 @@ func steps_010_intro() -> void:
 	bubble_add_text(
 		["[center]In this tour, you take your first steps in the [b]Godot editor[/b].[/center]",
 		"[center]You get an overview of the engine's four pillars: [b]Scenes[/b], [b]Nodes[/b], [b]Scripts[/b], and [b]Signals[/b].[/center]",
-	"[center]In the next tour, you'll get to assemble your first game from premade parts and put all this into practice.[/center]",
-	"[center][b]Let's get started![/b][/center]",]
+		"[center]In the next tour, you'll get to assemble your first game from premade parts and put all this into practice.[/center]",
+		"[center][b]Let's get started![/b][/center]",]
 	)
 	bubble_set_footer(CREDITS_FOOTER_GDQUEST)
 	queue_command(bubble.avatar.do_wink)
@@ -223,6 +223,9 @@ func steps_020_first_look() -> void:
 
 
 	# 0046: bottom panels
+	queue_command(func debugger_open():
+		interface.bottom_button_debugger.button_pressed = true
+	)
 	highlight_controls([interface.debugger])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.BOTTOM_CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
@@ -232,15 +235,11 @@ func steps_020_first_look() -> void:
 		"That's where you'll edit animations, write visual effects code (shaders), and more.",
 		"These editors are contextual. We'll see what that means in the next tour.",
 	])
-	queue_command(func debugger_open():
-		interface.bottom_button_debugger.button_pressed = true
-	)
 	complete_step()
 
 	queue_command(func debugger_close():
 		interface.bottom_button_debugger.button_pressed = false
 	)
-
 
 
 func steps_030_opening_scene() -> void:
