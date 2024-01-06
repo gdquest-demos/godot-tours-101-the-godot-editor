@@ -246,7 +246,7 @@ func steps_030_opening_scene() -> void:
 
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
-	highlight_scene_nodes(["Main", "Main/Bridges", "Main/InvisibleWalls", "Main/UILayer"])
+	highlight_scene_nodes_by_path(["Main", "Main/Bridges", "Main/InvisibleWalls", "Main/UILayer"])
 	bubble_set_title("The complete scene's nodes")
 	bubble_add_text([
 		"This completed game scene has four [b]nodes[/b]: [b]Main[/b], [b]Bridges[/b], [b]InvisibleWalls[/b], and [b]UILayer[/b].",
@@ -257,7 +257,7 @@ func steps_030_opening_scene() -> void:
 
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
-	highlight_scene_nodes(["Main/Player"])
+	highlight_scene_nodes_by_path(["Main/Player"])
 	bubble_set_title("Scene instances")
 	bubble_add_text([
 		"Other elements, like the [b]Player[/b], have an [b]Open In Editor[/b] " +
@@ -305,7 +305,7 @@ func steps_040_scripts() -> void:
 	complete_step()
 
 
-	highlight_scene_nodes(["Player"])
+	highlight_scene_nodes_by_path(["Player"])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("Open the Player script")
@@ -338,7 +338,7 @@ func steps_040_scripts() -> void:
 	complete_step()
 
 
-	highlight_scene_nodes(["Player", "Player/GodotArmor", "Player/WeaponHolder", "Player/ShakingCamera2D"])
+	highlight_scene_nodes_by_path(["Player", "Player/GodotArmor", "Player/WeaponHolder", "Player/ShakingCamera2D"])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title("Any node can have a script")
