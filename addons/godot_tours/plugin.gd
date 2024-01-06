@@ -43,11 +43,15 @@ func _enter_tree() -> void:
 		push_warning("Godot Tours: no tours found. The user interface will not be modified.")
 		return
 
+	# Hack for `EditorInterface.open_scene_from_path()`, see: https://github.com/godotengine/godot/issues/86869
+	for _frame in range(10):
+		await get_tree().process_frame
+
 	_tour_paths.assign(tour_list.tours.map(
 		func get_tour_path(tour_entry) -> String:
 			return tour_entry.tour_path
 	))
-	
+
 	await get_tree().physics_frame
 	get_viewport().mode = Window.MODE_MAXIMIZED
 
@@ -60,7 +64,7 @@ func _enter_tree() -> void:
 
 	translation_service = TranslationService.new(_tour_paths, editor_settings)
 	editor_interface_access = EditorInterfaceAccess.new()
-	overlays = Overlays.new(editor_interface_access, EditorInterface.get_editor_scale())
+	overlays = Overlays.new(editor_interface_access)
 	EditorInterface.get_base_control().add_child(overlays)
 
 	# Add button to the editor top bar, right before the run buttons
@@ -89,7 +93,10 @@ func _show_welcome_menu() -> void:
 		return
 
 	_button_top_bar.hide()
+
 	var welcome_menu := UI_WELCOME_MENU_SCENE.instantiate()
+	tree_exiting.connect(welcome_menu.queue_free)
+
 	EditorInterface.get_base_control().add_child(welcome_menu)
 	welcome_menu.setup(tour_list)
 	welcome_menu.tour_start_requested.connect(func start_tour(tour_path: String) -> void:
@@ -101,6 +108,9 @@ func _show_welcome_menu() -> void:
 
 
 func _exit_tree() -> void:
+	if _button_top_bar != null:
+		_button_top_bar.queue_free()
+
 	if tour_list == null:
 		return
 

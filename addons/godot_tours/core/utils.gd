@@ -43,18 +43,15 @@ static func find_tree_item_by_name(tree: Tree, name: String) -> TreeItem:
 		return root
 
 	var result: TreeItem = null
-
 	var stack: Array[TreeItem] = []
 	while not stack.is_empty():
 		var item: TreeItem = stack.pop_back()
-		print(item.get_text(0))
 		if item.get_text(0) == name:
 			result = item
 			break
 
 		if item.get_child_count() > 0:
 			stack += item.get_children()
-
 	return result
 
 
