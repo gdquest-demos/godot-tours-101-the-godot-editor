@@ -1,4 +1,6 @@
-extends "res://addons/godot_tours/core/tour.gd"
+extends "res://addons/godot_tours/tour.gd"
+
+const Gobot := preload("res://addons/godot_tours/bubble/gobot/gobot.gd")
 
 const TEXTURE_BUBBLE_BACKGROUND := preload("res://assets/bubble-background.png")
 const TEXTURE_GDQUEST_LOGO := preload("res://assets/gdquest-logo.svg")
@@ -64,26 +66,26 @@ func _build() -> void:
 
 
 func steps_010_intro() -> void:
-
 	# 0010: introduction
 	context_set_2d()
 	scene_open(scene_completed_project)
 	bubble_move_and_anchor(interface.base_control, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
-	bubble_set_background(TEXTURE_BUBBLE_BACKGROUND)
-	bubble_add_texture(TEXTURE_GDQUEST_LOGO)
 	bubble_set_title("")
-	bubble_add_text([bbcode_wrap_font_size("[center][b]Welcome to Godot[/b][/center]", 32)])
-	bubble_add_text(
-		["[center]In this tour, you take your first steps in the [b]Godot editor[/b].[/center]",
-		"[center]You get an overview of the engine's four pillars: [b]Scenes[/b], [b]Nodes[/b], [b]Scripts[/b], and [b]Signals[/b].[/center]",
-		"[center]In the next tour, you'll get to assemble your first game from premade parts and put all this into practice.[/center]",
-		"[center][b]Let's get started![/b][/center]",]
+	queue_command(func() -> void:
+		bubble.set_background(TEXTURE_BUBBLE_BACKGROUND)
+		bubble.add_texture(TEXTURE_GDQUEST_LOGO)
+		bubble.add_text([bbcode_wrap_font_size("[center][b]Welcome to Godot[/b][/center]", 32)] as Array[String])
+		bubble.add_text([
+			"[center]In this tour, you take your first steps in the [b]Godot editor[/b].[/center]",
+			"[center]You get an overview of the engine's four pillars: [b]Scenes[/b], [b]Nodes[/b], [b]Scripts[/b], and [b]Signals[/b].[/center]",
+			"[center]In the next tour, you'll get to assemble your first game from premade parts and put all this into practice.[/center]",
+			"[center][b]Let's get started![/b][/center]",
+		] as Array[String])
+		bubble.set_footer(CREDITS_FOOTER_GDQUEST)
+		bubble.avatar.do_wink()
 	)
-	bubble_set_footer(CREDITS_FOOTER_GDQUEST)
-	queue_command(bubble.avatar.do_wink)
 	complete_step()
-
 
 	# 0020: First look at game you'll make
 	highlight_controls([interface.run_bar_play_button], true)
@@ -91,23 +93,22 @@ func steps_010_intro() -> void:
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_add_task_press_button(interface.run_bar_play_button)
 	bubble_set_title("Try the game")
-	bubble_add_text(
-		["When a project is first opened in Godot, we land on the [b]Main Scene[/b]. It is the entry point of a Godot game.",
-		"Click the play icon in the top right of the editor to run the Godot project.",
-		"Then, press [b]F8[/b] on your keyboard or close the game window to stop the game.",]
+	queue_command(func() -> void:
+		bubble.add_text([
+			"When a project is first opened in Godot, we land on the [b]Main Scene[/b]. It is the entry point of a Godot game.",
+			"Click the play icon in the top right of the editor to run the Godot project.",
+			"Then, press [b]F8[/b] on your keyboard or close the game window to stop the game.",
+		] as Array[String])
 	)
 	complete_step()
-
 
 	# 0030: Start of editor tour
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("Editor tour")
-	bubble_add_text(
-		["Great! Now let's take a quick tour of the editor.",]
-	)
-	queue_command(func():
-		interface.bottom_button_output.button_pressed = false
+	queue_command(func() -> void:
+		bubble.add_text(["Great! Now let's take a quick tour of the editor.",] as Array[String])
+		interface.bottom_button_output.set_pressed(false)
 	)
 	complete_step()
 
@@ -118,52 +119,64 @@ func steps_020_first_look() -> void:
 	bubble_move_and_anchor(interface.inspector_dock, Bubble.At.BOTTOM_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title("The viewport")
-	bubble_add_text(
-		["The central part of the editor outlined in blue is the viewport. It's a view of the currently open [b]scene[/b].",]
+	queue_command(func() -> void:
+		bubble.add_text([
+			"The central part of the editor outlined in blue is the viewport. It's a view of the currently open [b]scene[/b].",
+		] as Array[String])
 	)
 	complete_step()
-
 
 	# 0041: scene explanation
 	highlight_controls([interface.canvas_item_editor])
 	bubble_set_title("A scene is a reusable template")
-	bubble_add_text(
-		["In Godot, a scene is a template that can represent anything: A character, a chest, an entire level, a menu, or even a complete game!",
-		"We are currently looking at a scene file called [b]" + scene_completed_project.get_file() + "[/b]. This scene consists of a complete game.",]
+	queue_command(func() -> void:
+		bubble.add_text([
+			"In Godot, a scene is a template that can represent anything: A character, a chest, an entire level, a menu, or even a complete game!",
+			"We are currently looking at a scene file called [b]" + scene_completed_project.get_file() + "[/b]. This scene consists of a complete game.",
+		] as Array[String])
 	)
 	complete_step()
 
 	# 0041: looking around
-	highlight_controls([interface.scene_dock, interface.filesystem_dock, interface.inspector_dock, interface.context_switcher, interface.run_bar, interface.bottom_buttons])
+	var controls_0041: Array[Control] = []
+	controls_0041.assign([
+		interface.scene_dock,
+		interface.filesystem_dock,
+		interface.inspector_dock,
+		interface.context_switcher,
+		interface.run_bar,
+	] + interface.bottom_buttons)
+	highlight_controls(controls_0041)
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("Let's look around")
-	bubble_add_text(
-		["We're going to explore the interface next, so you get a good feel for it.",]
+	queue_command(func() -> void:
+		bubble.add_text(["We're going to explore the interface next, so you get a good feel for it.",] as Array[String])
 	)
 	complete_step()
-
 
 	# 0042: playback controls/game preview buttons
 	highlight_controls([interface.run_bar], true)
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("Runner Buttons")
-	bubble_add_text(["Those buttons in the top-right are the Runner Buttons. You can [b]play[/b] and [b]stop[/b] the game with them."])
+	queue_command(func() -> void:
+		bubble.add_text(["Those buttons in the top-right are the Runner Buttons. You can [b]play[/b] and [b]stop[/b] the game with them."] as Array[String])
+	)
 	complete_step()
-
 
 	# 0042: main screen buttons / "context switcher"
 	highlight_controls([interface.context_switcher], true)
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("Context Switcher")
-	bubble_add_text([
-		"Centered at the top of the editor, you find the Godot [b]Context Switcher[/b].",
-		"You can change between the different [b]Editor[/b] views here. We are currently on the [b]2D View[/b]. Later, we will switch to the [b]Script Editor[/b]!",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"Centered at the top of the editor, you find the Godot [b]Context Switcher[/b].",
+			"You can change between the different [b]Editor[/b] views here. We are currently on the [b]2D View[/b]. Later, we will switch to the [b]Script Editor[/b]!",
+		] as Array[String])
+	)
 	complete_step()
-
 
 	# 0042: scene dock
 	context_set_2d()
@@ -171,43 +184,49 @@ func steps_020_first_look() -> void:
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title("Scene Dock")
-	bubble_add_text(["At the top-left, you have the [b]Scene Dock[/b]. You can see all the building blocks of a scene here.",
-		"In Godot, these building blocks are called [b]nodes[/b].",
-		"A scene is made up of one or more nodes.",
-		"There are nodes to draw images, play sounds, design animations, and more.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"At the top-left, you have the [b]Scene Dock[/b]. You can see all the building blocks of a scene here.",
+			"In Godot, these building blocks are called [b]nodes[/b].",
+			"A scene is made up of one or more nodes.",
+			"There are nodes to draw images, play sounds, design animations, and more.",
+		] as Array[String])
+	)
 	complete_step()
-
 
 	# 0042: Filesystem dock
 	highlight_controls([interface.filesystem_dock])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.BOTTOM_LEFT)
 	bubble_set_title("FileSystem Dock")
-	bubble_add_text(["At the bottom-left, you can see the [b]FileSystem Dock[/b]. It lists all the files used in your project (all the scenes, images, scripts...)."])
+	queue_command(func() -> void:
+		bubble.add_text(["At the bottom-left, you can see the [b]FileSystem Dock[/b]. It lists all the files used in your project (all the scenes, images, scripts...)."] as Array[String])
+	)
 	complete_step()
-
 
 	# 0044: inspector dock
 	highlight_controls([interface.inspector_dock])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("The Inspector")
-	bubble_add_text([
-		"On the right, we have the [b]Inspector Dock[/b]. In this dock, you can view and edit the properties of selected nodes.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"On the right, we have the [b]Inspector Dock[/b]. In this dock, you can view and edit the properties of selected nodes.",
+		] as Array[String])
+	)
 	complete_step()
-
 
 	# 0045: inspector test
 	scene_deselect_all_nodes()
 	highlight_controls([interface.inspector_dock, interface.scene_dock])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
-	bubble_set_avatar_surprised()
 	bubble_set_title("Try the Inspector")
-	bubble_add_text([
-		"Try the [b]Inspector[/b]! Click on the different nodes in the [b]Scene Dock[/b] on the left to see their properties in the [b]Inspector[/b] on the right.",
-	])
+	queue_command(func() -> void:
+		bubble.avatar.set_expression(Gobot.Expressions.SURPRISED)
+		bubble.add_text([
+			"Try the [b]Inspector[/b]! Click on the different nodes in the [b]Scene Dock[/b] on the left to see their properties in the [b]Inspector[/b] on the right.",
+		] as Array[String])
+	)
 	mouse_click()
 	mouse_move_by_callable(
 		get_tree_item_center_by_path.bind(interface.scene_tree, ("Main")),
@@ -221,7 +240,6 @@ func steps_020_first_look() -> void:
 	mouse_click()
 	complete_step()
 
-
 	# 0046: bottom panels
 	queue_command(func debugger_open():
 		interface.bottom_button_debugger.button_pressed = true
@@ -230,52 +248,53 @@ func steps_020_first_look() -> void:
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.BOTTOM_CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("The Bottom Panels")
-	bubble_add_text([
-		"At the bottom, you'll find editors like the [b]Output[/b] and [b]Debugger[/b] panels.",
-		"That's where you'll edit animations, write visual effects code (shaders), and more.",
-		"These editors are contextual. We'll see what that means in the next tour.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"At the bottom, you'll find editors like the [b]Output[/b] and [b]Debugger[/b] panels.",
+			"That's where you'll edit animations, write visual effects code (shaders), and more.",
+			"These editors are contextual. We'll see what that means in the next tour.",
+		] as Array[String])
+	)
 	complete_step()
 
-	queue_command(func debugger_close():
-		interface.bottom_button_debugger.button_pressed = false
-	)
+	queue_command(interface.bottom_button_debugger.set_pressed, [false])
 
 
 func steps_030_opening_scene() -> void:
-
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	highlight_scene_nodes_by_path(["Main", "Main/Bridges", "Main/InvisibleWalls", "Main/UILayer"])
 	bubble_set_title("The complete scene's nodes")
-	bubble_add_text([
-		"This completed game scene has four [b]nodes[/b]: [b]Main[/b], [b]Bridges[/b], [b]InvisibleWalls[/b], and [b]UILayer[/b].",
-		"We can see that in the [b]Scene Dock[/b] at the top-left."
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"This completed game scene has four [b]nodes[/b]: [b]Main[/b], [b]Bridges[/b], [b]InvisibleWalls[/b], and [b]UILayer[/b].",
+			"We can see that in the [b]Scene Dock[/b] at the top-left."
+		] as Array[String])
+	)
 	complete_step()
-
 
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	highlight_scene_nodes_by_path(["Main/Player"])
 	bubble_set_title("Scene instances")
-	bubble_add_text([
-		"Other elements, like the [b]Player[/b], have an [b]Open In Editor[/b] " +
-		bbcode_generate_icon_image_string(ICONS_MAP.open_in_editor) + " icon.",
-		"When you see this icon, you are looking at a [b]scene instance[/b]. It's a copy of another scene. You can think of it as a scene that uses another scene as its template. In Godot, we nest scene instances to create complete games.",
-		"Click the [b]Open in Editor[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.open_in_editor) + " icon next to the [b]Player[/b] node in the [b]Scene Dock[/b] to open the Player scene.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"Other elements, like the [b]Player[/b], have an [b]Open In Editor[/b] " +
+			bbcode_generate_icon_image_string(ICONS_MAP.open_in_editor) + " icon.",
+			"When you see this icon, you are looking at a [b]scene instance[/b]. It's a copy of another scene. You can think of it as a scene that uses another scene as its template. In Godot, we nest scene instances to create complete games.",
+			"Click the [b]Open in Editor[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.open_in_editor) + " icon next to the [b]Player[/b] node in the [b]Scene Dock[/b] to open the Player scene.",
+		] as Array[String])
+	)
 	bubble_add_task(
 		("Open the Player scene."),
 		1,
-		func task_open_start_scene(task: Task) -> int:
+		func task_open_start_scene(_task: Task) -> int:
 			var scene_root: Node = EditorInterface.get_edited_scene_root()
 			if scene_root == null:
 				return 0
 			return 1 if scene_root.name == "Player" else 0
 	)
 	complete_step()
-
 
 	context_set_2d()
 	canvas_item_editor_center_at(Vector2.ZERO)
@@ -284,39 +303,42 @@ func steps_030_opening_scene() -> void:
 	bubble_move_and_anchor(interface.inspector_dock, Bubble.At.BOTTOM_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title("The Player scene")
-	bubble_add_text([
-		"When opening a scene, the [b]Scene Dock[/b] and the viewport update to display the scene's contents.",
-		"In the Scene Dock at the top-left, you can see all the nodes that form the player's character.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"When opening a scene, the [b]Scene Dock[/b] and the viewport update to display the scene's contents.",
+			"In the Scene Dock at the top-left, you can see all the nodes that form the player's character.",
+		] as Array[String])
+	)
 	complete_step()
-
 
 
 func steps_040_scripts() -> void:
-
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("Scripts bring nodes to life")
-	bubble_add_text([
-		"By themselves, nodes and scenes don't interact.",
-		"To bring them to life, you need to give them instructions by writing code in a script and connecting it to the node or scene.",
-		"Let's have a look at an example of a script.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"By themselves, nodes and scenes don't interact.",
+			"To bring them to life, you need to give them instructions by writing code in a script and connecting it to the node or scene.",
+			"Let's have a look at an example of a script.",
+		] as Array[String])
+	)
 	complete_step()
-
 
 	highlight_scene_nodes_by_path(["Player"])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("Open the Player script")
-	bubble_add_text([
-		"The [b]Player[/b] node has a script file attached to it. We can see this thanks to the [b]Attached Script[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.script) + " icon located to the right of the node in the [b]Scene Dock[/b].",
-		"Click the script icon to open the [b]Player Script[/b] in the [b]Script Editor[/b].",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"The [b]Player[/b] node has a script file attached to it. We can see this thanks to the [b]Attached Script[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.script) + " icon located to the right of the node in the [b]Scene Dock[/b].",
+			"Click the script icon to open the [b]Player Script[/b] in the [b]Script Editor[/b].",
+		] as Array[String])
+	)
 	bubble_add_task(
 		"Open the script attached to the [b]Player[/b] node.",
 		1,
-		func(task: Task) -> int:
+		func(_task: Task) -> int:
 			if not interface.is_in_scripting_context():
 				return 0
 			var open_script: String = EditorInterface.get_script_editor().get_current_script().resource_path
@@ -324,46 +346,49 @@ func steps_040_scripts() -> void:
 	)
 	complete_step()
 
-
 	highlight_controls([interface.script_editor_code_panel])
 	bubble_move_and_anchor(interface.inspector_dock, Bubble.At.BOTTOM_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title("The scripting context")
-	bubble_add_text([
-		"We're now in the scripting context, which displays all the code in the open script file.",
-		"This code gives instructions to the computer about how to move the character, when to play sounds, and more.",
-		"Don't worry if you can't read the code yet: We made a FREE app to help you [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It's a free part of our complete course Learn Gamedev From Zero.",
-		"Use your [b]Mouse Wheel[/b] to scroll up and down the file or click and drag the scrollbar on the right.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"We're now in the scripting context, which displays all the code in the open script file.",
+			"This code gives instructions to the computer about how to move the character, when to play sounds, and more.",
+			"Don't worry if you can't read the code yet: We made a FREE app to help you [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It's a free part of our complete course Learn Gamedev From Zero.",
+			"Use your [b]Mouse Wheel[/b] to scroll up and down the file or click and drag the scrollbar on the right.",
+		] as Array[String])
+	)
 	complete_step()
-
 
 	highlight_scene_nodes_by_path(["Player", "Player/GodotArmor", "Player/WeaponHolder", "Player/ShakingCamera2D"])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title("Any node can have a script")
-	bubble_add_text([
-		"If we look back at the [b]Scene Dock[/b] at the top-left, we can see multiple nodes with script icons.",
-		"You can attach scripts to as many nodes as you need to control their behavior.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"If we look back at the [b]Scene Dock[/b] at the top-left, we can see multiple nodes with script icons.",
+			"You can attach scripts to as many nodes as you need to control their behavior.",
+		] as Array[String])
+	)
 	complete_step()
 
 
 func steps_050_signals() -> void:
-
 	highlight_controls([interface.context_switcher], true)
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("Go back to the 2D view")
-	bubble_add_text([
-		"We have one more essential pillar of Godot to look at: [b]Signals[/b].",
-		"Let's head back to the completed project scene. First, click the 2D workspace at the top of the editor to change the center view back to the viewport.",
-		"This will show you the player character once again.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"We have one more essential pillar of Godot to look at: [b]Signals[/b].",
+			"Let's head back to the completed project scene. First, click the 2D workspace at the top of the editor to change the center view back to the viewport.",
+			"This will show you the player character once again.",
+		] as Array[String])
+	)
 	bubble_add_task(
 		"Navigate to the [b]2D[/b] view.",
 		1,
-		func task_navigate_to_2d_view(task: Task) -> int:
+		func task_navigate_to_2d_view(_task: Task) -> int:
 			return 1 if interface.canvas_item_editor.visible else 0
 	)
 	complete_step()
@@ -373,14 +398,16 @@ func steps_050_signals() -> void:
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title("Change the active scene")
-	bubble_add_text([
-		"Let's change the active scene to the completed project scene.",
-		"Click on the [b]completed_project[/b] tab above the central viewport to change the scene.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"Let's change the active scene to the completed project scene.",
+			"Click on the [b]completed_project[/b] tab above the central viewport to change the scene.",
+		] as Array[String])
+	)
 	bubble_add_task(
 		"Navigate to the Completed Project scene.",
 		1,
-		func task_open_completed_project_scene(task: Task) -> int:
+		func task_open_completed_project_scene(_task: Task) -> int:
 			var scene_root: Node = EditorInterface.get_edited_scene_root()
 			if scene_root == null:
 				return 0
@@ -393,23 +420,27 @@ func steps_050_signals() -> void:
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("Signals")
-	bubble_add_text([
-		"Games have buttons, doors, chests and a myriad of other elements you interact with and that you expect to respond in a specific way.",
-		"To do what you need them to do, these elements need to report events to the game to trigger the action you expect them to trigger.",
-		"We call that a signal.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"Games have buttons, doors, chests and a myriad of other elements you interact with and that you expect to respond in a specific way.",
+			"To do what you need them to do, these elements need to report events to the game to trigger the action you expect them to trigger.",
+			"We call that a signal.",
+		] as Array[String])
+	)
 	complete_step()
 
-	queue_command(overlays.highlight_scene_node.bind("Main/Player", true))
+	highlight_scene_nodes_by_path(["Main/Player"])
 	highlight_controls([interface.node_dock_signals_editor])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("Click the signal icon")
-	bubble_add_text([
-		"In the [b]Scene Dock[/b] at the top-left, look at the [b]Player[/b] node.",
-		"You can see the [b]Signal Emission[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.node_signal_connected) + " icon emitting little waves. This icon tells you that the node has a signal connection.",
-		"Click the icon to open the [b]Node Dock[/b] at the right of the editor.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"In the [b]Scene Dock[/b] at the top-left, look at the [b]Player[/b] node.",
+			"You can see the [b]Signal Emission[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.node_signal_connected) + " icon emitting little waves. This icon tells you that the node has a signal connection.",
+			"Click the icon to open the [b]Node Dock[/b] at the right of the editor.",
+		] as Array[String])
+	)
 	bubble_add_task_set_tab_to_title(
 		interface.inspector_tabs,
 		"Node",
@@ -420,20 +451,24 @@ func steps_050_signals() -> void:
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("The Node Dock")
-	bubble_add_text([
-		"On the right, you can see the [b]Node Dock[/b]. It lists all the signals of the selected node. In this case, it's the [b]Player[/b] node.",
-		"The signal list is long: nodes emit many signals, because there are many kinds of events we need to react to in a game.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"On the right, you can see the [b]Node Dock[/b]. It lists all the signals of the selected node. In this case, it's the [b]Player[/b] node.",
+			"The signal list is long: nodes emit many signals, because there are many kinds of events we need to react to in a game.",
+		] as Array[String])
+	)
 	complete_step()
 
 	highlight_signals(["health_changed"], true)
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("The health_changed signal")
-	bubble_add_text([
-		"The player node has one especially useful signal: [b]health_changed[/b].",
-		"The [b]health_changed[/b] signal tells us when the player takes damage or heals up.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"The player node has one especially useful signal: [b]health_changed[/b].",
+			"The [b]health_changed[/b] signal tells us when the player takes damage or heals up.",
+		] as Array[String])
+	)
 	complete_step()
 
 	# Highlights the signal connection line
@@ -441,15 +476,17 @@ func steps_050_signals() -> void:
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("The signal connection")
-	bubble_add_text([
-		"Notice the [b]Connected Signal[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.script_signal_connected) + " icon below the signal: it shows that the signal is connected to a piece of code.",
-		"It means that each time the player health changes, Godot will run the connected piece of code.",
-		"We can double-click the line with the green icon to open the connected piece of code.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"Notice the [b]Connected Signal[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.script_signal_connected) + " icon below the signal: it shows that the signal is connected to a piece of code.",
+			"It means that each time the player health changes, Godot will run the connected piece of code.",
+			"We can double-click the line with the green icon to open the connected piece of code.",
+		] as Array[String])
+	)
 	bubble_add_task(
 		"Double-click the signal connection in the node dock.",
 		1,
-		func task_open_health_changed_signal_connection(task: Task) -> int:
+		func task_open_health_changed_signal_connection(_task: Task) -> int:
 			if not interface.is_in_scripting_context():
 				return 0
 			var open_script: String = EditorInterface.get_script_editor().get_current_script().resource_path
@@ -461,10 +498,12 @@ func steps_050_signals() -> void:
 	bubble_move_and_anchor(interface.inspector_dock, Bubble.At.BOTTOM_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title("The connected code")
-	bubble_add_text([
-		"The script editor reopens and focuses the view on the [b]set_health[/b] function.",
-			"A function is a name we give to multiple lines of code for easy reuse: in other game code, we can then use the function name to execute all the lines of code in the function.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"The script editor reopens and focuses the view on the [b]set_health[/b] function.",
+				"A function is a name we give to multiple lines of code for easy reuse: in other game code, we can then use the function name to execute all the lines of code in the function.",
+		] as Array[String])
+	)
 	complete_step()
 
 	# Highlight the set_health function, don't re-center on it to avoid a jump after the previous
@@ -473,11 +512,13 @@ func steps_050_signals() -> void:
 	bubble_move_and_anchor(interface.inspector_dock, Bubble.At.BOTTOM_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title("The set_health function")
-	bubble_add_text([
-		"This function updates the display of the player health bar.",
-		"Notice the green [b]Connected Signal[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.script_signal_connected) + " icon in the left margin of the script editor. When coding a game, it reminds you of existing signal connections.",
-		"So, each time the player health changes, the [b]Player[/b] node emits the [b]health_changed[/b] signal and, in turn, Godot runs the [b]set_health[/b] function that updates the health bar in the running game.",
-	])
+	queue_command(func() -> void:
+		bubble.add_text([
+			"This function updates the display of the player health bar.",
+			"Notice the green [b]Connected Signal[/b] " + bbcode_generate_icon_image_string(ICONS_MAP.script_signal_connected) + " icon in the left margin of the script editor. When coding a game, it reminds you of existing signal connections.",
+			"So, each time the player health changes, the [b]Player[/b] node emits the [b]health_changed[/b] signal and, in turn, Godot runs the [b]set_health[/b] function that updates the health bar in the running game.",
+		] as Array[String])
+	)
 	complete_step()
 
 	highlight_controls([interface.run_bar_play_button], true)
@@ -485,44 +526,43 @@ func steps_050_signals() -> void:
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_add_task_press_button(interface.run_bar_play_button)
 	bubble_set_title("Run the game")
-	bubble_add_text(
-		["Run the game again and pay attention to the health bar in the top-left.",
-		"Move the player character to an enemy and touch them to lose health. You will see the health bar lose one point.",
-		"This happens thanks to the [b]health_changed[/b] signal connection.",]
+	queue_command(func() -> void:
+		bubble.add_text([
+			"Run the game again and pay attention to the health bar in the top-left.",
+			"Move the player character to an enemy and touch them to lose health. You will see the health bar lose one point.",
+			"This happens thanks to the [b]health_changed[/b] signal connection.",
+		] as Array[String])
 	)
 	complete_step()
 
-	queue_command(func debugger_close():
-		interface.bottom_button_debugger.button_pressed = false
-	)
+	queue_command(interface.bottom_button_debugger.set_pressed, [false])
 
 
 func steps_090_conclusion() -> void:
-
 	context_set_2d()
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title("In summary")
-	bubble_add_text(
-		[
+	queue_command(func() -> void:
+		bubble.add_text([
 			"Godot has four essential concepts on which your games rely: scenes, nodes, scripts, and signals.",
 			"[b]Scenes[/b] are reusable templates that represent anything in your game.",
 			"[b]Nodes[/b] are the building blocks of scenes. They are the elements you see in the viewport.",
 			"[b]Scripts[/b] are text files that give instructions to the computer. You can attach them to nodes to control their behavior.",
 			"And [b]Signals[/b] are events that nodes emit to report what's happening in the game. You can connect signals to scripts to run code when an event occurs.",
-		]
+		] as Array[String])
 	)
 	complete_step()
 
-
 	bubble_move_and_anchor(interface.main_screen)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
-	bubble_set_avatar_happy()
-	bubble_set_background(TEXTURE_BUBBLE_BACKGROUND)
-	bubble_add_texture(TEXTURE_GDQUEST_LOGO)
 	bubble_set_title("Congratulations on your first Godot Tour!")
-	bubble_add_text([("[center]Next, we'll practice and learn more by assembling a game[/center]")])
-	# TODO: add video of other parts here if on free version
-	bubble_set_footer((CREDITS_FOOTER_GDQUEST))
+	queue_command(func() -> void:
+		bubble.avatar.set_expression(Gobot.Expressions.HAPPY)
+		bubble.set_background(TEXTURE_BUBBLE_BACKGROUND)
+		bubble.add_texture(TEXTURE_GDQUEST_LOGO)
+		bubble.add_text([("[center]Next, we'll practice and learn more by assembling a game[/center]")] as Array[String])
+		# TODO: add video of other parts here if on free version
+		bubble.set_footer((CREDITS_FOOTER_GDQUEST))
+	)
 	complete_step()
-
