@@ -9,6 +9,8 @@ signal back_button_pressed
 signal next_button_pressed
 ## Emitted when the user confirms wanting to quit the tour.
 signal close_requested
+## Emitted when the user confirms wanting to finish the tour (for example, when they finish the last step).
+signal finish_requested
 
 const Task := preload("task/task.gd")
 const EditorInterfaceAccess := preload("../editor_interface_access.gd")
@@ -18,7 +20,7 @@ const ThemeUtils := preload("../ui/theme_utils.gd")
 
 const TaskPackedScene: PackedScene = preload("task/task.tscn")
 
-const TWEEN_DURATION := 0.1
+const TWEEN_DURATION := 0.25
 
 ## Location to place and anchor the bubble relative to a given Control node [b]inside its rectangle[/b]. Used in the
 ## function [method move_and_anchor] and by the [member at] variable.
@@ -35,6 +37,18 @@ enum At {
 }
 ## Location of the Avatar along the top edge of the bubble.
 enum AvatarAt { LEFT, CENTER, RIGHT }
+
+const GROW_DIRECTIONS := {
+	At.TOP_LEFT: {h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_END},
+	At.TOP_RIGHT: {h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_END},
+	At.BOTTOM_RIGHT: {h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_BEGIN},
+	At.BOTTOM_LEFT: {h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_BEGIN},
+	At.CENTER_LEFT: {h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_BOTH},
+	At.TOP_CENTER: {h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_END},
+	At.BOTTOM_CENTER: {h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_BEGIN},
+	At.CENTER_RIGHT: {h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_BOTH},
+	At.CENTER: {h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_BOTH},
+}
 
 var at := At.CENTER  ## Bubble location relative to a given Control node. See [enum At] for details.
 var avatar_at := AvatarAt.LEFT  ## Avatar location relative to the bubble. See [enum AvatarAt] for details.
@@ -58,6 +72,11 @@ var avatar_tween_rotation: Tween = null
 func setup(translation_service: TranslationService, step_count: int) -> void:
 	self.translation_service = translation_service
 	self.step_count = step_count
+
+	# We call this function that updates the position and size of the bubble.
+	# RichTextLabel nodes added to the bubble can cause it to resize after 0, 1, or 2 frames. It's not reliable
+	# and depends on the computer. So, it's best to let the panel container node tell us when it's been resized.
+	panel.minimum_size_changed.connect(refresh)
 
 
 ## [b]Virtual[/b] method for reacting to the tour step change. See ["addons/godot_tours/tour.gd"]
@@ -111,9 +130,13 @@ func set_footer(text: String) -> void:
 	pass
 
 
+## [b]Virtual[/b] method to change the text of the next button.
+func set_finish_button_text(text: String) -> void:
+	pass
+
+
 ## [b]Virtual[/b] method to add a task.
 func add_task(
-
 	description: String,
 	repeat: int,
 	repeat_callable: Callable,
@@ -137,7 +160,9 @@ func move_and_anchor(
 	self.at = at
 	self.margin = margin
 	self.offset_vector = offset_vector
-	refresh()
+	panel.grow_horizontal = GROW_DIRECTIONS[at].h
+	panel.grow_vertical = GROW_DIRECTIONS[at].v
+	panel.reset_size()
 
 
 ## Sets the avatar location at the top of the bubble. Check [member avatar_at] for details on the parameter.
@@ -158,32 +183,31 @@ func set_avatar_at(at := AvatarAt.LEFT) -> void:
 	}
 	var new_avatar_rotation: float = target_rotation_degrees[at]
 
+	const TWEEN_DURATION_AVATAR := 0.15
+
 	if not avatar.position.is_equal_approx(new_avatar_position):
 		if avatar_tween_position != null:
 			avatar_tween_position.kill()
-		avatar_tween_position = create_tween().set_ease(Tween.EASE_IN)
+		avatar_tween_position = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		avatar_tween_position.tween_property(
-			avatar, "position", new_avatar_position, TWEEN_DURATION
+			avatar, "position", new_avatar_position, TWEEN_DURATION_AVATAR
 		)
 
 	if not avatar.position.is_equal_approx(new_avatar_position):
 		if avatar_tween_rotation != null:
 			avatar_tween_rotation.kill()
-		avatar_tween_rotation = create_tween().set_ease(Tween.EASE_IN)
+		avatar_tween_rotation = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		avatar_tween_rotation.tween_property(
-			avatar, "rotation_degrees", new_avatar_rotation, TWEEN_DURATION
+			avatar, "rotation_degrees", new_avatar_rotation, TWEEN_DURATION_AVATAR
 		)
 
 
 ## Refreshes the position and size of the bubble and its avatar as necessary.
+## Connected to the [member minimum_size_changed] signal of the [member panel].
 func refresh() -> void:
 	if control == null:
 		return
 
-	# We delay for one frame because it can take that amount of time for RichTextLabel nodes to update their state.
-	# Without this, the bubble can end up being too tall.
-	await get_tree().process_frame
-	panel.reset_size()
 	var at_offset := {
 		At.TOP_LEFT: margin * Vector2.ONE,
 		At.TOP_CENTER: Vector2((control.size.x - panel.size.x) / 2.0, 0.0) + margin * Vector2.DOWN,
@@ -196,11 +220,12 @@ func refresh() -> void:
 		At.CENTER_RIGHT: Vector2(1.0, 0.5) * (control.size - panel.size) + margin * Vector2.LEFT,
 		At.CENTER: (control.size - panel.size) / 2.0,
 	}
+
 	var new_global_position: Vector2 = control.global_position + at_offset[at] + offset_vector
 	if not panel.global_position.is_equal_approx(new_global_position):
 		if tween != null:
 			tween.kill()
-		tween = create_tween().set_ease(Tween.EASE_IN)
+		tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween.tween_property(panel, "global_position", new_global_position, TWEEN_DURATION)
 	set_avatar_at(avatar_at)
 

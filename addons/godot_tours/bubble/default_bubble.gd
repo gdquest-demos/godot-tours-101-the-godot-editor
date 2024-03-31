@@ -45,8 +45,11 @@ func setup(translation_service: TranslationService, step_count: int) -> void:
 
 
 func _ready() -> void:
-	if not Engine.is_editor_hint() or owner == self:
+	if not Engine.is_editor_hint() or EditorInterface.get_edited_scene_root() == self:
 		return
+
+	# Clear tasks etc. in case we have some for testing in the scene.
+	clear_elements_and_tasks()
 
 	back_button.pressed.connect(func() -> void: back_button_pressed.emit())
 	next_button.pressed.connect(func() -> void: next_button_pressed.emit())
@@ -59,7 +62,7 @@ func _ready() -> void:
 		view_close.hide()
 	)
 	button_close_yes.pressed.connect(func() -> void: close_requested.emit())
-	finish_button.pressed.connect(func() -> void: close_requested.emit())
+	finish_button.pressed.connect(func() -> void: finish_requested.emit())
 	for node in [header_rich_text_label, main_v_box_container, tasks_v_box_container, footer_rich_text_label, footer_spacer]:
 		node.visible = false
 
@@ -76,7 +79,7 @@ func on_tour_step_changed(index: int) -> void:
 	finish_button.visible = false
 	if index == 0:
 		back_button.visible = false
-		next_button.visible = true
+		next_button.visible = tasks_v_box_container.get_children().filter(func(n: Node) -> bool: return not n.is_queued_for_deletion()).size() == 0
 		next_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER | Control.SIZE_EXPAND
 	elif index == step_count - 1:
 		next_button.visible = false
@@ -93,7 +96,6 @@ func clear() -> void:
 	set_footer("")
 	set_background(null)
 	clear_elements_and_tasks()
-	refresh()
 
 
 func clear_elements_and_tasks() -> void:
@@ -184,3 +186,8 @@ func _add_debug_shortcuts() -> void:
 	next_button.shortcut = load("res://addons/godot_tours/bubble/shortcut_debug_button_next.tres")
 	back_button.shortcut = load("res://addons/godot_tours/bubble/shortcut_debug_button_back.tres")
 	button_close_yes.shortcut = load("res://addons/godot_tours/bubble/shortcut_debug_button_close.tres")
+
+
+## [b]Virtual[/b] method to change the text of the next button.
+func set_finish_button_text(text: String) -> void:
+	finish_button.text = text

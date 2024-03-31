@@ -1,0 +1,1871 @@
+# LANGUAGE translation for M2. Getting to Know Godot (Interactive Tours) for the following files:
+# res://addons/gdquest_welcome_tour/tours/learn-gamedev-from-zero/tour.gd
+# res://addons/gdquest_welcome_tour/tours/welcome/welcome.gd
+# res://addons/gdquest_welcome_tour/tours/godot-first-tour/godot_first_tour.gd
+# res://addons/gdquest_welcome_tour/tours/learn-gamedev-from-zero/assemble_path_of_sorcerers.gd
+# res://addons/gdquest_welcome_tour/tours/test/debug_and_tests.gd
+# res://addons/godot_tours/tours/godot-first-tour/godot_first_tour.gd
+# res://addons/godot_tours/tours/learn-gamedev-from-zero/assemble_path_of_sorcerers.gd
+# res://addons/godot_tours/tours/test/debug_and_tests.gd
+# res://tours/learn-gamedev-from-zero/assemble_path_of_sorcerers_1.gd
+# res://tours/learn-gamedev-from-zero/assemble_path_of_sorcerers_2.gd
+# res://addons/godot_tours/tour.gd
+# res://tours/godot-first-tour/godot_first_tour.gd
+# res://tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+# res://tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+# res://tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+# res://tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+# res://tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+#
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: M2. Getting to Know Godot (Interactive Tours)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: addons/godot_tours/tour.gd
+msgid "Press the [b]%s[/b] button."
+msgstr ""
+
+#: addons/godot_tours/tour.gd
+msgid "Turn the [b]%s[/b] button %s."
+msgstr ""
+
+#: addons/godot_tours/tour.gd
+msgid "Change to the [b]%s[/b] tab."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "[center]In this tour, you take your first steps in the [b]Godot editor[/b].[/center]"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "[center]You get an overview of the engine\'s four pillars: [b]Scenes[/b], [b]Nodes[/b], [b]Scripts[/b], and [b]Signals[/b].[/center]"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "[center]In the next tour, you\'ll get to assemble your first game from premade parts and put all this into practice.[/center]"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "[center][b]Let\'s get started![/b][/center]"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Try the game"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "When a project is first opened in Godot, we land on the [b]Main Scene[/b]. It is the entry point of a Godot game."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Click the play icon in the top right of the editor to run the Godot project."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Then, press [b]F8[/b] on your keyboard or close the game window to stop the game."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Editor tour"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Great! Now let\'s take a quick tour of the editor."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The viewport"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The central part of the editor outlined in blue is the viewport. It\'s a view of the currently open [b]scene[/b]."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "A scene is a reusable template"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "In Godot, a scene is a template that can represent anything: A character, a chest, an entire level, a menu, or even a complete game!"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "We are currently looking at a scene file called [b]%s[/b]. This scene consists of a complete game."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Let\'s look around"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "We\'re going to explore the interface next, so you get a good feel for it."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Runner Buttons"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Those buttons in the top-right are the Runner Buttons. You can [b]play[/b] and [b]stop[/b] the game with them."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Context Switcher"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Centered at the top of the editor, you find the Godot [b]Context Switcher[/b]."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "You can change between the different [b]Editor[/b] views here. We are currently on the [b]2D View[/b]. Later, we will switch to the [b]Script Editor[/b]!"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Scene Dock"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "At the top-left, you have the [b]Scene Dock[/b]. You can see all the building blocks of a scene here."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "In Godot, these building blocks are called [b]nodes[/b]."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "A scene is made up of one or more nodes."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "There are nodes to draw images, play sounds, design animations, and more."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "FileSystem Dock"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "At the bottom-left, you can see the [b]FileSystem Dock[/b]. It lists all the files used in your project (all the scenes, images, scripts...)."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The Inspector"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "On the right, we have the [b]Inspector Dock[/b]. In this dock, you can view and edit the properties of selected nodes."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Try the Inspector"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Try the [b]Inspector[/b]! Click on the different nodes in the [b]Scene Dock[/b] on the left to see their properties in the [b]Inspector[/b] on the right."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The Bottom Panels"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "At the bottom, you\'ll find editors like the [b]Output[/b] and [b]Debugger[/b] panels."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "That\'s where you\'ll edit animations, write visual effects code (shaders), and more."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "These editors are contextual. We\'ll see what that means in the next tour."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The complete scene\'s nodes"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "This completed game scene has four [b]nodes[/b]: [b]Main[/b], [b]Bridges[/b], [b]InvisibleWalls[/b], and [b]UILayer[/b]."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "We can see that in the [b]Scene Dock[/b] at the top-left."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Scene instances"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Other elements, like the [b]Player[/b], have an [b]Open In Editor[/b] %s icon."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "When you see this icon, you are looking at a [b]scene instance[/b]. It\'s a copy of another scene. You can think of it as a scene that uses another scene as its template. In Godot, we nest scene instances to create complete games."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Click the [b]Open in Editor[/b] %s icon next to the [b]Player[/b] node in the [b]Scene Dock[/b] to open the Player scene."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Open the Player scene."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The Player scene"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "When opening a scene, the [b]Scene Dock[/b] and the viewport update to display the scene\'s contents."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "In the Scene Dock at the top-left, you can see all the nodes that form the player\'s character."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Scripts bring nodes to life"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "By themselves, nodes and scenes don\'t interact."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "To bring them to life, you need to give them instructions by writing code in a script and connecting it to the node or scene."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Let\'s have a look at an example of a script."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Open the Player script"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The [b]Player[/b] node has a script file attached to it. We can see this thanks to the [b]Attached Script[/b] %s icon located to the right of the node in the [b]Scene Dock[/b]."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Click the script icon to open the [b]Player Script[/b] in the [b]Script Editor[/b]."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Open the script attached to the [b]Player[/b] node."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The scripting context"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "We\'re now in the scripting context, which displays all the code in the open script file."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "This code gives instructions to the computer about how to move the character, when to play sounds, and more."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Don\'t worry if you can\'t read the code yet: We made a FREE app to help you [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It\'s a free part of our complete course Learn Gamedev From Zero."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Use your [b]Mouse Wheel[/b] to scroll up and down the file or click and drag the scrollbar on the right."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Any node can have a script"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "If we look back at the [b]Scene Dock[/b] at the top-left, we can see multiple nodes with script icons."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "You can attach scripts to as many nodes as you need to control their behavior."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Go back to the 2D view"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "We have one more essential pillar of Godot to look at: [b]Signals[/b]."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Let\'s head back to the completed project scene. First, click the 2D workspace at the top of the editor to change the center view back to the viewport."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "This will show you the player character once again."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Navigate to the [b]2D[/b] view."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Change the active scene"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Let\'s change the active scene to the completed project scene."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Click on the [b]completed_project[/b] tab above the central viewport to change the scene."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Navigate to the Completed Project scene."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Signals"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Games have buttons, doors, chests and a myriad of other elements you interact with and that you expect to respond in a specific way."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "To do what you need them to do, these elements need to report events to the game to trigger the action you expect them to trigger."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "We call that a signal."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Click the signal icon"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "In the [b]Scene Dock[/b] at the top-left, look at the [b]Player[/b] node."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "You can see the [b]Signal Emission[/b] %s icon emitting little waves. This icon tells you that the node has a signal connection."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Click the icon to open the [b]Node Dock[/b] at the right of the editor."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Click the signal emission icon next to the [b]Player[/b] node and open the [b]Node Dock[/b]."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "The Node Dock"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "On the right, you can see the [b]Node Dock[/b]. It lists all the signals of the selected node. In this case, it\'s the [b]Player[/b] node."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The signal list is long: nodes emit many signals, because there are many kinds of events we need to react to in a game."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The health_changed signal"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The player node has one especially useful signal: [b]health_changed[/b]."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The [b]health_changed[/b] signal tells us when the player takes damage or heals up."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The signal connection"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Notice the [b]Connected Signal[/b] %s icon below the signal: it shows that the signal is connected to a piece of code."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "It means that each time the player health changes, Godot will run the connected piece of code."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "We can double-click the line with the green icon to open the connected piece of code."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Double-click the signal connection in the node dock."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The connected code"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The script editor reopens and focuses the view on the [b]set_health[/b] function."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "A function is a name we give to multiple lines of code for easy reuse: in other game code, we can then use the function name to execute all the lines of code in the function."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "The set_health function"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "This function updates the display of the player health bar."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Notice the green [b]Connected Signal[/b] %s icon in the left margin of the script editor. When coding a game, it reminds you of existing signal connections."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "So, each time the player health changes, the [b]Player[/b] node emits the [b]health_changed[/b] signal and, in turn, Godot runs the [b]set_health[/b] function that updates the health bar in the running game."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Run the game"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Run the game again and pay attention to the health bar in the top-left."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Move the player character to an enemy and touch them to lose health. You will see the health bar lose one point."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "This happens thanks to the [b]health_changed[/b] signal connection."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "In summary"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Godot has four essential concepts on which your games rely: scenes, nodes, scripts, and signals."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "[b]Scenes[/b] are reusable templates that represent anything in your game."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "[b]Nodes[/b] are the building blocks of scenes. They are the elements you see in the viewport."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "[b]Scripts[/b] are text files that give instructions to the computer. You can attach them to nodes to control their behavior."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "And [b]Signals[/b] are events that nodes emit to report what\'s happening in the game. You can connect signals to scripts to run code when an event occurs."
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "Congratulations on your first Godot Tour!"
+msgstr ""
+
+#: tours/godot-first-tour/godot_first_tour.gd
+msgid "[center]Next, we\'ll practice and learn more by assembling a game[/center]"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Assemble your first game"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "In this tour, you get to assemble your first game from premade parts."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "You will put what you learned in the previous tour into practice."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "You\'ll select and move nodes, create scene instances, use Godot\'s tilemap editor, and more."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Let\'s get started!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Let\'s make a little game"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "By the end of this tutorial, you\'ll have a little playable game like this one."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "In this first part, you\'ll learn how to instantiate scenes, move entities, and draw bridges between rooms using a tilemap."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "You can try it right now: click the play icon in the top right of the editor to run the Godot project."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Then, press [b]F8[/b] or close the game window to stop the game."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Let\'s head to the starter scene and assemble the game."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Open the start scene"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "In the [b]FileSystem Dock[/b] at the bottom-left, find and [b]double-click[/b] on the scene we will be working with: [b]\" + SCENE_START.get_file() + \"[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Open the scene [b]%s[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Start"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Add Player Scene"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Now let\'s add a playable character to the scene! Drag and drop the player from the [b]FileSystem Dock[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Add the [b]Player Scene[/b] to the [b]Scene[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Great job!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Remember [b]a scene is a template[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "By dragging the [b]Player Scene[/b] into the viewport in the center, you created a copy of the player template in the start scene."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "You can see in the [b]Scene Dock[/b] that there is now an [b]instance[/b] of the player scene in the start scene."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Flesh out the environment"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "We\'re lacking an environment for players to explore. Let\'s add a couple of rooms next."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "We\'ve prepared rooms for you to place in the level."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Snap to grid"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "To place the rooms accurately, we will use grid snapping."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "You can toggle the grid on and off by clicking the [b]Grid[/b] button at the top (but keep it on!)."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Change grid size"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "The grid is too small. Let\'s make it bigger."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Click the the three vertical dots in the toolbar to access the grid settings."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Then, click [b]Configure Snap...[/b], and change [b]Grid Step[/b] to [b]128px[/b] by [b]128px[/b]. Then, click [b]Ok[/b] to confirm."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "How to zoom in and out"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Before adding rooms, let\'s learn to zoom and pan the view. You\'ll likely need to zoom out to place the rooms comfortably."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "To zoom in and out, use your [b]Mouse Wheel[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "On touch displays and supported touchpads, you can pinch two fingers."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Give it a try!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Using the zoom buttons"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Alternatively, you can click the [b]Zoom In[/b] button "
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid " and [b]Zoom Out[/b] "
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid " button in the top-left of the viewport to zoom in and out."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "How to pan the view"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "To pan the view, click and drag using the [b]Middle Mouse Button[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "If you don\'t have a mouse wheel, press the [b]Spacebar[/b] and click and drag with the [b]Left Mouse Button[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "And if you\'re using a touchpad, you can keep the [b]Ctrl[/b] key down and slide two fingers over your touchpad."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Add Rooms"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Now, you can start placing rooms!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Drag and drop one of each room type (a, b, and c) from the [b]FileSystem Dock[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Place them so that the rooms do not overlap, and keep some space between them, as we\'ll connect the rooms with bridges later."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Use the [b]Middle Mouse Button[/b] to pan the view if you need to."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Use the [b]Mouse Wheel[/b] to zoom in and out."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Don\'t worry if their position isn\'t perfect: we\'ll learn to move the rooms next."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Add [b]RoomA[/b] to the [b]Scene[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Add [b]RoomB[/b] to the [b]Scene[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Add [b]RoomC[/b] to the [b]Scene[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Your game now has 3 rooms."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Did you notice how rooms snap to the grid?"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Next, let\'s learn to select and move the rooms directly in the viewport."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Move the rooms"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "To move a node, like the rooms, you first need to [b]select[/b] it. You can use the [b]Select Mode[/b] for that."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Ensure that the [b]Select Mode[/b] is active in the toolbar at the top."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Its icon looks like a mouse cursor. If it\'s active, the icon will be blue."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "The select tool is active by default when you create a new project in Godot."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Select a room"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "With the [b]Select Mode[/b] active, you can now select the rooms."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "To select a room, in the viewport, click on the room\'s little grey cross \" + bbcode_generate_icon_image_string(ICONS_MAP.node_position_unselected) +  gtr(\" with the [b]Left Mouse Button[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Once you\'ve selected a room, the cross will turn orange \" + bbcode_generate_icon_image_string(ICONS_MAP.node_position_selected) +  gtr(\"."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "You can visually select any node that has a cross in the viewport."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Select one of the [b]Room[/b] nodes."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Move with the select mode"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Click and drag [b]on the cross[/b] to move the node. Try to move the rooms."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "If you need to pan the view, move the mouse while pressing the [b]Middle Mouse Button[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Alternatively, you can press down the [b]Spacebar[/b] and click and drag on the view with the [b]Left Mouse Button[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Excellent!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Take a moment to move the rooms around and arrange them to your liking."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Try to make the openings between rooms align a bit. It will make it easier to add bridges between them later."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Also, try to keep some space between the rooms so you can add bridges between them later."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Once you\'re happy with the layout, move on to the next step."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Moving the player to the first room"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Next, we\'ll move the player inside [b]RoomA[/b] so that when running the game, the player starts in the room."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "We\'ll take this opportunity to learn another useful way of selecting and moving nodes."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Find RoomA"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "To find [b]RoomA[/b], we\'ll use the [b]Scene Dock[/b] and the viewport in the center."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Click each of the room nodes and pay attention to the crosses in the viewport."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Each cross \" + bbcode_generate_icon_image_string(ICONS_MAP.node_position_unselected) +  \" represents the position of one room. When you select a room, its cross turns orange: \" + bbcode_generate_icon_image_string(ICONS_MAP.node_position_selected) +  \"."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Click on [b]RoomA[/b] to select it and find the room\'s location."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Select the Player"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Let\'s select the player node to move it next. Click on [b]Player[/b] node in the [b]Scene Dock[/b] to select it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Move the Player"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "To move a node, you can use the [b]Move Mode[/b] "
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid " in the toolbar. Click the move tool to activate it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "With the move tool selected, click and drag anywhere on the viewport until the player is inside of [b]RoomA[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "Move the [b]Player[/b] inside of [b]RoomA[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "You created several scene instances and learned to select and move them in the viewport."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/01_add_player_and_rooms/01_add_player_and_rooms.gd
+msgid "In the next part, you\'ll learn how to use the TileMap editor and Terrains to draw bridges that connect the rooms."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Add Bridges"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Let\'s draw bridges to connect the rooms using a [b]TileMap[/b] next."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Tilesets and Tilemaps"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "As soon as you selected [b]Bridges[/b], a bottom panel expanded and two tabs appeared: [b]TileSet[/b] and [b]TileMap[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "It\'s because [b]Bridges[/b] is a [b]TileMap[/b] node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Godot will automatically show you the relevant tabs for the selected node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "That\'s why we say the [b]Bottom Panels[/b] are \\\"[b]contextual[/b]\\\". They appear in the right context."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "The TileMap Tab"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "For drawing bridges, we will use the [b]TileMap[/b] tab."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Tilemaps are an efficient way to draw game levels using a grid and [b]tiling images[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Most of your childhood 2D games used tilemaps (like Final Fantasy 6 and Zelda: Link\'s Awakening)!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Tile Selection"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "To the right of the panel, you can see the different tile images we have at our disposal."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "You can select them one at a time and draw on the map, but there is a faster way: using [b]Terrains[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "The Terrains Tab"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Terrains are a set of rules to create compositions for auto-tiling. They help us draw faster."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "You\'ll learn more about creating terrains later in the course."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Click on the [b]Terrains[/b] tab to find the terrain we\'ve set up for the bridges."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "The Bridge Terrain"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Next, click the terrain named [b]Bridge[/b] in the tree on the left to select it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Select the [b]Bridge[/b] terrain."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "The Path Drawing Mode"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Now, click on the Path-like icon to select the [b]Path Drawing Mode[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "With this tool active, you can draw your bridges."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Select the [b]Path Drawing Mode[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Restore the Select mode"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "As we are currently in the [b]Move Mode[/b], we cannot draw the bridges. To draw, we need to be in the [b]Select Mode[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Click the [b]Select Mode[/b] button to activate it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Draw The Bridges"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgctxt "[b]Right-click[/b] to erase bridges."
+msgid "[b]Left Click and drag[/b] on the map to draw bridges between rooms."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Try to connect the openings in the rooms. The openings are located where there are red crosses around the perimeter of the room."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "You are free to draw the bridges however you like."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Reconnecting bridges"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "If you lift the mouse button when drawing bridges, you may see gaps like this:"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "To correct that and get clean corners, click and drag over the already drawn tiles."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "This allows the tilemap\'s terrain to apply its rules and clean up the bridge for you. That\'s the power of terrains!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Excellent! Time to play!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Let\'s see if everything works as expected."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "The [b]Play[/b] button we used earlier is for running the [b]"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "To play the [b]current[/b] scene, click the [b]Play Edited Scene[/b] button to run the scene."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Alternatively, you can press press [b]F6[/b] on your keyboard."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "The missing \\\"walls\\"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "While playing, did you notice something strange? The player can move outside of the bridges!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "This is because the bridges lack [b]collision shapes[/b]. They are invisible geometric shapes that control where characters can move."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "What you see on screen and the physical limits of the world are two separate layers."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Our bridges currently lack this invisible layer. We\'ll add it next."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Select the InvisibleWalls node"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Did you notice the red crosses around the rooms? They are collision shapes we pre-added to the rooms to give them \\\"walls\\\", or limits."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "We can draw them using the [b]InvisibleWalls[/b] tilemap."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Let\'s add \\\"walls\\\" to prevent players from walking outside of the bridges."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Select the Tiles tab"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "In the [b]TileMap[/b] bottom panel, we need to find and select the red cross."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Since we were previously looking at the [b]Terrains[/b] tab, we need to switch back to the [b]Tiles[/b] tab first, where the red cross is."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Draw the invisible walls"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Select the big [b]red cross[/b] in the [b]TileMap[/b] bottom panel."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Then, [b]Left Click and drag[/b] around bridges in the viewport to draw red cross tiles. They will prevent the player from moving off the bridges."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "If you make a mistake, you can use the [b]Right Click[/b] to remove tiles."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Take your time and draw the invisible walls around all bridges. Once you\'re done, click the [b]Next[/b] button"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Let\'s try this!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "If you run the scene, you should see the player can\'t walk anywhere you drew a red cross."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Click the [b]Play Edited Scene[/b] button in the top-right or press [b]F6[/b] to run the scene."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Press [b]F8[/b] to close the game window once you\'re done."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "You learned to use tilemaps to draw bridges and add collision shapes that prevent the player from walking outside of the bridges."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "In the next part, you\'ll make the level feel fuller by adding a sky and a health bar."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Fleshing out the game"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "You will usually start creating a game with the character and level structure, then flesh out the background and add user interface."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "We have the playable character and level, so we\'ll add a sky and health bar next."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "The background is a dull flat color. Let\'s start with the sky."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Re-select the Start node"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "We usually add background elements as children of the scene root node to keep the scene organized."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "In this case, the scene root node is the [b]Start[/b] node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Click on the [b]Start[/b] node in the [b]Scene Dock[/b] to re-select it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Add the sky scene"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Drag and drop the [b]\" + SCENE_BACKGROUND_SKY.get_file() + \"[/b] file onto the viewport to create an instance of it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "This will add the sky to the game as a child of the selected [b]Start[/b] node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Add the [b]Background Blue Sky Scene[/b] to the [b]Scene[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Perfect!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Run the game to see how the sky always fills up the background and improves the experience."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "A game\'s feel improves with all the little things you add: background, animations, sounds, special effects..."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Click the [b]Play Edited Scene[/b] button to run the scene."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Adding user interface"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Our next task is to add a health bar to see when the character takes damage."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Until now, we\'ve only created scene instances. This time, we will also create a node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "The CanvasLayer node"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "When we add visual elements to the game, by default, they don\'t move with the player."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "For the user interface, we want it to move with the player so it always stays on screen."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "We can use a [b]CanvasLayer node[/b] for this. By default, it keeps visuals we add as a child of it on screen at all times."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Let\'s add a CanvasLayer node to the scene so that our user interface moves with the player."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Select the Start node"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "We want to add the [b]CanvasLayer[/b] node as a child of the [b]Start[/b] node, [b]not[/b] as a child of the currently selected [b]BackgroundBlueSky[/b], to keep our scene hierarchy organized."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Click on the [b]Start[/b] node in the [b]Scene Dock[/b] to select it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "The Create Node dialog"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "To add a node, click on the plus icon in the top-left of the [b]Scene Dock[/b], or press [b]Ctrl A[/b] on your keyboard (Cmd A on macOS)."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "This will open a popup window listing all the types of nodes built into Godot."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Godot\'s built-in nodes"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "This popup window is the [b]Create Node[/b] dialog."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "It lists over 100 node types Godot provides out of the box!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Each has a specific purpose, like displaying an image, playing a sound, or letting you draw with a tilemap."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Add the CanvasLayer node"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "We need to add a [b]CanvasLayer node[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Click the search bar at the top to select it and search the node list. It\'s the fastest way to find nodes."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "In the central panel of the popup window, click on the [b]CanvasLayer[/b] node to select it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Then, click the [b]Create[/b] button at the bottom of the window to add the node (or press the [b]Enter[/b] key on your keyboard)."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Create the [b]CanvasLayer[/b] node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "You just created your first node. Godot automatically selects a newly created node for you, so that you can immediately change its properties in the Inspector on the right."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Let\'s add the health bar next."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Add the health bar"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "To stay on screen at all times, the health bar must be a child of the [b]CanvasLayer[/b] node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Drag and drop the [b]\" + SCENE_HEALTH_BAR.get_file() + \"[/b] scene onto the [b]CanvasLayer[/b] node in the [b]Scene Dock[/b] to create an instance of it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Dragging the scene onto a node in the [b]Scene Dock[/b] creates the instance as a child of the node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Add the [b]Health Bar Scene[/b] to the [b]Scene[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "The screen area"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "We need to ensure that the health bar is positioned correctly to be visible on-screen."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "In the viewport, four thin lines are forming a rectangle. They represent the extent of the game window, the window that opens when you run the game."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "The four lines can be difficult to spot as they\'re thin. Look at the flashing area in the viewport. It highlights this window extent area."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Any user interface you want to keep on-screen in the game should be placed inside this rectangle."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Place the health bar on-screen"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Let\'s learn a third way to move an element: using the [b]Inspector[/b] and typing coordinates manually."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "We currently have the [b]UIHealthBar[/b] node selected in the [b]Scene[/b] dock."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "On the right, in the [b]Inspector Dock[/b], in the section [b]Layout -> Transform[/b], you can find the [b]Position[/b] property."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Earlier, when you moved and placed rooms around the viewport with the select and move modes, you changed the [b]Position[/b] property of individual rooms."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "The position property"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "The Position property has two coordinates: the [b]x[/b] coordinate controls the [b]horizontal[/b] position of the health bar, and the [b]y[/b] coordinate controls its [b]vertical[/b] position."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Click the number of each coordinate to edit it. Type a new number and press [b]Enter[/b] on your keyboard to confirm the new value."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Change the x coordinate to 60, and the y coordinate to 60 as well. This will place the health bar in the top-left corner of the game window when playing."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Set the [b]x Position[/b] property of the [b]UIHealthBar[/b] to [b]60px[/b] (pixels)."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Set the [b]y Position[/b] property of the [b]UIHealthBar[/b] to [b]60px[/b] (pixels)."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "You know what time it is? Yes, let\'s run the scene!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Click the [b]Play Current Scene[/b] button and pay attention to how the health bar stays on screen as your progress through the level."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "Also, try to go touch an enemy and pay attention to what happens to the health bar."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "You added a background and a health bar to the game. Most importantly, you learned to create a node and add the health bar as a child of it to make the user interface stay on screen."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/03_add_sky_and_healthbar/03_add_sky_and_healthbar.gd
+msgid "In the next part, you\'ll use signals to connect the health bar to the player\'s health."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Updating the health bar"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "We have a problem. When we hit an enemy, the character loses one health point, but this is not reflected in the health bar."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "This is because the [b]UIHealthBar[/b] node is [b]not connected[/b] to changes in the [b]Player[/b] node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Godot comes with a handy feature to react to changes in a node, like the player\'s health changing: [b]signals[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "In this project, when the player takes damage, the [b]Player[/b] node [b]emits[/b] a signal called [b]health_changed[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "We need to [b]connect[/b] this signal to the [b]UIHealthBar[/b] node to update the health bar."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Select the player node"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "To see and connect the signals of a node, we first need to select that node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "So once again, select the [b]Player[/b] node in the [b]Scene Dock[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Next to the [b]Inspector[/b] dock on the right lives the [b]Node dock[/b]. The node dock lists the selected node\'s signals."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "The node dock is located in its own tab next to the tab of the [b]Inspector[/b] dock."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Click on the [b]Node[/b] tab in the top-right to select the Node dock."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "All the signals"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "As you can see, the player node has many signals. Most of them come built into Godot."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Throughout the course, you will learn to use the most useful ones."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "At the top of the list, notice the [b]health_changed[/b] signal."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Connect the health_changed signal"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Let\'s connect the signal."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Double-click the [b]health_changed[/b] signal to open the window [b]Connect a Signal to a Method[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Double-click the [b]health_changed[/b] signal "
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "The connect signal window"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "This window on the left is the [b]Connect a Signal to a Method[/b] window. It lists all the nodes in your scene."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Many nodes are greyed out. This is because we can only connect signals to a node that has a code file \" + bbcode_generate_icon_image_string(ICONS_MAP.script) + \" attached to it, like the [b]UIHealthBar[/b] node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "The called function"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "At the bottom of the window, Godot lets us pick a \\\"Receiver Method\\\"."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "This is a piece of code that Godot will run when the player node emits the [b]health_changed[/b] signal."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "We can keep the default value."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "You will learn more about what a [b]method[/b] (also called a function) is in the next module, where we\'ll learn to write code."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Connect the signal"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "To connect the signal, double-click on the [b]UIHealthBar[/b] node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "You may need to scroll down the list to find it. You can do so using the [b]Mouse Wheel[/b] or by clicking and dragging on the scrollbar on the right."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "This will immediately take you to the code file attached to the UI health bar node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Double-click on the [b]UIHealthBar[/b] node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "You are now looking at the code file attached to the [b]UIHealthBar[/b] node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Don\'t worry if the code doesn\'t make sense yet. You will learn to read and write code throughout the course."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "The connected function"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Your signal is now connected to the function named [b]_on_player_health_changed[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Godot indicates the connection with the green icon \" + bbcode_generate_icon_image_string(ICONS_MAP.script_signal_connected) +  \" in the margin on the left."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Time to play!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "Click the [b]Play Current Scene[/b] button and go fight some baddies."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "When you touch an enemy and lose health, the health bar should now update accordingly."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "In this part, you learned where to find the list of signals a node emits and how to connect a signal to a function. Thanks to this, the player can now see their health decreasing when they take damage."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/04_connect_healthbar_to_player/04_connect_healthbar_to_player.gd
+msgid "In the next and last part, you will add a chest to one of the room scenes and write your first line of code to complete the game."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Changing RoomA"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "We added several scene instances to the [b]Start[/b] scene: the [b]Player[/b], the [b]UIHealthBar[/b], the [b]BackgroundBlueSky[/b], and the rooms."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "We can open and modify any of those scenes. Any changes we make to the scene source files in the [b]FileSystem[/b] dock will be reflected in their instances."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "The opposite is not true: Changes we make to a specific instance of a scene applies to that instance only."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Open the RoomA scene"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Let\'s give this a try. Open the [b]RoomA[/b] scene."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Double-click the file [b]\" + room_a_filename + \"[/b] in the [b]FileSystem dock[/b] in the bottom-left to open the scene."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "The RoomA scene"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "We\'re now inside the room\'s scene."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Anything we add here will be reflected in the [b]Start[/b] scene when we play the game."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "The chest"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "In the project, we prepared a chest scene for you: [b]\" + scene_chest_filename + \"[/b]. You can see it in the [b]FileSystem Dock[/b] in the bottom-left."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Drag and drop the [b]\" + scene_chest_filename + \"[/b] file onto the viewport to create an instance of it, and place it inside of the room."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Add the [b]Chest Scene[/b] to the [b]Scene[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Place the [b]Chest Scene[/b] inside of the room."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Save the scene"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Press [b]Ctrl+S[/b] on your keyboard (Cmd+S on macOS) to save the [b]RoomA[/b] scene."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "This will save your change and update the [b]Start[/b] scene."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Head back to the start scene"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Let\'s now head back to the [b]Start[/b] scene where you can see the chest."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Click on the scene tab that says \" + SCENE_START.get_file() + \" above the viewport."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Click the [b]Start[/b] scene tab."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Click the [b]Play Current Scene[/b] button to run the scene and move the player near the chest."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "What do you observe?"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Press [b]F8[/b] on your keyboard or close the game window to return to the editor."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Your first line of code"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Currently, when we approach the chest, it opens, and nothing comes out of it. That\'s because we\'re missing the code that spawns pickups when the chest opens."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Nodes and scenes can fill up the game world but without [b]code[/b], they don\'t make a complete game."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "To add life and interaction to your game, you need to write code."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Open the chest scene"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Let\'s make something come out of the chest by adding a line of code to it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "First, open the [b]Chest[/b] scene by double-clicking on it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Open the scene [b]chest.tscn[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Open the script"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "To make nodes interactive, we need to tell the computer how they interact. We do that using code."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "In Godot, we write code in a text file that we attach to a node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "You can see that the chest node has a code file attached to it thanks to the script icon \" + bbcode_generate_icon_image_string(ICONS_MAP.script) +  \". We call a code file a [b]script[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Click the script icon \" + bbcode_generate_icon_image_string(ICONS_MAP.script) +  \" to open this file in the script view."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Open the script attached to the [b]Chest[/b] node."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "The chest script"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "This file already contains a bunch of GDScript code."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "GDScript is a language made by gamedevs for gamedevs. It\'s designed to code games fast."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Again, don\'t worry if you can\'t understand the code yet: that\'s what the next modules are for."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "For now, we\'ll just add one missing line to get familiar with the script editor."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "The loot function"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "In the highlighted lines of code, we define a [b]function[/b] named [b]loot[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "A function is a group of instructions you can run by [b]calling[/b] the function\'s name, like so: [b]loot()[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Connected signal"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "The loot function is [b]called[/b] from the [b]_on_body_entered[/b] function."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Notice the green icon \" + bbcode_generate_icon_image_string(ICONS_MAP.script_signal_connected) +  \" in the margin on the left. It tells us that [b]_on_body_entered[/b] is connected to a signal."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "This is why the chest opens when the player approaches it."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "The open animation"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Inside the loot function, we play the [b]open[/b] animation, which makes the chest open."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "And currently, that\'s all! This is why nothing comes out of the chest."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "The create_pickup function"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Below the [b]loot[/b] function, in the highlighted lines, there\'s a function defined to create pickups. We named it [b]create_pickup[/b]."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Don\'t worry about how it\'s coded yet. For now, just notice that while this function is defined, it\'s not called anywhere in the script file, which means it\'s not used by the [b]loot[/b] function."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "We need to call it in the [b]loot[/b] function so that the loot function can do two things:"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "1. Play the chest open animation."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "2. Create pickups."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Write the code"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "On line 14, type [b]create_pickup()[/b] to call the function. Be careful to type exactly what you see here, including the parentheses."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "The name \\\"create_pickup\\\" tells the computer which function we want to refer to, and the parentheses () run the function\'s lines of code."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Also, make sure that there\'s a [b]tab character[/b] at the start of the line, just like on line 13: \" + bbcode_generate_icon_image_string(ICONS_MAP.script_indent) +  \". That\'s how Godot knows that the line belongs to the [b]loot[/b] function."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Press the [b]Tab[/b] key on your keyboard to write a tab character."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Call the function [b]create_pickup[/b] on line 14."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Let\'s now head back to the [b]Start[/b] scene so we can test the result."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Click on the scene tab that says [b]start[/b] above the viewport."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "The game is now complete and ready to play!"
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Click the [b]Play Current Scene[/b] button and move near a chest to test your code."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Feel free to explore the rest of the game and appreciate all you just learned."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Once you\'re done, press [b]F8[/b] on your keyboard or close the game window to return to the editor."
+msgstr ""
+
+#: tours/102_assemble_your_first_game/05_add_chest_that_spawns_pickups/05_add_chest_that_spawns_pickups.gd
+msgid "Congratulations on assembling your first game in Godot!"
+msgstr ""
