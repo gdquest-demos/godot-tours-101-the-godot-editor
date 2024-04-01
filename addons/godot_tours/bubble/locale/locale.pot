@@ -1,8 +1,0 @@
-msgid ""
-msgstr ""
-
-msgid "NEXT STEP"
-msgstr ""
-
-msgid "BACK"
-msgstr ""
