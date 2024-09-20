@@ -1,0 +1,470 @@
+# LANGUAGE translation for M2. Getting to Know Godot (Interactive Tours) for the following files:
+# res://tours/102_assemble_your_first_game/102_assemble_your_first_game.gd
+# res://addons/godot_tours/tour.gd
+# res://tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+#
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: M2. Getting to Know Godot (Interactive Tours)\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.4\n"
+
+#: tours/102_assemble_your_first_game/102_assemble_your_first_game.gd
+msgid "Open the start scene"
+msgstr "startシーンを開く"
+
+#: tours/102_assemble_your_first_game/102_assemble_your_first_game.gd
+msgid "Let's start by opening the scene we will be working with."
+msgstr "それではこれから作業するシーンを開きましょう。"
+
+#: tours/102_assemble_your_first_game/102_assemble_your_first_game.gd
+msgid ""
+"In the [b]FileSystem Dock[/b] at the bottom-left, find and [b]double-click[/"
+"b] on the scene we will be working with: [b]%s[/b]."
+msgstr ""
+"左下の[b]ファイルシステムドック[/b]から、これから作業する[b]%s[/b]シーンを見"
+"つけて[b]ダブルクリック[/b]します。"
+
+#: tours/102_assemble_your_first_game/102_assemble_your_first_game.gd
+msgid "Open the scene [b]%s[/b]."
+msgstr "[b]%s[/b]シーンを開いてください。"
+
+#: addons/godot_tours/tour.gd
+msgid "Press the [b]%s[/b] button."
+msgstr "[b]%s[/b]ボタンを押してください。"
+
+#: addons/godot_tours/tour.gd
+msgid "Turn the [b]%s[/b] button %s."
+msgstr "[b]%s[/b]ボタンを%sしてください。"
+
+#: addons/godot_tours/tour.gd
+msgid "Change to the [b]%s[/b] tab."
+msgstr "タブを[b]%s[/b]に変更してください。"
+
+#: addons/godot_tours/tour.gd
+msgid "Select the %s %s in the [b]Scene Dock[/b]."
+msgstr "[b]シーンドック[/b]で%s %sを選択してください。"
+
+#: addons/godot_tours/tour.gd
+msgid "Set [b]%s[/b] to [code]%s[/code]"
+msgstr "[b]%s[/b]を[code]%s[/code]に設定してください。"
+
+#: addons/godot_tours/tour.gd
+msgid "Set [b]%s[/b]'s [b]%s[/b] property to [b]%s[/b]"
+msgstr "[b]%s[/b]の[b]%s[/b]プロパティを[b]%s[/b] に設定してください"
+
+#: addons/godot_tours/tour.gd
+msgid "Open the scene [b]%s[/b]"
+msgstr "[b]%s[/b]シーンを開いてください"
+
+#: addons/godot_tours/tour.gd
+msgid "Expand the property [b]%s[/b] in the [b]Inspector[/b]"
+msgstr "[b]Inspector[/b]のプロパティ[b]%s[/b]を展開してください"
+
+#: addons/godot_tours/tour.gd
+msgid "Move [b]%s[/b] inside the guide box"
+msgstr "ガイドボックスの内側に[b]%s[/b]を移動してください"
+
+#: addons/godot_tours/tour.gd
+msgid "Instantiate the [b]%s[/b] scene as a child of [b]%s[/b]"
+msgstr "[b]%s[/b] シーンを [b]%s[/b] の子としてインスタンス化してください"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Add Bridges"
+msgstr "橋を追加する"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Let's draw bridges to connect the rooms using a [b]TileMap[/b] next."
+msgstr "次に[b]TileMap[/b]を使って部屋と部屋をつなぐ橋を描いてみましょう。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Tilesets and Tilemaps"
+msgstr "タイルセットとタイルマップ"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"As soon as you selected [b]Bridges[/b], a bottom panel expanded and two tabs "
+"appeared: [b]TileSet[/b] and [b]TileMap[/b]."
+msgstr ""
+"[b]Bridges[/b]を選択するとすぐに下のパネルが展開し、[b]TileSet[/b]と"
+"[b]TileMap[/b]の2つのタブが現れます。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "It's because [b]Bridges[/b] is a [b]TileMap[/b] node."
+msgstr "[b]Bridges[/b]は[b]タイルマップ[/b]ノードだからです."
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Godot will automatically show you the relevant tabs for the selected node."
+msgstr "Godotは選択されたノードに関連するタブを自動的に表示します。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"That's why we say the [b]Bottom Panels[/b] are \"[b]contextual[/b]\". They "
+"appear in the right context."
+msgstr ""
+"それによって[b]下部のパネル[/b]は「[b]コンテキストに応じた内容[/b]」が表示さ"
+"れます。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "The TileMap Tab"
+msgstr "タイルマップタブ"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "For drawing bridges, we will use the [b]TileMap[/b] tab."
+msgstr "橋を描くには[b]TileMap[/b]を使います。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Tilemaps are an efficient way to draw game levels using a grid and [b]tiling "
+"images[/b]."
+msgstr ""
+"タイルマップは、グリッドと[b]タイル画像[/b]を使ってゲームレベルを描画できる効"
+"率的な方法です。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Most of your childhood 2D games used tilemaps (like Final Fantasy 6 and "
+"Zelda: Link's Awakening)!"
+msgstr ""
+"皆さんが子供の頃に遊んだ2Dゲームのほとんどはタイルマップを使っていました!\n"
+"(例えばファイナルファンタジーⅥやゼルダの伝説 夢をみる島など)"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Tile Selection"
+msgstr "タイル選択"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"To the right of the panel, you can see the different tile images we have at "
+"our disposal."
+msgstr "パネルの右側には、自由に使えるさまざまなタイル画像が表示されています。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"You can select them one at a time and draw on the map, but there is a faster "
+"way: using [b]Terrains[/b]."
+msgstr ""
+"一度に1つずつ選択してマップに描くこともできますが、[b]地形[/b]を使ったより速"
+"く描く方法もあります。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "The Terrains Tab"
+msgstr "地形タブ"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Terrains are a set of rules to create compositions for auto-tiling. They "
+"help us draw faster."
+msgstr ""
+"地形は自動タイル描画のための構成を作るためのルールセットです。より速く描画す"
+"るのに役立ちます。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "You'll learn more about creating terrains later in the course."
+msgstr "地形の作成については、コースの後半で詳しく学びます。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Click on the [b]Terrains[/b] tab to find the terrain we've set up for the "
+"bridges."
+msgstr ""
+"[b]地形[/b]タブをクリックして、橋のために設定した地形を見つけましょう。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "The Bridge Terrain"
+msgstr "橋の地形"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Next, click the terrain named [b]Bridge[/b] in the tree on the left to "
+"select it."
+msgstr ""
+"次に左側のツリーにある[b]Bridge[/b]という名前の地形をクリックして選択しましょ"
+"う。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Select the [b]Bridge[/b] terrain."
+msgstr "[b]Bridge[/b]地形を選択します。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "The Path Drawing Mode"
+msgstr "パスモード"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Now, click on the Path-like icon to select the [b]Path Drawing Mode[/b]."
+msgstr ""
+"次にパスのようなアイコンをクリックして[b]パスモード[/b]に切り替えます。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "With this tool active, you can draw your bridges."
+msgstr "このモードを有効にすると橋を描くことができます。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Select the [b]Path Drawing Mode[/b]."
+msgstr "[b]パスモード[/b]を選択します。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Restore the Select mode"
+msgstr "選択モードに戻す"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"As we are currently in the [b]Move Mode[/b], we cannot draw the bridges. To "
+"draw, we need to be in the [b]Select Mode[/b]."
+msgstr ""
+"現在は[b]移動モード[/b]のため、橋を描くことができません。\n"
+"描画するために[b]選択モード[/b]に変更する必要があります。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Click the [b]Select Mode[/b] button to activate it."
+msgstr "[b]選択モード[/b]ボタンをクリックして有効化しましょう。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Select Mode"
+msgstr "選択モード"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Draw The Bridges"
+msgstr "橋を描く"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgctxt "[b]Right-click[/b] to erase bridges."
+msgid "[b]Left Click and drag[/b] on the map to draw bridges between rooms."
+msgstr ""
+"マップ上で[b]左クリック＆ドラッグ[/b]すると、部屋と部屋の間に橋をかけることが"
+"できます。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Try to connect the openings in the rooms. The openings are located where "
+"there are red crosses around the perimeter of the room."
+msgstr ""
+"部屋の開口部をつなげてみてください。開口部は、部屋の周囲に赤いバッテンがある"
+"場所にあります。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "You are free to draw the bridges however you like."
+msgstr "あなたの思うがままに自由に橋を描いてみましょう。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Reconnecting bridges"
+msgstr "橋の再接続"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"If you lift the mouse button when drawing bridges, you may see gaps like "
+"this:"
+msgstr ""
+"ブリッジを描画するときにマウスボタンを離すと、次のようなギャップが表示される"
+"場合があります:"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"To correct that and get clean corners, click and drag over the already drawn "
+"tiles."
+msgstr ""
+"これを修正してきれいな角を作るには、すでに描かれているタイルの上をクリック＆"
+"ドラッグしましょう。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"This allows the tilemap's terrain to apply its rules and clean up the bridge "
+"for you. That's the power of terrains!"
+msgstr ""
+"この操作によりタイルマップの地形がそのルールを適用し、あなたのために橋をきれ"
+"いにすることができます。これが地形の力です！"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Excellent! Time to play!"
+msgstr "素晴らしい！早速遊んでみましょう！"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Let's see if everything works as expected."
+msgstr "全てが期待通りに機能するか確認してみましょう。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"The [b]Play[/b] button we used earlier is for running the [b]%s[/b] scene."
+msgstr ""
+"先ほど使った[b]プロジェクトを実行[/b]ボタンは、[b]%s[/b]シーンを実行するため"
+"のものです。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"To play the [b]current[/b] scene, click the [b]Play Edited Scene[/b] button "
+"to run the scene."
+msgstr ""
+"[b]現在のシーン[/b]を再生するには、[b]現在のシーンを実行[/b]ボタンをクリック"
+"してシーンを実行します。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Alternatively, you can press press [b]%s[/b] on your keyboard."
+msgstr "または、キーボードの[b]%s[/b]を押すこともできます。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Then, press [b]%s[/b] or close the game window to stop the game."
+msgstr "次に[b]%s[/b]を押すか、ゲームウィンドウを閉じてゲームを停止します。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "The missing \"walls\""
+msgstr "見えない壁"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"While playing, did you notice something strange? The player can move outside "
+"of the bridges!"
+msgstr ""
+"遊んでいる時に不思議なことに気づきましたか？そう、プレイヤーは橋の外側を移動"
+"できるんです！"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"This is because the bridges lack [b]collision shapes[/b]. They are invisible "
+"geometric shapes that control where characters can move."
+msgstr ""
+"その理由は橋に[b]コリジョン領域[/b]が無いからです。\n"
+"コリジョン領域は目に見えない幾何学的な領域で、キャラクターが移動できる場所を"
+"制限できます。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"What you see on screen and the physical limits of the world are two separate "
+"layers."
+msgstr ""
+"スクリーンから見えるものと、ゲーム世界の物理的な制限は別のレイヤーなのです。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Our bridges currently lack this invisible layer. We'll add it next."
+msgstr ""
+"現在、あなたが作った橋にはこの見えないレイヤーがないので追加しましょう。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Select the InvisibleWalls node"
+msgstr "InvisibleWallsノードを選択します"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Did you notice the red crosses around the rooms? They are collision shapes "
+"we pre-added to the rooms to give them \"walls\", or limits."
+msgstr ""
+"部屋の周りに赤いバッテンがあるのに気づきましたか？\n"
+"これは部屋に「壁」、つまり移動を制限するためにあらかじめ追加したコリジョン領"
+"域です。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "We can draw them using the [b]InvisibleWalls[/b] tilemap."
+msgstr "[b]InvisibleWalls[/b]タイルマップを使って描くことができます。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Let's add \"walls\" to prevent players from walking outside of the bridges."
+msgstr "プレイヤーが橋の外を歩けないように「壁」を追加しましょう。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Select the Tiles tab"
+msgstr "タイルタブを選択する"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"In the [b]TileMap[/b] bottom panel, we need to find and select the red cross."
+msgstr ""
+"下部のタイルマップパネルで、赤いバッテンを見つけて選択する必要があります。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Since we were previously looking at the [b]Terrains[/b] tab, we need to "
+"switch back to the [b]Tiles[/b] tab first, where the red cross is."
+msgstr ""
+"この前まで[b]地形[/b]タブを見ていたので、赤いバッテンのある[b]タイル[/b]タブ"
+"に戻る必要があります。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Draw the invisible walls"
+msgstr "見えない壁を描く"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Select the big [b]red cross[/b] in the [b]TileMap[/b] bottom panel."
+msgstr ""
+"[b]タイルマップ[/b]の下部パネルで大きな[b]赤いバッテン[/b]を選択します。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Then, [b]Left Click and drag[/b] around bridges in the viewport to draw red "
+"cross tiles. They will prevent the player from moving off the bridges."
+msgstr ""
+"次に[b]左クリックしてドラッグ[/b]し、ビューポートの橋の周りに赤いバッテンのタ"
+"イルを描きます。\n"
+"このタイルはプレイヤーが橋の上から移動できないようにします。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"If you make a mistake, you can use the [b]Right Click[/b] to remove tiles."
+msgstr "間違えたら、[b]右クリック[/b]でタイルを削除しましょう。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Take your time and draw the invisible walls around all bridges. Once you're "
+"done, click the [b]Next[/b] button"
+msgstr ""
+"時間をかけて全ての橋の周りに見えない壁を描いてください。\n"
+"描き終わったら[b]次へ[/b]ボタンをクリックします"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Let's try this!"
+msgstr "試してみよう！"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"If you run the scene, you should see the player can't walk anywhere you drew "
+"a red cross."
+msgstr ""
+"シーンを実行すると、赤いバッテンを引いたところはプレイヤーが歩けないのがわか"
+"るはずです。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"Click the [b]Play Edited Scene[/b] button in the top-right or press [b]%s[/"
+"b] to run the scene."
+msgstr ""
+"右上の[b]現在のシーンを実行[/b]ボタンをクリックするか、[b]%s[/b]を押してシー"
+"ンを実行します。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Press [b]%s[/b] to close the game window once you're done."
+msgstr "完了したら、[b]%s[/b]を押してゲームウィンドウを閉じます。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Play Edited Scene"
+msgstr "現在のシーンを実行"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid "Excellent!"
+msgstr "素晴らしい！"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"You learned to use tilemaps to draw bridges and add collision shapes that "
+"prevent the player from walking outside of the bridges."
+msgstr ""
+"タイルマップを使用して橋を描画し、プレイヤーが橋の外を歩けないようにするコリ"
+"ジョン領域を追加する方法を学びました。"
+
+#: tours/102_assemble_your_first_game/02_add_bridges/02_add_bridges.gd
+msgid ""
+"In the next part, you'll make the level feel fuller by adding a sky and a "
+"health bar."
+msgstr ""
+"次のパートでは、青空とHPバーを追加して、レベルをより充実感のあるものに変えて"
+"いきます。"

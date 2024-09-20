@@ -8,7 +8,7 @@ func _ready() -> void:
 	_invisible_walls.hide()
 
 	if _player:
-		_player.connect("died", _on_Player_died)
+		_player.connect("died", Callable(self, "_on_Player_died"))
 
 	if _health_bar:
 		_health_bar.set_health(_player.health)

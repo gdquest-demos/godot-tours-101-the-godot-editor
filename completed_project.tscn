@@ -5,7 +5,7 @@
 [ext_resource type="TileSet" uid="uid://cqb2wtrubw0n6" path="res://levels/rooms/tileset_invisible_walls.tres" id="3_vklf7"]
 [ext_resource type="PackedScene" uid="uid://dds7yrrx56gcy" path="res://player/player.tscn" id="4_idksr"]
 [ext_resource type="PackedScene" uid="uid://cce7r30dfjm4r" path="res://interface/bars/ui_health_bar.tscn" id="4_mukgi"]
-[ext_resource type="PackedScene" uid="uid://dq3p4x4do28l6" path="res://levels/rooms/room_a.tscn" id="5_d5k6w"]
+[ext_resource type="PackedScene" uid="uid://cu2rb5dl4ljte" path="res://levels/rooms/room_a.tscn" id="5_d5k6w"]
 [ext_resource type="PackedScene" uid="uid://dgayuh42w4v6u" path="res://levels/rooms/room_b.tscn" id="6_d2i4m"]
 [ext_resource type="PackedScene" uid="uid://dw1qted83s8gw" path="res://pickups/weapon_pickup.tscn" id="6_w1fjs"]
 [ext_resource type="PackedScene" uid="uid://cq0mmphkbrvmm" path="res://levels/rooms/room_c.tscn" id="7_g7cph"]

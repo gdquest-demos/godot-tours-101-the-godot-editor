@@ -56,13 +56,16 @@ func _process(_delta: float) -> void:
 
 
 ## Highlights a control, allowing the end user to interact with it using the mouse, and carving into the dimmers.
-func add_highlight_to_control(control: Control, rect_getter := Callable(), play_flash := false) -> void:
+func add_highlight_to_control(control: Control, rect_getter := Callable(), play_flash := false, do_grow := false) -> void:
 	var dimmer := ensure_get_dimmer_for(control)
 
 	# Calculate overlapping highlights to avoid stacking highlights and outlines.
 	var overlaps := []
 	if rect_getter.is_null():
-		rect_getter = control.get_global_rect
+		if interface.inspector_editor.is_ancestor_of(control):
+			rect_getter = func() -> Rect2: return control.get_global_rect().intersection(interface.inspector_editor.get_global_rect())
+		else:
+			rect_getter = control.get_global_rect
 
 	var editor_scale := EditorInterface.get_editor_scale()
 	var rect := rect_getter.call()
@@ -70,7 +73,7 @@ func add_highlight_to_control(control: Control, rect_getter := Callable(), play_
 		if child is Highlight:
 			child.refresh()
 			var child_rect := Rect2(child.global_position, child.custom_minimum_size)
-			if rect.grow(RECT_GROW * editor_scale).intersects(child_rect):
+			if (rect.grow(RECT_GROW * editor_scale) if do_grow else rect).intersects(child_rect):
 				overlaps.push_back(child)
 
 	var highlight := HighlightPackedScene.instantiate()
@@ -78,15 +81,15 @@ func add_highlight_to_control(control: Control, rect_getter := Callable(), play_
 	if play_flash:
 		highlight.flash()
 
-	highlight.setup(control, rect_getter, dimmer, _highlight_style_scaled)
+	highlight.setup(rect_getter, dimmer, _highlight_style_scaled)
+	highlight.controls.push_back(control)
 	if overlaps.is_empty() and control is TabBar:
 		control.tab_changed.connect(highlight.refresh_tabs)
 	elif not overlaps.is_empty():
 		for other_highlight: Highlight in overlaps:
+			highlight.controls.append_array(other_highlight.controls)
 			highlight.rect_getters.append_array(other_highlight.rect_getters)
 			other_highlight.queue_free()
-	control.draw.connect(highlight.refresh)
-	control.visibility_changed.connect(highlight.refresh)
 
 
 ## Removes all dimmers and consequently highlights from the editor.
@@ -106,8 +109,8 @@ func toggle_dimmers(is_on: bool) -> void:
 ## Get the dimmer associated with a [Control]. There is only one dimmer per [Viewport] so the dimmer is really
 ## associated with the Control's Viewport. If there is no such dimmer, create one on the fly and return it.
 func ensure_get_dimmer_for(control: Control) -> Dimmer:
-	var viewport := control.get_viewport()
-	var result: Dimmer = viewport.get_node_or_null("Dimmer")
+	var window := control.get_window()
+	var result: Dimmer = window.get_node_or_null("Dimmer")
 
 	# Ensure that when we create a new Dimmer, the name Dimmer won't be taken.
 	if result != null and result.is_queued_for_deletion():
@@ -115,7 +118,7 @@ func ensure_get_dimmer_for(control: Control) -> Dimmer:
 
 	if result == null or result.is_queued_for_deletion():
 		result = DimmerPackedScene.instantiate()
-		viewport.add_child(result)
+		window.add_child(result)
 		dimmers.push_back(result)
 	return result
 
@@ -123,15 +126,15 @@ func ensure_get_dimmer_for(control: Control) -> Dimmer:
 ## Highlight [TreeItem]s from the given [code]tree[/code] that match the [code]predicate[/code]. The highlight can
 ## also play a flash animation if [code]play_flash[/code] is [code]true[/code]. [code]button_index[/code] specifies
 ## which button to highlight from the [TreeItem] instead of the whole item.
-func highlight_tree_items(tree: Tree, predicate: Callable, button_index := -1, play_flash := false) -> void:
+func highlight_tree_items(tree: Tree, predicate: Callable, button_index := -1, do_center := true, play_flash := false) -> void:
 	var root := tree.get_root()
 	if root == null:
 		return
-	
+
 	var height_fix := 6 * EditorInterface.get_editor_scale()
 	for item in Utils.filter_tree_items(root, predicate):
 		interface.unfold_tree_item(item)
-		tree.scroll_to_item(item)
+		tree.scroll_to_item(item, do_center)
 
 		var item_path := Utils.get_tree_item_path(item)
 		var rect_getter := func() -> Rect2:
@@ -143,56 +146,57 @@ func highlight_tree_items(tree: Tree, predicate: Callable, button_index := -1, p
 				rect.position.y += height_fix - tree.get_scroll().y
 				return rect.intersection(tree.get_global_rect())
 			return Rect2()
-		add_highlight_to_control.call_deferred(tree, rect_getter, play_flash)
+		add_highlight_to_control.call_deferred(tree, rect_getter, play_flash, true)
 
 
 ## Highlights multiple Scene dock [TreeItem]s by [code]names[/code]. See [method highlight_tree_items]
 ## for details on the other parameters.
-func highlight_scene_nodes_by_name(names: Array[String], button_index := -1, play_flash := false) -> void:
+func highlight_scene_nodes_by_name(names: Array[String], button_index := -1, do_center := true, play_flash := false) -> void:
 	highlight_tree_items(
 		interface.scene_tree,
 		func(item: TreeItem) -> bool: return item.get_text(0) in names,
 		button_index,
+		do_center,
 		play_flash,
 	)
 
 
 ## Highlights multiple Scene dock [TreeItem]s by [code]paths[/code]. See [method highlight_tree_items]
 ## for details on the other parameters.
-func highlight_scene_nodes_by_path(paths: Array[String], button_index := -1, play_flash := false) -> void:
+func highlight_scene_nodes_by_path(paths: Array[String], button_index := -1, do_center := true, play_flash := false) -> void:
 	highlight_tree_items(
 		interface.scene_tree,
 		func(item: TreeItem) -> bool: return Utils.get_tree_item_path(item) in paths,
 		button_index,
+		do_center,
 		play_flash,
 	)
 
 
 ## Highlights FileSystem dock [TreeItem]s by [code]paths[/code]. See [method highlight_tree_items]
 ## for [code]play_flash[/code].
-func highlight_filesystem_paths(paths: Array[String], play_flash := false) -> void:
+func highlight_filesystem_paths(paths: Array[String], do_center := true, play_flash := false) -> void:
 	highlight_tree_items(
 		interface.filesystem_tree,
 		func(item: TreeItem) -> bool: return Utils.get_tree_item_path(item) in paths,
 		-1,
+		do_center,
 		play_flash,
 	)
 
 
 ## Highlights Inspector dock properties by (programmatic) [code]name[/code]. See [method highlight_tree_items]
 ## for [code]play_flash[/code].
-func highlight_inspector_properties(names: Array[StringName], play_flash := false) -> void:
-	for name in names:
-		var property: EditorProperty = Utils.find_child_by_type(
-			interface.inspector_editor,
-			"EditorProperty",
-			true,
-			func(ep: EditorProperty) -> bool: return ep.get_edited_property() == name,
-		)
-		if property != null:
+func highlight_inspector_properties(names: Array[StringName], do_center := true, play_flash := false) -> void:
+	var scroll_offset := 200 * EditorInterface.get_editor_scale()
+	var all_properties := interface.inspector_editor.find_children("", "EditorProperty", true, false)
+	for n in names:
+		var predicate_first := func predicate_first(p: EditorProperty) -> bool:
+			return p.get_edited_property() == n
+
+		for property: EditorProperty in all_properties.filter(predicate_first):
 			# Unfold parent sections recursively if necessary.
-			var current_parent: Node = property.get_parent()
-			var last_section = null
+			var current_parent := property.get_parent()
 			const MAX_ITERATION_COUNT := 10
 			for i in MAX_ITERATION_COUNT:
 				if current_parent.get_class() == "EditorInspectorSection":
@@ -200,29 +204,38 @@ func highlight_inspector_properties(names: Array[StringName], play_flash := fals
 				current_parent = current_parent.get_parent()
 				if current_parent == interface.inspector_editor:
 					break
+			if do_center:
+				interface.inspector_editor.scroll_vertical += (
+					property.global_position.y + scroll_offset
+					- interface.inspector_editor.global_position.y
+					- interface.inspector_editor.size.y / 2.0
+				)
+			else:
+				interface.inspector_editor.ensure_control_visible(property)
 
-			if last_section:
-				await last_section.draw
-
-			interface.inspector_editor.ensure_control_visible(property)
-			var dimmer := ensure_get_dimmer_for(interface.inspector_dock)
-			var rect_getter := func() -> Rect2:
-				var rect := property.get_global_rect()
-				rect.position.x = interface.inspector_editor.global_position.x
-				rect.size.x = interface.inspector_editor.size.x
-				return rect
-			add_highlight_to_control.call_deferred(interface.inspector_editor, rect_getter, play_flash)
+		var dimmer := ensure_get_dimmer_for(interface.inspector_dock)
+		var rect_getter := func inspector_property_rect_getter() -> Rect2:
+			all_properties = interface.inspector_editor.find_children("", "EditorProperty", true, false)
+			for property: EditorProperty in all_properties.filter(predicate_first):
+				if property.is_visible_in_tree():
+					var rect := property.get_global_rect()
+					rect.position.x = interface.inspector_editor.global_position.x
+					rect.size.x = interface.inspector_editor.size.x
+					return rect.intersection(interface.inspector_editor.get_global_rect())
+			return Rect2()
+		add_highlight_to_control.call_deferred(interface.inspector_editor, rect_getter, play_flash, true)
 
 
 ## Highlights Node > Signals dock [TreeItem]s by [code]signal_names[/code]. See [method highlight_tree_items]
 ## for details on the other parameters.
-func highlight_signals(signal_names: Array[String], play_flash := false) -> void:
+func highlight_signals(signal_names: Array[String], do_center := true, play_flash := false) -> void:
 	highlight_tree_items(
 		interface.node_dock_signals_tree,
 		func(item: TreeItem) -> bool:
 			var predicate := func(sn: String) -> bool: return item.get_text(0).begins_with(sn)
 			return signal_names.any(predicate),
 		-1,
+		do_center,
 		play_flash,
 	)
 
@@ -266,7 +279,7 @@ func highlight_controls(controls: Array[Control], play_flash := false) -> void:
 	for control in controls:
 		if control == null:
 			continue
-		add_highlight_to_control(control, control.get_global_rect, play_flash)
+		add_highlight_to_control(control, Callable(), play_flash)
 
 
 ## Highlights either the whole [code]tabs[/code] [TabBar] if [code]index == -1[/code] or the given [TabContainer] tab

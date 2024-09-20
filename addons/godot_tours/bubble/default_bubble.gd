@@ -9,6 +9,8 @@ const TextureRectPackedScene := preload("texture_rect.tscn")
 const VideoStreamPlayerPackedScene := preload("video_stream_player.tscn")
 const RichTextLabelPackedScene := preload("rich_text_label/rich_text_label.tscn")
 
+const CLASS_IMG := r"[img=%dx%d]res://addons/godot_tours/bubble/assets/icons/$1.svg[/img] [b]$1[/b]"
+
 ## Separation between paragraphs of text and elements in the main content in pixels.
 @export var paragraph_separation := 12:
 	set(new_value):
@@ -16,6 +18,9 @@ const RichTextLabelPackedScene := preload("rich_text_label/rich_text_label.tscn"
 		if main_v_box_container == null:
 			await ready
 		main_v_box_container.add_theme_constant_override("separation", paragraph_separation)
+
+var img_size := 24 * EditorInterface.get_editor_scale()
+var regex_class := RegEx.new()
 
 @onready var background_texture_rect: TextureRect = %BackgroundTextureRect
 @onready var title_label: Label = %TitleLabel
@@ -41,6 +46,11 @@ const RichTextLabelPackedScene := preload("rich_text_label/rich_text_label.tscn"
 
 func setup(translation_service: TranslationService, step_count: int) -> void:
 	super(translation_service, step_count)
+
+	var classes := Array(ClassDB.get_class_list())
+	classes.sort_custom(func(a: String, b: String) -> bool: return a.length() > b.length())
+	regex_class.compile(r"\[b\](%s)\[\/b\]" % "|".join(classes))
+
 	update_step_count_display(0)
 	Utils.update_locale(translation_service, {
 		back_button: {text = "BACK"},
@@ -54,6 +64,7 @@ func setup(translation_service: TranslationService, step_count: int) -> void:
 
 
 func _ready() -> void:
+	super()
 	if not Engine.is_editor_hint() or EditorInterface.get_edited_scene_root() == self:
 		return
 
@@ -76,14 +87,12 @@ func _ready() -> void:
 		node.visible = false
 
 	var editor_scale := EditorInterface.get_editor_scale()
-	panel.theme = ThemeUtils.generate_scaled_theme(panel.theme)
-	panel.custom_minimum_size *= editor_scale
 	button_close.custom_minimum_size *= editor_scale
-	avatar.scale = avatar.scale_start * editor_scale
 	paragraph_separation *= editor_scale
 
 
 func on_tour_step_changed(index: int) -> void:
+	super(index)
 	back_button.visible = true
 	finish_button.visible = false
 	if index == 0:
@@ -120,11 +129,16 @@ func add_element(element: Control, data: Variant) -> void:
 	if element is RichTextLabel or element is CodeEdit:
 		element.text = data
 	elif element is TextureRect:
-		element.texture = data
+		element.texture = data.texture
+		if "max_height" in data:
+			element.max_height = data.max_height
 	elif element is VideoStreamPlayer:
 		element.stream = data
 		element.finished.connect(element.play)
 		element.play()
+		var texture: Texture2D = element.get_video_texture()
+		element.custom_minimum_size.x = main_v_box_container.size.x
+		element.custom_minimum_size.y = element.custom_minimum_size.x * texture.get_height() / texture.get_width()
 
 
 func set_title(title_text: String) -> void:
@@ -133,6 +147,7 @@ func set_title(title_text: String) -> void:
 
 func add_text(text: Array[String]) -> void:
 	for line in text:
+		line = regex_class.sub(line, CLASS_IMG % [img_size, img_size], true)
 		add_element(RichTextLabelPackedScene.instantiate(), line)
 
 
@@ -141,10 +156,14 @@ func add_code(code: Array[String]) -> void:
 		add_element(CodeEditPackedScene.instantiate(), snippet)
 
 
-func add_texture(texture: Texture2D) -> void:
+func add_texture(texture: Texture2D, max_height := 0.0) -> void:
 	if texture == null:
 		return
-	add_element(TextureRectPackedScene.instantiate(), texture)
+	var texture_rect := TextureRectPackedScene.instantiate()
+	var data := {"texture": texture}
+	if max_height > 0.0:
+		data["max_height"] = max_height
+	add_element(texture_rect, data)
 
 
 func add_video(stream: VideoStream) -> void:
@@ -179,7 +198,7 @@ func set_background(texture: Texture2D) -> void:
 
 
 func check_tasks() -> bool:
-	var are_tasks_done := tasks_v_box_container.get_children().all(func(task: Task) -> bool: return task.is_done())
+	var are_tasks_done := tasks_v_box_container.get_children().all(func(task: Task) -> bool: return task.is_done() and not task.is_queued_for_deletion())
 	next_button.visible = are_tasks_done
 	if are_tasks_done:
 		avatar.do_wink()

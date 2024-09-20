@@ -18,7 +18,7 @@ var run_bar: MarginContainer = null
 var run_bar_play_button: Button = null
 var run_bar_pause_button: Button = null
 var run_bar_stop_button: Button = null
-var run_bar_debug_button: Button = null
+var run_bar_debug_button: MenuButton = null
 var run_bar_play_current_button: Button = null
 var run_bar_play_custom_button: Button = null
 var run_bar_movie_mode_button: Button = null
@@ -43,9 +43,11 @@ var canvas_item_editor_toolbar_pan_button: Button = null
 var canvas_item_editor_toolbar_ruler_button: Button = null
 var canvas_item_editor_toolbar_smart_snap_button: Button = null
 var canvas_item_editor_toolbar_grid_button: Button = null
-var canvas_item_editor_toolbar_snap_options_button: Button = null
+var canvas_item_editor_toolbar_snap_options_button: MenuButton = null
 var canvas_item_editor_toolbar_lock_button: Button = null
+var canvas_item_editor_toolbar_unlock_button: Button = null
 var canvas_item_editor_toolbar_group_button: Button = null
+var canvas_item_editor_toolbar_ungroup_button: Button = null
 var canvas_item_editor_toolbar_skeleton_options_button: Button = null
 ## Parent container of the zoom buttons in the top-left of the 2D editor.
 var canvas_item_editor_zoom_widget: Control = null
@@ -56,13 +58,35 @@ var canvas_item_editor_zoom_button_lower: Button = null
 var canvas_item_editor_zoom_button_reset: Button = null
 ## Increase zoom button in the top-left of the 2D viewport.
 var canvas_item_editor_zoom_button_increase: Button = null
+
 var spatial_editor: Control = null
+var spatial_editor_surfaces: Array[Control] = []
+var spatial_editor_surfaces_menu_buttons: Array[MenuButton] = []
+var spatial_editor_viewports: Array[Control] = []
+var spatial_editor_preview_check_boxes: Array[CheckBox] = []
 var spatial_editor_cameras: Array[Camera3D] = []
-var spatial_editor_surface: Control = null
+var spatial_editor_toolbar: Control = null
+var spatial_editor_toolbar_select_button: Button = null
+var spatial_editor_toolbar_move_button: Button = null
+var spatial_editor_toolbar_rotate_button: Button = null
+var spatial_editor_toolbar_scale_button: Button = null
+var spatial_editor_toolbar_selectable_button: Button = null
+var spatial_editor_toolbar_lock_button: Button = null
+var spatial_editor_toolbar_unlock_button: Button = null
+var spatial_editor_toolbar_group_button: Button = null
+var spatial_editor_toolbar_ungroup_button: Button = null
+var spatial_editor_toolbar_local_button: Button = null
+var spatial_editor_toolbar_snap_button: Button = null
+var spatial_editor_toolbar_camera_button: Button = null
+var spatial_editor_toolbar_sun_button: Button = null
+var spatial_editor_toolbar_environment_button: Button = null
+var spatial_editor_toolbar_sun_environment_button: Button = null
+var spatial_editor_toolbar_transform_menu_button: MenuButton = null
+var spatial_editor_toolbar_view_menu_button: MenuButton = null
+
 var script_editor: ScriptEditor = null
 ## Parent node of the script editor, used to pop out the editor and controls the script editor's
-## visibility
-## Used to check if students are in the scripting context.
+## visibility. Used to check if students are in the scripting context.
 var script_editor_window_wrapper: Node = null
 var script_editor_top_bar: HBoxContainer = null
 var script_editor_items: ItemList = null
@@ -89,6 +113,7 @@ var scene_dock: VBoxContainer = null
 var scene_dock_button_add: Button = null
 var scene_tree: Tree = null
 var import_dock: VBoxContainer = null
+var select_node_window: ConfirmationDialog = null
 
 var node_create_window: ConfirmationDialog = null
 var node_create_panel: HSplitContainer = null
@@ -164,6 +189,13 @@ var bottom_button_tilemap: Button = null
 var bottom_button_tileset: Button = null
 var bottom_buttons: Array[Button] = []
 
+var scene_import_settings_window: ConfirmationDialog = null
+var scene_import_settings: VBoxContainer = null
+var scene_import_settings_ok_button: Button = null
+var scene_import_settings_cancel_button: Button = null
+
+var windows: Array[ConfirmationDialog] = []
+
 
 func _init() -> void:
 	base_control = EditorInterface.get_base_control()
@@ -190,15 +222,17 @@ func _init() -> void:
 	run_bar_pause_button = run_bar_buttons[1]
 	run_bar_stop_button = run_bar_buttons[2]
 	run_bar_debug_button = run_bar_buttons[3]
-	run_bar_play_current_button = run_bar_buttons[5]
-	run_bar_play_custom_button = run_bar_buttons[6]
-	run_bar_movie_mode_button = run_bar_buttons[7]
+	run_bar_play_current_button = run_bar_buttons[7]
+	run_bar_play_custom_button = run_bar_buttons[8]
+	run_bar_movie_mode_button = run_bar_buttons[9]
 	rendering_options = Utils.find_child_by_type(editor_title_bar, "OptionButton")
 
 	# Main Screen
 	main_screen = EditorInterface.get_editor_main_screen()
 	main_screen_tabs = Utils.find_child_by_type(main_screen.get_parent().get_parent(), "TabBar")
-	distraction_free_button = Utils.find_child_by_type(main_screen_tabs.get_parent(), "Button")
+	distraction_free_button = (
+		main_screen_tabs.get_parent().find_children("", "Button", true, false).back()
+	)
 	canvas_item_editor = Utils.find_child_by_type(main_screen, "CanvasItemEditor")
 	canvas_item_editor_viewport = Utils.find_child_by_type(
 		canvas_item_editor, "CanvasItemEditorViewport"
@@ -219,11 +253,13 @@ func _init() -> void:
 	canvas_item_editor_toolbar_grid_button = canvas_item_editor_toolbar_buttons[9]
 	canvas_item_editor_toolbar_snap_options_button = canvas_item_editor_toolbar_buttons[10]
 	canvas_item_editor_toolbar_lock_button = canvas_item_editor_toolbar_buttons[11]
+	canvas_item_editor_toolbar_unlock_button = canvas_item_editor_toolbar_buttons[12]
 	canvas_item_editor_toolbar_group_button = canvas_item_editor_toolbar_buttons[13]
+	canvas_item_editor_toolbar_ungroup_button = canvas_item_editor_toolbar_buttons[14]
 	canvas_item_editor_toolbar_skeleton_options_button = canvas_item_editor_toolbar_buttons[15]
 
 	canvas_item_editor_zoom_widget = Utils.find_child_by_type(
-		canvas_item_editor, "EditorZoomWidget"
+		canvas_item_editor_viewport, "EditorZoomWidget"
 	)
 	canvas_item_editor_zoom_button_lower = canvas_item_editor_zoom_widget.get_child(0)
 	canvas_item_editor_zoom_button_reset = canvas_item_editor_zoom_widget.get_child(1)
@@ -243,10 +279,45 @@ func _init() -> void:
 	snap_options_scale_step_controls.assign(snap_options.get_child(4).get_children())
 
 	spatial_editor = Utils.find_child_by_type(main_screen, "Node3DEditor")
-	spatial_editor_cameras.assign(spatial_editor.find_children("", "Camera3D", true, false))
-	spatial_editor_surface = (
-		Utils.find_child_by_type(spatial_editor, "ViewportNavigationControl").get_parent()
+	spatial_editor_viewports.assign(
+		spatial_editor.find_children("", "Node3DEditorViewport", true, false)
 	)
+	spatial_editor_preview_check_boxes.assign(
+		spatial_editor.find_children("", "CheckBox", true, false)
+	)
+	spatial_editor_cameras.assign(spatial_editor.find_children("", "Camera3D", true, false))
+	var surfaces := {}
+	for surface in spatial_editor.find_children("", "ViewportNavigationControl", true, false).map(
+		func(c: Control) -> Control: return c.get_parent()
+	):
+		surfaces[surface] = null
+	spatial_editor_surfaces.assign(surfaces.keys())
+	for surface in spatial_editor_surfaces:
+		spatial_editor_surfaces_menu_buttons.append_array(
+			surface.find_children("", "MenuButton", true, false)
+		)
+	spatial_editor_toolbar = spatial_editor.get_child(0).get_child(0).get_child(0)
+	var spatial_editor_toolbar_buttons := spatial_editor_toolbar.find_children(
+		"", "Button", false, false
+	)
+	spatial_editor_toolbar_select_button = spatial_editor_toolbar_buttons[0]
+	spatial_editor_toolbar_move_button = spatial_editor_toolbar_buttons[1]
+	spatial_editor_toolbar_rotate_button = spatial_editor_toolbar_buttons[2]
+	spatial_editor_toolbar_scale_button = spatial_editor_toolbar_buttons[3]
+	spatial_editor_toolbar_selectable_button = spatial_editor_toolbar_buttons[4]
+	spatial_editor_toolbar_lock_button = spatial_editor_toolbar_buttons[5]
+	spatial_editor_toolbar_unlock_button = spatial_editor_toolbar_buttons[6]
+	spatial_editor_toolbar_group_button = spatial_editor_toolbar_buttons[7]
+	spatial_editor_toolbar_ungroup_button = spatial_editor_toolbar_buttons[8]
+	spatial_editor_toolbar_local_button = spatial_editor_toolbar_buttons[9]
+	spatial_editor_toolbar_snap_button = spatial_editor_toolbar_buttons[10]
+	spatial_editor_toolbar_camera_button = spatial_editor_toolbar_buttons[11]
+	spatial_editor_toolbar_sun_button = spatial_editor_toolbar_buttons[12]
+	spatial_editor_toolbar_environment_button = spatial_editor_toolbar_buttons[13]
+	spatial_editor_toolbar_sun_environment_button = spatial_editor_toolbar_buttons[14]
+	spatial_editor_toolbar_transform_menu_button = spatial_editor_toolbar_buttons[15]
+	spatial_editor_toolbar_view_menu_button = spatial_editor_toolbar_buttons[16]
+
 	script_editor = EditorInterface.get_script_editor()
 	script_editor_window_wrapper = script_editor.get_parent()
 	script_editor_code_panel = script_editor.get_child(0).get_child(1).get_child(1)
@@ -275,6 +346,7 @@ func _init() -> void:
 	scene_tabs = Utils.find_child_by_type(scene_dock.get_parent(), "TabBar")
 	var scene_tree_editor := Utils.find_child_by_type(scene_dock, "SceneTreeEditor")
 	scene_tree = Utils.find_child_by_type(scene_tree_editor, "Tree")
+	select_node_window = Utils.find_child_by_type(base_control, "SceneTreeDialog")
 	import_dock = Utils.find_child_by_type(base_control, "ImportDock")
 
 	# Left Bottom
@@ -337,7 +409,7 @@ func _init() -> void:
 		bottom_button_output, bottom_button_debugger, bottom_button_tileset, bottom_button_tilemap
 	]
 
-	tilemap = Utils.find_child_by_type(bottom_panels_vboxcontainer, "TileMapEditor", false)
+	tilemap = Utils.find_child_by_type(bottom_panels_vboxcontainer, "TileMapLayerEditor", false)
 	var tilemap_flow_container: HFlowContainer = Utils.find_child_by_type(
 		tilemap, "HFlowContainer", false
 	)
@@ -369,16 +441,22 @@ func _init() -> void:
 	tileset_patterns_panel = tileset.get_child(0).get_child(2)
 	tileset_panels = [tileset_tiles_panel, tileset_patterns_panel]
 
-	for window in [signals_dialog_window, node_create_window]:
+	scene_import_settings_window = Utils.find_child_by_type(base_control, "SceneImportSettingsDialog")
+	scene_import_settings = scene_import_settings_window.get_child(0)
+	scene_import_settings_cancel_button = scene_import_settings_window.get_cancel_button()
+	scene_import_settings_ok_button = scene_import_settings_window.get_ok_button()
+
+	windows.assign([signals_dialog_window, node_create_window, scene_import_settings_window])
+	for window in windows:
 		window_toggle_tour_mode(window, true)
 
 
 func clean_up() -> void:
-	for window in [signals_dialog_window, node_create_window]:
+	for window in windows:
 		window_toggle_tour_mode(window, false)
 
 
-func window_toggle_tour_mode(window: Window, is_in_tour: bool) -> void:
+func window_toggle_tour_mode(window: ConfirmationDialog, is_in_tour: bool) -> void:
 	window.dialog_close_on_escape = not is_in_tour
 	window.transient = is_in_tour
 	window.exclusive = not is_in_tour

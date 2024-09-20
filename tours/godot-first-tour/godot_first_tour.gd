@@ -75,7 +75,7 @@ func steps_010_intro() -> void:
 	bubble_set_background(TEXTURE_BUBBLE_BACKGROUND)
 	bubble_add_texture(TEXTURE_GDQUEST_LOGO)
 	bubble_set_title("")
-	bubble_add_text([bbcode_wrap_font_size("[center][b]Welcome to Godot[/b][/center]", 32)])
+	bubble_add_text([bbcode_wrap_font_size(gtr("[center][b]Welcome to Godot[/b][/center]"), 32)])
 	bubble_add_text(
 		[gtr("[center]In this tour, you take your first steps in the [b]Godot editor[/b].[/center]"),
 		gtr("[center]You get an overview of the engine's four pillars: [b]Scenes[/b], [b]Nodes[/b], [b]Scripts[/b], and [b]Signals[/b].[/center]"),
@@ -96,7 +96,7 @@ func steps_010_intro() -> void:
 	bubble_add_text(
 		[gtr("When a project is first opened in Godot, we land on the [b]Main Scene[/b]. It is the entry point of a Godot game."),
 		gtr("Click the play icon in the top right of the editor to run the Godot project."),
-		gtr("Then, press [b]F8[/b] on your keyboard or close the game window to stop the game."),]
+		gtr("Then, press [b]%s[/b] on your keyboard or close the game window to stop the game.") % shortcuts.stop]
 	)
 	complete_step()
 
@@ -121,7 +121,7 @@ func steps_020_first_look() -> void:
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title(gtr("The viewport"))
 	bubble_add_text(
-		[gtr("The central part of the editor outlined in blue is the viewport. It's a view of the currently open [b]scene[/b]."),]
+		[gtr("The central part of the editor outlined in purple is the viewport. It's a view of the currently open [b]scene[/b]."),]
 	)
 	complete_step()
 

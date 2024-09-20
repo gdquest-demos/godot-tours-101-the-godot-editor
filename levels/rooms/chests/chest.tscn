@@ -122,17 +122,17 @@ collision_mask = 0
 shape = SubResource("1")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "RESET"
 libraries = {
 "": SubResource("AnimationLibrary_xyhmo")
 }
+autoplay = "RESET"
 
 [node name="Path2D" type="Path2D" parent="."]
 curve = SubResource("4")
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
 position = Vector2(-0.386932, -0.414749)
-rotation = -2.25364
+rotates = false
 loop = false
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

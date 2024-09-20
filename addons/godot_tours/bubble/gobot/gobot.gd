@@ -1,16 +1,20 @@
 @tool
 extends Node2D
 
-enum Expressions {NEUTRAL, HAPPY, SURPRISED}
+enum Expressions { NEUTRAL, HAPPY, SURPRISED }
 
-@export_range(-1.0, 1.0, 0.1) var tilt_x : float = 0.0 : set = _set_tilt_x
-@export_range(-1.0, 1.0, 0.1) var tilt_y : float = 0.0 : set = _set_tilt_y
+@export_range(-1.0, 1.0, 0.1) var tilt_x: float = 0.0:
+	set = _set_tilt_x
+@export_range(-1.0, 1.0, 0.1) var tilt_y: float = 0.0:
+	set = _set_tilt_y
 
-@export var expression := Expressions.NEUTRAL: set = set_expression
-@export var look_at_cursor := false: set = set_look_at_cursor
+@export var expression := Expressions.NEUTRAL:
+	set = set_expression
+@export var look_at_cursor := false:
+	set = set_look_at_cursor
 
 ## Stores the initial scale of the avatar from the scene instance.
-@onready var scale_start := scale
+var _scale_start := scale
 
 @onready var animation_tree: AnimationTree = %AnimationTree
 # Character nodes
@@ -24,6 +28,12 @@ enum Expressions {NEUTRAL, HAPPY, SURPRISED}
 @onready var bolt_r: Sprite2D = %BoltR
 
 
+func _ready() -> void:
+	if Engine.is_editor_hint() and (not EditorInterface.get_edited_scene_root() in [self, owner]):
+		scale *= EditorInterface.get_editor_scale()
+	_scale_start = scale
+
+
 func do_wink() -> void:
 	animation_tree.set("parameters/OneShot/request", true)
 
@@ -32,7 +42,9 @@ func set_expression(value: Expressions) -> void:
 	expression = value
 	if not is_node_ready():
 		return
-	animation_tree.set("parameters/Transition/transition_request", Expressions.find_key(expression).to_lower())
+	animation_tree.set(
+		"parameters/Transition/transition_request", Expressions.find_key(expression).to_lower()
+	)
 
 
 func set_look_at_cursor(state: bool) -> void:
@@ -41,6 +53,11 @@ func set_look_at_cursor(state: bool) -> void:
 	look_at_cursor = state
 	animation_tree.active = not state
 	animation_tree.set("parameters/AddTilt/add_amount", float(animation_tree.active))
+
+
+## Scales the avatar relative to its initial scale. A value of 1.0 is the default scale.
+func set_scale_multiplier(value: float) -> void:
+	scale = _scale_start * value
 
 
 func _set_tilt_x(value: float) -> void:

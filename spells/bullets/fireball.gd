@@ -1,6 +1,7 @@
 extends Bullet
 
 @onready var _animation_player := $AnimationPlayer as AnimationPlayer
+@warning_ignore("unused_private_class_variable")
 @onready var _particles := $GPUParticles2D as GPUParticles2D
 
 

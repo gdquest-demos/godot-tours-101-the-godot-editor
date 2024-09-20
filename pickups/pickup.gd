@@ -1,6 +1,7 @@
 class_name Pickup
 extends Area2D
 
+@warning_ignore("unused_private_class_variable")
 @onready var _audio := $AudioStreamPlayer2D as AudioStreamPlayer2D
 @onready var _animation_player := $AnimationPlayer as AnimationPlayer
 

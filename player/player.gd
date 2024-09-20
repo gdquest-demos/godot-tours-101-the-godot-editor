@@ -46,7 +46,6 @@ func _physics_process(_delta: float) -> void:
 	velocity += steering / drag_factor
 	set_velocity(velocity)
 	move_and_slide()
-	velocity = velocity
 
 
 func take_damage(amount: int) -> void:

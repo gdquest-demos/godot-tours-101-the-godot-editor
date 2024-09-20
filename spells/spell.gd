@@ -12,6 +12,7 @@ extends Node2D
 
 var _audio := AudioStreamPlayer2D.new()
 
+@warning_ignore("unused_private_class_variable")
 @onready var _random_angle := deg_to_rad(random_angle_degrees)
 
 

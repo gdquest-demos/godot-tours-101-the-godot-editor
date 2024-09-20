@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://bxefaevg616la"]
+
+[ext_resource type="Script" path="res://addons/godot_tours/assets/guide_3d.gd" id="1_nq5ae"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y1av2"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+no_depth_test = true
+shading_mode = 2
+diffuse_mode = 2
+specular_mode = 2
+disable_ambient_light = true
+disable_fog = true
+albedo_color = Color(0.101961, 0.305882, 0.87451, 0.545098)
+
+[sub_resource type="BoxMesh" id="BoxMesh_refqc"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_y1av2")
+
+[node name="Guide3D" type="Node3D"]
+top_level = true
+script = ExtResource("1_nq5ae")
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(0.999997, -0.00212301, 0.00132331, 0.00212455, 0.999997, -0.00115882, -0.00132084, 0.00116164, 0.999998, 0, 0, 0)
+mesh = SubResource("BoxMesh_refqc")

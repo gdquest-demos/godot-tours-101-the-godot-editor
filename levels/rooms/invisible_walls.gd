@@ -1,5 +1,5 @@
 extends TileMap
 
 
-func _ready():
+func _ready() -> void:
 	visible = false
