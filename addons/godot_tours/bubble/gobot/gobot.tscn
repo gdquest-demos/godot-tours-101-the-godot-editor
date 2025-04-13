@@ -1,7 +1,7 @@
 [gd_scene load_steps=31 format=3 uid="uid://bgxtydff0olev"]
 
-[ext_resource type="Script" path="res://addons/godot_tours/bubble/gobot/gobot.gd" id="1_0v1f1"]
-[ext_resource type="Shader" path="res://addons/godot_tours/bubble/gobot/assets/gobot_material.gdshader" id="2_2ns2r"]
+[ext_resource type="Script" uid="uid://u32fh515j1s7" path="res://addons/godot_tours/bubble/gobot/gobot.gd" id="1_0v1f1"]
+[ext_resource type="Shader" uid="uid://fqp41an74fwt" path="res://addons/godot_tours/bubble/gobot/assets/gobot_material.gdshader" id="2_2ns2r"]
 [ext_resource type="Texture2D" uid="uid://dhvsj4fjh5h30" path="res://addons/godot_tours/bubble/gobot/assets/gobot_mascot.png" id="2_d0rrb"]
 [ext_resource type="Texture2D" uid="uid://bpgwxmhfauri6" path="res://addons/godot_tours/bubble/gobot/assets/bolt.png" id="3_ahy46"]
 [ext_resource type="Texture2D" uid="uid://csp1wgpwsmqdo" path="res://addons/godot_tours/bubble/gobot/assets/horns.png" id="4_03njk"]
@@ -749,12 +749,12 @@ tracks/10/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_axgnh"]
 _data = {
-"RESET": SubResource("Animation_xm3qg"),
-"expression_happy": SubResource("Animation_kv2u0"),
-"expression_neutral": SubResource("Animation_1vc05"),
-"expression_surprised": SubResource("Animation_jbvns"),
-"idle": SubResource("Animation_kiuqq"),
-"reaction_wink": SubResource("Animation_3uqyx")
+&"RESET": SubResource("Animation_xm3qg"),
+&"expression_happy": SubResource("Animation_kv2u0"),
+&"expression_neutral": SubResource("Animation_1vc05"),
+&"expression_surprised": SubResource("Animation_jbvns"),
+&"idle": SubResource("Animation_kiuqq"),
+&"reaction_wink": SubResource("Animation_3uqyx")
 }
 
 [sub_resource type="AnimationNodeAdd2" id="AnimationNodeAdd2_7ne4x"]
@@ -780,12 +780,15 @@ fadeout_time = 0.1
 xfade_time = 0.1
 input_0/name = "neutral"
 input_0/auto_advance = false
+input_0/break_loop_at_end = false
 input_0/reset = true
 input_1/name = "happy"
 input_1/auto_advance = false
+input_1/break_loop_at_end = false
 input_1/reset = true
 input_2/name = "surprised"
 input_2/auto_advance = false
+input_2/break_loop_at_end = false
 input_2/reset = true
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_638r0"]

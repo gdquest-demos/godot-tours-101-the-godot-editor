@@ -3,8 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://ijiitgilb4y2" path="res://enemies/shield/shield_active.png" id="1"]
 [ext_resource type="AudioStream" uid="uid://cte8ddxd7o4de" path="res://common/kill.wav" id="2"]
 [ext_resource type="AudioStream" uid="uid://dfc5tcrthtntk" path="res://common/hurt.wav" id="3"]
-[ext_resource type="Script" path="res://enemies/shield/haunted_shield_ai.gd" id="4"]
-[ext_resource type="PackedScene" path="res://common/shadow.tscn" id="5"]
+[ext_resource type="Script" uid="uid://cwmlj3chxff22" path="res://enemies/shield/haunted_shield_ai.gd" id="4"]
+[ext_resource type="PackedScene" uid="uid://2o2k4nyqroe" path="res://common/shadow.tscn" id="5"]
 [ext_resource type="Texture2D" uid="uid://cjch4itgn8lir" path="res://enemies/shield/shield_inactive.png" id="6"]
 
 [sub_resource type="CircleShape2D" id="1"]

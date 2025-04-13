@@ -143,7 +143,8 @@ func highlight_tree_items(tree: Tree, predicate: Callable, button_index := -1, d
 				func(ti: TreeItem) -> bool: return item_path == Utils.get_tree_item_path(ti),
 			):
 				var rect := tree.get_global_transform() * tree.get_item_area_rect(the_item, 0, button_index)
-				rect.position.y += height_fix - tree.get_scroll().y
+				# TODO: following line mithgt not be necessary in Godot 4.4
+				# rect.position.y += height_fix - tree.get_scroll().y
 				return rect.intersection(tree.get_global_rect())
 			return Rect2()
 		add_highlight_to_control.call_deferred(tree, rect_getter, play_flash, true)
@@ -314,7 +315,7 @@ func highlight_tilemap_list_item(item_list: ItemList, item_index: int, play_flas
 
 	var dimmer := ensure_get_dimmer_for(interface.tilemap)
 	var rect_getter := func() -> Rect2:
-			var rect := item_list.get_item_rect(item_index)
-			rect.position += item_list.global_position
-			return rect
+		var rect := item_list.get_item_rect(item_index)
+		rect.position += item_list.global_position
+		return rect
 	add_highlight_to_control(interface.tilemap, rect_getter, play_flash)

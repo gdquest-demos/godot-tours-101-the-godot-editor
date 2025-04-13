@@ -23,7 +23,7 @@ func add_mask() -> ColorRect:
 
 
 func refresh() -> void:
-	size = window.size
+	set_size.call_deferred(window.size)
 
 
 func toggle_dimmer_mask(is_on: bool) -> void:

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bp0jk65vdkenb"]
 
-[ext_resource type="Script" path="res://addons/godot_tours/overlays/dimmer/dimmer.gd" id="1_30fag"]
+[ext_resource type="Script" uid="uid://n10b3len4jvo" path="res://addons/godot_tours/overlays/dimmer/dimmer.gd" id="1_30fag"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cvwys"]
 blend_mode = 3

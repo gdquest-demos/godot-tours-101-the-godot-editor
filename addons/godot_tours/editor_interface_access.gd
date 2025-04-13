@@ -13,12 +13,13 @@ var context_switcher: HBoxContainer = null
 var context_switcher_2d_button: Button = null
 var context_switcher_3d_button: Button = null
 var context_switcher_script_button: Button = null
+var context_switcher_game_button: Button = null
 var context_switcher_asset_lib_button: Button = null
+
 var run_bar: MarginContainer = null
 var run_bar_play_button: Button = null
 var run_bar_pause_button: Button = null
 var run_bar_stop_button: Button = null
-var run_bar_debug_button: MenuButton = null
 var run_bar_play_current_button: Button = null
 var run_bar_play_custom_button: Button = null
 var run_bar_movie_mode_button: Button = null
@@ -74,6 +75,7 @@ var spatial_editor_toolbar_selectable_button: Button = null
 var spatial_editor_toolbar_lock_button: Button = null
 var spatial_editor_toolbar_unlock_button: Button = null
 var spatial_editor_toolbar_group_button: Button = null
+var spatial_editor_toolbar_ruler_button: Button = null
 var spatial_editor_toolbar_ungroup_button: Button = null
 var spatial_editor_toolbar_local_button: Button = null
 var spatial_editor_toolbar_snap_button: Button = null
@@ -198,6 +200,7 @@ var windows: Array[ConfirmationDialog] = []
 
 
 func _init() -> void:
+	var language_offset := (Engine.get_script_language_count() - 1) % 2
 	base_control = EditorInterface.get_base_control()
 
 	# Top
@@ -214,29 +217,26 @@ func _init() -> void:
 	context_switcher_2d_button = context_switcher_buttons[0]
 	context_switcher_3d_button = context_switcher_buttons[1]
 	context_switcher_script_button = context_switcher_buttons[2]
-	context_switcher_asset_lib_button = context_switcher_buttons[3]
+	context_switcher_game_button = context_switcher_buttons[3]
+	context_switcher_asset_lib_button = context_switcher_buttons[4]
 
 	run_bar = Utils.find_child_by_type(editor_title_bar, "EditorRunBar")
-	var run_bar_buttons = run_bar.find_children("", "Button", true, false)
-	run_bar_play_button = run_bar_buttons[0]
-	run_bar_pause_button = run_bar_buttons[1]
-	run_bar_stop_button = run_bar_buttons[2]
-	run_bar_debug_button = run_bar_buttons[3]
-	run_bar_play_current_button = run_bar_buttons[7]
-	run_bar_play_custom_button = run_bar_buttons[8]
-	run_bar_movie_mode_button = run_bar_buttons[9]
+	var run_bar_buttons = Utils.find_child_by_type(run_bar.get_child(0), "HBoxContainer").find_children("", "Button", true, false)
+	# TODO: Find a better way to check for C# engine instead of using scripting language count
+	run_bar_play_button = run_bar_buttons[0 + language_offset]
+	run_bar_pause_button = run_bar_buttons[1 + language_offset]
+	run_bar_stop_button = run_bar_buttons[2 + language_offset]
+	run_bar_play_current_button = run_bar_buttons[-3]
+	run_bar_play_custom_button = run_bar_buttons[-2]
+	run_bar_movie_mode_button = run_bar_buttons[-1]
 	rendering_options = Utils.find_child_by_type(editor_title_bar, "OptionButton")
 
 	# Main Screen
 	main_screen = EditorInterface.get_editor_main_screen()
 	main_screen_tabs = Utils.find_child_by_type(main_screen.get_parent().get_parent(), "TabBar")
-	distraction_free_button = (
-		main_screen_tabs.get_parent().find_children("", "Button", true, false).back()
-	)
+	distraction_free_button = main_screen_tabs.get_parent().find_children("", "Button", true, false).back()
 	canvas_item_editor = Utils.find_child_by_type(main_screen, "CanvasItemEditor")
-	canvas_item_editor_viewport = Utils.find_child_by_type(
-		canvas_item_editor, "CanvasItemEditorViewport"
-	)
+	canvas_item_editor_viewport = Utils.find_child_by_type(canvas_item_editor, "CanvasItemEditorViewport")
 	canvas_item_editor_toolbar = canvas_item_editor.get_child(0).get_child(0).get_child(0)
 	var canvas_item_editor_toolbar_buttons := canvas_item_editor_toolbar.find_children(
 		"", "Button", false, false
@@ -309,9 +309,9 @@ func _init() -> void:
 	spatial_editor_toolbar_unlock_button = spatial_editor_toolbar_buttons[6]
 	spatial_editor_toolbar_group_button = spatial_editor_toolbar_buttons[7]
 	spatial_editor_toolbar_ungroup_button = spatial_editor_toolbar_buttons[8]
-	spatial_editor_toolbar_local_button = spatial_editor_toolbar_buttons[9]
-	spatial_editor_toolbar_snap_button = spatial_editor_toolbar_buttons[10]
-	spatial_editor_toolbar_camera_button = spatial_editor_toolbar_buttons[11]
+	spatial_editor_toolbar_ruler_button = spatial_editor_toolbar_buttons[9]
+	spatial_editor_toolbar_local_button = spatial_editor_toolbar_buttons[10]
+	spatial_editor_toolbar_snap_button = spatial_editor_toolbar_buttons[11]
 	spatial_editor_toolbar_sun_button = spatial_editor_toolbar_buttons[12]
 	spatial_editor_toolbar_environment_button = spatial_editor_toolbar_buttons[13]
 	spatial_editor_toolbar_sun_environment_button = spatial_editor_toolbar_buttons[14]
@@ -396,15 +396,13 @@ func _init() -> void:
 	)
 	shader = Utils.find_child_by_type(bottom_panels_vboxcontainer, "WindowWrapper", false)
 	var editor_toaster := Utils.find_child_by_type(bottom_panels_vboxcontainer, "EditorToaster")
-	bottom_buttons_container = Utils.find_child_by_type(
-		editor_toaster.get_parent(), "HBoxContainer", false
-	)
+	bottom_buttons_container = Utils.find_child_by_type(Utils.find_child_by_type(editor_toaster.get_parent(), "ScrollContainer", false), "HBoxContainer", false)
 
 	var bottom_button_children := bottom_buttons_container.get_children()
 	bottom_button_output = bottom_button_children[0]
 	bottom_button_debugger = bottom_button_children[1]
-	bottom_button_tileset = bottom_button_children[-3]
-	bottom_button_tilemap = bottom_button_children[-2]
+	bottom_button_tileset = bottom_button_children[-4 - language_offset]
+	bottom_button_tilemap = bottom_button_children[-3 - language_offset]
 	bottom_buttons = [
 		bottom_button_output, bottom_button_debugger, bottom_button_tileset, bottom_button_tilemap
 	]
@@ -450,6 +448,58 @@ func _init() -> void:
 	for window in windows:
 		window_toggle_tour_mode(window, true)
 
+	check_button_icons({
+		context_switcher_2d_button: ["context_switcher_2d_button", "2D"],
+		context_switcher_3d_button: ["context_switcher_3d_button", "3D"],
+		context_switcher_script_button: ["context_switcher_script_button", "Script"],
+		context_switcher_game_button: ["context_switcher_game_button", "Game"],
+		context_switcher_asset_lib_button: ["context_switcher_asset_lib_button", "AssetLib"],
+		run_bar_play_button: ["run_bar_play_button", "MainPlay"],
+		run_bar_pause_button: ["run_bar_pause_button", "Pause"],
+		run_bar_stop_button: ["run_bar_stop_button", "Stop"],
+		run_bar_play_current_button: ["run_bar_play_current_button", "PlayScene"],
+		run_bar_play_custom_button: ["run_bar_play_custom_button", "PlayCustom"],
+		run_bar_movie_mode_button: ["run_bar_movie_mode_button", "MainMovieWrite"],
+		distraction_free_button: ["distraction_free_button", "DistractionFree"],
+		canvas_item_editor_toolbar_select_button: ["canvas_item_editor_toolbar_select_button", "ToolSelect"],
+		canvas_item_editor_toolbar_move_button: ["canvas_item_editor_toolbar_move_button", "ToolMove"],
+		canvas_item_editor_toolbar_rotate_button: ["canvas_item_editor_toolbar_rotate_button", "ToolRotate"],
+		canvas_item_editor_toolbar_scale_button: ["canvas_item_editor_toolbar_scale_button", "ToolScale"],
+		canvas_item_editor_toolbar_selectable_button: ["canvas_item_editor_toolbar_selectable_button", "ListSelect"],
+		canvas_item_editor_toolbar_pivot_button: ["canvas_item_editor_toolbar_pivot_button", "EditPivot"],
+		canvas_item_editor_toolbar_pan_button: ["canvas_item_editor_toolbar_pan_button", "ToolPan"],
+		canvas_item_editor_toolbar_ruler_button: ["canvas_item_editor_toolbar_ruler_button", "Ruler"],
+		canvas_item_editor_toolbar_smart_snap_button: ["canvas_item_editor_toolbar_smart_snap_button", "Snap"],
+		canvas_item_editor_toolbar_grid_button: ["canvas_item_editor_toolbar_grid_button", "SnapGrid"],
+		canvas_item_editor_toolbar_snap_options_button: ["canvas_item_editor_toolbar_snap_options_button", "GuiTabMenuHl"],
+		canvas_item_editor_toolbar_lock_button: ["canvas_item_editor_toolbar_lock_button", "Lock"],
+		canvas_item_editor_toolbar_unlock_button: ["canvas_item_editor_toolbar_unlock_button", "Unlock"],
+		canvas_item_editor_toolbar_group_button: ["canvas_item_editor_toolbar_group_button", "Group"],
+		canvas_item_editor_toolbar_ungroup_button: ["canvas_item_editor_toolbar_ungroup_button", "Ungroup"],
+		canvas_item_editor_toolbar_skeleton_options_button: ["canvas_item_editor_toolbar_skeleton_options_button", "Bone"],
+		canvas_item_editor_zoom_button_lower: ["canvas_item_editor_zoom_button_lower", "ZoomLess"],
+		canvas_item_editor_zoom_button_increase: ["canvas_item_editor_zoom_button_increase", "ZoomMore"],
+		spatial_editor_toolbar_select_button: ["spatial_editor_toolbar_select_button", "ToolSelect"],
+		spatial_editor_toolbar_move_button: ["spatial_editor_toolbar_move_button", "ToolMove"],
+		spatial_editor_toolbar_rotate_button: ["spatial_editor_toolbar_rotate_button", "ToolRotate"],
+		spatial_editor_toolbar_scale_button: ["spatial_editor_toolbar_scale_button", "ToolScale"],
+		spatial_editor_toolbar_selectable_button: ["spatial_editor_toolbar_selectable_button", "ListSelect"],
+		spatial_editor_toolbar_lock_button: ["spatial_editor_toolbar_lock_button", "Lock"],
+		spatial_editor_toolbar_unlock_button: ["spatial_editor_toolbar_unlock_button", "Unlock"],
+		spatial_editor_toolbar_group_button: ["spatial_editor_toolbar_group_button", "Group"],
+		spatial_editor_toolbar_ungroup_button: ["spatial_editor_toolbar_ungroup_button", "Ungroup"],
+		spatial_editor_toolbar_ruler_button: ["spatial_editor_toolbar_ruler_button", "Ruler"],
+		spatial_editor_toolbar_local_button: ["spatial_editor_toolbar_local_button", "Object"],
+		spatial_editor_toolbar_snap_button: ["spatial_editor_toolbar_snap_button", "Snap"],
+		spatial_editor_toolbar_sun_button: ["spatial_editor_toolbar_sun_button", "PreviewSun"],
+		spatial_editor_toolbar_environment_button: ["spatial_editor_toolbar_environment_button", "PreviewEnvironment"],
+		spatial_editor_toolbar_sun_environment_button: ["spatial_editor_toolbar_sun_environment_button", "GuiTabMenuHl"],
+		scene_dock_button_add: ["scene_dock_button_add", "Add"],
+		node_dock_signals_button: ["node_dock_signals_button", "Signals"],
+		node_dock_groups_button: ["node_dock_groups_button", "Groups"],
+		tilemap_terrains_tool_draw: ["tilemap_terrains_tool_draw", "Edit"],
+	})
+
 
 func clean_up() -> void:
 	for window in windows:
@@ -490,3 +540,15 @@ func unfold_tree_item(item: TreeItem) -> void:
 
 func is_in_scripting_context() -> bool:
 	return script_editor_window_wrapper.visible
+
+
+func check_button_icons(buttons_info: Dictionary[Button, Array]) -> void:
+	var editor_theme := EditorInterface.get_editor_theme()
+	for button: Button in buttons_info:
+		var button_name: StringName = buttons_info[button][0]
+		var icon_name: StringName = buttons_info[button][1]
+		var editor_has_icon := editor_theme.has_icon(icon_name, "EditorIcons")
+		if editor_has_icon and button.icon != editor_theme.get_icon(icon_name, "EditorIcons"):
+			push_warning("Button `%s` should have `%s` icon, but doesn't!" % [button_name, icon_name])
+		elif not editor_has_icon:
+			push_warning("Icon `%s` doesn't exist in the `EditorIcons` theme type! Check for typos." % icon_name)

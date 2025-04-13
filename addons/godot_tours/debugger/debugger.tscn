@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bpby88c43ifbo"]
 
-[ext_resource type="Script" path="res://addons/godot_tours/debugger/debugger.gd" id="1_l4dkp"]
+[ext_resource type="Script" uid="uid://cxxfdr4y3dd0c" path="res://addons/godot_tours/debugger/debugger.gd" id="1_l4dkp"]
 
 [node name="Debugger" type="PanelContainer"]
 anchors_preset = 15

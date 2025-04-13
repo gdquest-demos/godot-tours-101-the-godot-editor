@@ -1,11 +1,11 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://t1i763qyaaii"]
 
-[ext_resource path="res://pickups/pickup.tscn" type="PackedScene" id=1]
-[ext_resource path="res://pickups/health_pickup.gd" type="Script" id=2]
-[ext_resource path="res://pickups/pickup_health.wav" type="AudioStream" id=3]
+[ext_resource type="PackedScene" uid="uid://dj16nr52gkesr" path="res://pickups/pickup.tscn" id="1"]
+[ext_resource type="Script" uid="uid://dtd8331wofg8y" path="res://pickups/health_pickup.gd" id="2"]
+[ext_resource type="AudioStream" uid="uid://o3ra7o263286" path="res://pickups/pickup_health.wav" id="3"]
 
-[node name="HealthPickup" instance=ExtResource( 1 )]
-script = ExtResource( 2 )
+[node name="HealthPickup" instance=ExtResource("1")]
+script = ExtResource("2")
 
 [node name="AudioStreamPlayer2D" parent="." index="3"]
-stream = ExtResource( 3 )
+stream = ExtResource("3")

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://cb43ntajwjlbf"]
 
 [ext_resource type="FontFile" path="res://common/title_font.tres" id="1"]
-[ext_resource type="Script" path="res://game_over.gd" id="2"]
+[ext_resource type="Script" uid="uid://rjgk3o48mg8p" path="res://game_over.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://y22sv3lfxf33" path="res://common/game_over_sky.png" id="3_knmkv"]
 
 [sub_resource type="Theme" id="1"]

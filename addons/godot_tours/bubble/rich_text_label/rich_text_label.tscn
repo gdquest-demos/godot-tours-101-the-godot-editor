@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://wd822miy3aij"]
 
-[ext_resource type="Script" path="res://addons/godot_tours/bubble/rich_text_label/rich_text_label.gd" id="1_t4611"]
+[ext_resource type="Script" uid="uid://c08x426gupagy" path="res://addons/godot_tours/bubble/rich_text_label/rich_text_label.gd" id="1_t4611"]
 
 [node name="RichTextLabel" type="RichTextLabel"]
 bbcode_enabled = true

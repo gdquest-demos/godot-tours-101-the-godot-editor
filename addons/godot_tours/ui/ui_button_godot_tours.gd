@@ -1,7 +1,7 @@
 @tool
 extends Button
 
-const ThemeUtils = preload("theme_utils.gd")
+const ThemeUtils = preload("../../gdquest_theme_utils/theme_utils.gd")
 
 
 func setup() -> void:

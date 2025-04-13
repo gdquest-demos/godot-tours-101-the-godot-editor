@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://cce7r30dfjm4r"]
 
-[ext_resource type="Script" path="res://interface/bars/ui_health_bar.gd" id="1"]
+[ext_resource type="Script" uid="uid://cffv0u1hcki54" path="res://interface/bars/ui_health_bar.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://206pnoc2labm" path="res://interface/bars/health_point.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://bo2sfxd46ihbv" path="res://interface/bars/bar_bg_ninepatch.png" id="3"]
 
@@ -97,9 +97,9 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_b311i"]
 _data = {
-"RESET": SubResource("2"),
-"fade_in": SubResource("4"),
-"fade_out": SubResource("3")
+&"RESET": SubResource("2"),
+&"fade_in": SubResource("4"),
+&"fade_out": SubResource("3")
 }
 
 [node name="UIHealthBar" type="PanelContainer"]

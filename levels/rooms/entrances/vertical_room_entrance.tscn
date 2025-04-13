@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://dmy8a66tdnvkh"]
 
-[ext_resource type="Script" path="res://levels/rooms/entrances/vertical_room_entrance.gd" id="1"]
+[ext_resource type="Script" uid="uid://cut4yxo180u5k" path="res://levels/rooms/entrances/vertical_room_entrance.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://yycrja4hp4wa" path="res://levels/rooms/entrances/door_glow_vertical.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://cqewufr1s28k5" path="res://levels/rooms/entrances/door_open_vertical.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://bprfgkbp5oaxa" path="res://levels/rooms/entrances/door_beam_vertical.png" id="4"]
@@ -118,8 +118,8 @@ tracks/3/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_x65im"]
 _data = {
-"RESET": SubResource("3"),
-"close": SubResource("4")
+&"RESET": SubResource("3"),
+&"close": SubResource("4")
 }
 
 [node name="VerticalRoomEntrance" type="Area2D"]

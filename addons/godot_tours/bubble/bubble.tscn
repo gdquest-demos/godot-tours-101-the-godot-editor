@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://d2prd14xbjee2"]
 
-[ext_resource type="Script" path="res://addons/godot_tours/bubble/bubble.gd" id="1_oyoy5"]
+[ext_resource type="Script" uid="uid://cq2xtxdi3p1va" path="res://addons/godot_tours/bubble/bubble.gd" id="1_oyoy5"]
 [ext_resource type="Theme" uid="uid://cx2cxgbadh7fg" path="res://addons/godot_tours/bubble/assets/bubble_theme.tres" id="2_biru1"]
 [ext_resource type="PackedScene" uid="uid://bgxtydff0olev" path="res://addons/godot_tours/bubble/gobot/gobot.tscn" id="7_2u8aa"]
 

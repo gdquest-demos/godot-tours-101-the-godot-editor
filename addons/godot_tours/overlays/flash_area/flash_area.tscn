@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://d3cgblhg1sbn"]
 
-[ext_resource type="Script" path="res://addons/godot_tours/overlays/flash_area/flash_area.gd" id="1_tncox"]
+[ext_resource type="Script" uid="uid://hh2sx8hpqx87" path="res://addons/godot_tours/overlays/flash_area/flash_area.gd" id="1_tncox"]
 
 [sub_resource type="Animation" id="Animation_k7a3o"]
 length = 0.001
@@ -36,8 +36,8 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_o58va"]
 _data = {
-"RESET": SubResource("Animation_k7a3o"),
-"flash": SubResource("Animation_mndg1")
+&"RESET": SubResource("Animation_k7a3o"),
+&"flash": SubResource("Animation_mndg1")
 }
 
 [node name="FlashArea" type="ColorRect"]

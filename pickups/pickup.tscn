@@ -2,8 +2,8 @@
 
 [ext_resource type="AudioStream" uid="uid://udconm0ioedx" path="res://common/powerup.wav" id="1"]
 [ext_resource type="Texture2D" uid="uid://be8lmb157qflx" path="res://pickups/pickup_health.png" id="2"]
-[ext_resource type="PackedScene" path="res://common/particles/paricles_sparkle.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://common/shadow.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://ji8cgaoft588" path="res://common/particles/paricles_sparkle.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://2o2k4nyqroe" path="res://common/shadow.tscn" id="4"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 32.0
@@ -192,9 +192,9 @@ tracks/3/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ipaaj"]
 _data = {
-"RESET": SubResource("3"),
-"destroy": SubResource("4"),
-"idle": SubResource("2")
+&"RESET": SubResource("3"),
+&"destroy": SubResource("4"),
+&"idle": SubResource("2")
 }
 
 [node name="Pickup" type="Area2D"]

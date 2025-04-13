@@ -20,6 +20,14 @@ const DebuggerPackedScene := preload("debugger/debugger.tscn")
 const UIWelcomeMenuPackedScene = preload("ui/ui_welcome_menu.tscn")
 const UIButtonGodotToursPackedScene = preload("ui/ui_button_godot_tours.tscn")
 
+const ALERT_TEXT := "You're using Godot '%s', but GDTour does not support this version currently.\nPlease use one of the supported versions: '%s <= VERSION <= %s'."
+
+var _supported_versions := {
+	min = {major = 4, minor = 3, patch = 0, op = func(a: int, b: int) -> bool: return a <= b},
+	max = {major = 4, minor = 4, patch = 1, op = func(a: int, b: int) -> bool: return a >= b},
+}
+var version_info := Engine.get_version_info()
+
 var plugin_path: String = get_script().resource_path.get_base_dir()
 var translation_parser := TranslationParser.new()
 var translation_service: TranslationService = null
@@ -44,6 +52,16 @@ var _button_top_bar: Button = null
 
 
 func _enter_tree() -> void:
+	if not _is_supported_version():
+		var accept_dialog := AcceptDialog.new()
+		add_child(accept_dialog)
+		accept_dialog.dialog_text = ALERT_TEXT % ([version_info.string] + _supported_versions.keys().map(
+			func(k: String) -> String: return "{major}.{minor}.{patch}".format(_supported_versions[k])
+		))
+		accept_dialog.initial_position = AcceptDialog.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+		accept_dialog.exclusive = false
+		accept_dialog.show()
+
 	if tour_list == null:
 		push_warning("Godot Tours: no tours found. The user interface will not be modified.")
 		return
@@ -52,19 +70,15 @@ func _enter_tree() -> void:
 	for _frame in range(10):
 		await get_tree().process_frame
 
-	_tour_paths.assign(
-		tour_list.tours.map(func get_tour_path(tour_entry) -> String: return tour_entry.tour_path)
-	)
+	_tour_paths.assign(tour_list.tours.map(func get_tour_path(tour_entry) -> String: return tour_entry.tour_path))
 
 	await get_tree().physics_frame
 	get_viewport().mode = Window.MODE_MAXIMIZED
 
 	var editor_settings := EditorInterface.get_editor_settings()
-
 	add_translation_parser_plugin(translation_parser)
 	translation_service = TranslationService.new(_tour_paths, editor_settings)
 	editor_interface_access = EditorInterfaceAccess.new()
-
 	overlays = Overlays.new(editor_interface_access)
 	EditorInterface.get_base_control().add_child(overlays)
 
@@ -91,9 +105,7 @@ func _add_top_bar_button() -> void:
 	_button_top_bar = UIButtonGodotToursPackedScene.instantiate()
 	_button_top_bar.setup()
 	editor_interface_access.run_bar.add_sibling(_button_top_bar)
-	_button_top_bar.get_parent().move_child(
-		_button_top_bar, editor_interface_access.run_bar.get_index()
-	)
+	_button_top_bar.get_parent().move_child(_button_top_bar, editor_interface_access.run_bar.get_index())
 	_button_top_bar.pressed.connect(_show_welcome_menu)
 
 
@@ -169,9 +181,7 @@ func ensure_pot_generation(plugin_path: String, do_clean_up := false) -> void:
 func toggle_debugger() -> void:
 	if debugger == null:
 		debugger = DebuggerPackedScene.instantiate()
-		debugger.setup(
-			plugin_path, editor_interface_access, overlays, translation_service, tour, _tour_paths
-		)
+		debugger.setup(plugin_path, editor_interface_access, overlays, translation_service, tour, _tour_paths)
 
 	if debugger.is_inside_tree():
 		remove_control_from_docks(debugger)
@@ -246,7 +256,6 @@ func _reset_tour_files(tour_path: String) -> bool:
 	var reload_scene_paths: Array[String] = []
 	for tour_file_path: String in tour_file_paths:
 		var destination_file_path := PREFIX.path_join(tour_file_path.replace(tour_dir_path, ""))
-
 		var destination_dir_path := destination_file_path.get_base_dir()
 		DirAccess.make_dir_recursive_absolute(destination_dir_path)
 
@@ -280,3 +289,12 @@ func _reset_tour_files(tour_path: String) -> bool:
 	for scene_path: String in reload_scene_paths:
 		EditorInterface.reload_scene_from_path(scene_path)
 	return was_reset_successful
+
+
+func _is_supported_version() -> bool:
+	var result := true
+	for bound: String in _supported_versions:
+		var dict: Dictionary = _supported_versions[bound]
+		for key: String in _supported_versions[bound].keys().filter(func (k: String) -> bool: return k != "op"):
+			result = result and dict.op.call(dict[key], version_info[key])
+	return result

@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://cng52v4e4mhqe"]
 
-[ext_resource type="Script" path="res://levels/rooms/entrances/horizontal_room_entrance.gd" id="1"]
+[ext_resource type="Script" uid="uid://b87xk86gpntog" path="res://levels/rooms/entrances/horizontal_room_entrance.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://d08now2ab4buo" path="res://levels/rooms/entrances/door_beam.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://bqopblk5ilols" path="res://levels/rooms/entrances/door_open.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://dbbingkk37v4d" path="res://levels/rooms/entrances/door_glow.png" id="4"]
@@ -94,8 +94,8 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_d3ihj"]
 _data = {
-"RESET": SubResource("3"),
-"close": SubResource("4")
+&"RESET": SubResource("3"),
+&"close": SubResource("4")
 }
 
 [node name="HorizontalRoomEntrance" type="Area2D"]

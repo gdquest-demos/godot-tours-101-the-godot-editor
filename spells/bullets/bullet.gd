@@ -6,7 +6,7 @@ extends Area2D
 
 var max_range := 1000.0
 
-var _travelled_distance = 0.0
+var _traveled_distance = 0.0
 var _audio := AudioStreamPlayer2D.new()
 
 @onready var speed := default_speed
@@ -23,8 +23,8 @@ func _physics_process(delta: float) -> void:
 
 	position += motion
 
-	_travelled_distance += distance
-	if _travelled_distance > max_range:
+	_traveled_distance += distance
+	if _traveled_distance > max_range:
 		_destroy()
 
 

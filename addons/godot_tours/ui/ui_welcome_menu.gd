@@ -7,13 +7,13 @@ signal tour_reset_requested(tour_path: String)
 ## Emitted when the menu is closed.
 signal closed
 
-const ThemeUtils := preload("theme_utils.gd")
 const UISelectableTour = preload("ui_selectable_tour.gd")
 const GodotTourEntry = preload("../godot_tour_entry.gd")
 const GodotTourList = preload("../godot_tour_list.gd")
 const Tour := preload("../tour.gd")
 const Utils := preload("../utils.gd")
 const TranslationService := preload("../translation/translation_service.gd")
+const ThemeUtils := preload("../../gdquest_theme_utils/theme_utils.gd")
 
 const UISelectableTourPackedScene = preload("ui_selectable_tour.tscn")
 
@@ -90,13 +90,13 @@ func setup(translation_service: TranslationService, tour_list: GodotTourList) ->
 	# Scale with editor scale
 	if Engine.is_editor_hint() and owner != self:
 		control.theme = ThemeUtils.generate_scaled_theme(control.theme)
-		for node: Control in [label_title, button_start_learning]:
-			ThemeUtils.scale_font_size(node)
 		var editor_scale := EditorInterface.get_editor_scale()
 		panel_container.custom_minimum_size.x *= editor_scale
 		ThemeUtils.scale_margin_container_margins(margin_container)
-		for button: BaseButton in [button_reset_selected, button_reset_no, button_reset_yes, button_reset_ok, button_start_learning]:
+		for button: BaseButton in [button_reset_selected, button_close]:
 			button.custom_minimum_size *= editor_scale
+		for color_rect: ColorRect in button_close.get_children():
+			color_rect.scale = editor_scale * Vector2.ONE
 
 	if tours_column.get_child_count() > 0:
 		tours_column.get_child(0).select()

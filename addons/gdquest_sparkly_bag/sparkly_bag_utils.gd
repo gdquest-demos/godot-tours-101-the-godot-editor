@@ -139,3 +139,28 @@ static func flatten_unique(array: Array) -> Array:
 static func flatten(array: Array) -> Array:
 	return array.reduce(func(acc: Array, xs: Array) -> Array: return acc + xs, [])
 
+
+static func check_godot_files(dir_path: String) -> ReturnCode:
+	var result := ReturnCode.OK
+	var godot_args := ["--headless", "--path", dir_path, "--quit"]
+	var found := fs_find("*", dir_path, false)
+	if found.return_code != ReturnCode.OK:
+		return found.return_code
+
+	for path: String in found.result:
+		var extension := path.get_extension()
+		var args := []
+		if extension in ["gd", "cs"]:
+			args = godot_args + ["--script", path, "--check-only"]
+		elif extension == "tscn":
+			args = godot_args + [path]
+
+		if args.is_empty():
+			continue
+
+		print_rich(path)
+		result = os_execute("godot", args)
+		if result != ReturnCode.OK:
+			break
+	return result
+

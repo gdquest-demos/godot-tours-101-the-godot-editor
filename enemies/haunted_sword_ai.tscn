@@ -1,11 +1,11 @@
 [gd_scene load_steps=10 format=3 uid="uid://piso1p2hou2v"]
 
-[ext_resource type="Script" path="res://enemies/sword/haunted_sword_ai.gd" id="1"]
+[ext_resource type="Script" uid="uid://p8afi7m2jala" path="res://enemies/sword/haunted_sword_ai.gd" id="1"]
 [ext_resource type="AudioStream" uid="uid://cte8ddxd7o4de" path="res://common/kill.wav" id="2"]
 [ext_resource type="AudioStream" uid="uid://dfc5tcrthtntk" path="res://common/hurt.wav" id="3"]
 [ext_resource type="Texture2D" uid="uid://bofr21sykbeu4" path="res://enemies/sword/sword_active.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://nohjoiah3jgr" path="res://enemies/sword/sword_inactive.png" id="5"]
-[ext_resource type="PackedScene" path="res://common/shadow.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://2o2k4nyqroe" path="res://common/shadow.tscn" id="6"]
 
 [sub_resource type="CircleShape2D" id="4"]
 radius = 25.6121

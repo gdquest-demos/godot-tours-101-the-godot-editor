@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://b4v6pov4l21dy"]
 
 [ext_resource type="Texture2D" uid="uid://bgn8fvhkjniwn" path="res://spells/bullets/fire.png" id="1"]
-[ext_resource type="Script" path="res://spells/bullets/fireball.gd" id="2"]
+[ext_resource type="Script" uid="uid://c5tu3tyyp3a4y" path="res://spells/bullets/fireball.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://dxe2pniv6kdn4" path="res://spells/bullets/fire_trail.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://bf2ij3m5qkqk7" path="res://common/particles/ice_particle_white.png" id="4"]
 
@@ -118,9 +118,9 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_rsd6n"]
 _data = {
-"RESET": SubResource("3"),
-"destroy": SubResource("4"),
-"spawn": SubResource("2")
+&"RESET": SubResource("3"),
+&"destroy": SubResource("4"),
+&"spawn": SubResource("2")
 }
 
 [sub_resource type="Gradient" id="5"]

@@ -122,6 +122,7 @@ func clean_up() -> void:
 
 
 func set_index(value: int) -> void:
+	log.reopen()
 	var step_count := steps.size()
 	var stride := Direction.BACK if value < index else Direction.NEXT
 	value = clampi(value, -1, step_count)
@@ -140,8 +141,8 @@ func load_bubble(BubblePackedScene: PackedScene = null) -> void:
 		BubblePackedScene = load("res://addons/godot_tours/bubble/default_bubble.tscn")
 
 	bubble = BubblePackedScene.instantiate()
+	bubble.setup(interface, log, translation_service, steps.size())
 	interface.base_control.add_child(bubble)
-	bubble.setup(translation_service, steps.size())
 	bubble.back_button_pressed.connect(back)
 	bubble.next_button_pressed.connect(next)
 	bubble.close_requested.connect(func() -> void:
@@ -232,10 +233,8 @@ func scene_select_nodes_by_path(paths: Array[String] = []) -> void:
 	scene_deselect_all_nodes()
 	queue_command(func() -> void:
 		var scene_root := EditorInterface.get_edited_scene_root()
-		var nodes := ([scene_root] if scene_root.name in paths else []) + Utils.find_children_by_path(scene_root, paths)
-		for node in nodes:
+		for node in Utils.find_children_by_path(scene_root, paths):
 			editor_selection.add_node(node)
-			EditorInterface.edit_node(node)
 	)
 
 
@@ -410,6 +409,10 @@ func context_set_3d() -> void:
 
 func context_set_script() -> void:
 	context_set("Script")
+
+
+func context_set_game() -> void:
+	context_set("Game")
 
 
 func context_set_asset_lib() -> void:
@@ -681,15 +684,18 @@ func bubble_add_task_node_to_guide(parameters: Guide3DTaskParameters) -> void:
 	queue_command(func() -> void:
 		var scene_root := EditorInterface.get_edited_scene_root()
 		var guide := Guide3DPackedScene.instantiate()
+		scene_root.add_child(guide)
 		guides[parameters.node_name] = guide
 		guide.global_position = parameters.global_position
 		guide.box_offset = parameters.box_offset
 		guide.size = parameters.box_size
-		scene_root.add_child(guide)
+		guide.owner = scene_root
+		guide.name = "GDTourGuide"
+		guide.set_meta(&"_edit_lock_", true)
 	)
 	bubble_add_task(parameters.description_override, 1, func node_to_guide(_task: Task) -> int:
 		var scene_root := EditorInterface.get_edited_scene_root()
-		var node: Node3D = null 
+		var node: Node3D = null
 		if parameters.node_name == scene_root.name:
 			node = scene_root
 		else:
@@ -829,10 +835,10 @@ func highlight_spatial_editor_camera_region(start: Vector3, end: Vector3, index 
 		var rect_getter := func() -> Rect2:
 			var s := camera.unproject_position(start)
 			var e := camera.unproject_position(end)
-			return interface.spatial_editor_surface.get_global_rect().intersection(
+			return interface.spatial_editor.get_global_rect().intersection(
 				camera.get_viewport().get_screen_transform() * Rect2(Vector2(min(s.x, e.x), min(s.y, e.y)), (e - s).abs())
 			)
-		overlays.add_highlight_to_control(interface.spatial_editor_surface, rect_getter, play_flash),
+		overlays.add_highlight_to_control(interface.spatial_editor, rect_getter, play_flash),
 	)
 
 
@@ -967,7 +973,6 @@ func get_tree_item_center_by_path(tree: Tree, path: String, button_index := -1) 
 		return result
 	for item in Utils.filter_tree_items(root, func(ti: TreeItem) -> bool: return path == Utils.get_tree_item_path(ti)):
 		var rect := tree.get_global_transform() * tree.get_item_area_rect(item, 0, button_index)
-		rect.position -= tree.get_scroll()
 		result = rect.get_center()
 		break
 	return result
@@ -981,7 +986,6 @@ func get_tree_item_center_by_name(tree: Tree, name: String) -> Vector2:
 
 	var item := Utils.find_tree_item_by_name(tree, name)
 	var rect := tree.get_global_transform() * tree.get_item_area_rect(item, 0)
-	rect.position -= tree.get_scroll()
 	result = rect.get_center()
 	return result
 

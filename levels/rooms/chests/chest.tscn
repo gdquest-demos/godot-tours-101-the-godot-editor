@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dub7cda3qxho2" path="res://levels/rooms/chests/chest_bottom.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://bfj2ayjhou4bv" path="res://levels/rooms/chests/chest_top.png" id="2"]
-[ext_resource type="Script" path="res://levels/rooms/chests/chest.gd" id="3"]
+[ext_resource type="Script" uid="uid://dkyittpwbcx3f" path="res://levels/rooms/chests/chest.gd" id="3"]
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(48, 42)
@@ -88,8 +88,8 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xyhmo"]
 _data = {
-"RESET": SubResource("3"),
-"open": SubResource("2")
+&"RESET": SubResource("3"),
+&"open": SubResource("2")
 }
 
 [sub_resource type="Curve2D" id="4"]

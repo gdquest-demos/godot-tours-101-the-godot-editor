@@ -1,12 +1,12 @@
 [gd_scene load_steps=10 format=3 uid="uid://dds7yrrx56gcy"]
 
-[ext_resource type="Script" path="res://player/godot_armor.gd" id="1"]
-[ext_resource type="Script" path="res://player/player.gd" id="2"]
+[ext_resource type="Script" uid="uid://ml4ha041ty2r" path="res://player/godot_armor.gd" id="1"]
+[ext_resource type="Script" uid="uid://d2geudhdo080x" path="res://player/player.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://bw03btxpkxde4" path="res://player/godot_bottom.png" id="3"]
-[ext_resource type="Script" path="res://player/shaking_camera2_d.gd" id="4"]
+[ext_resource type="Script" uid="uid://jnvhj3mqdau8" path="res://player/shaking_camera2_d.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://dekkcmj408pvt" path="res://player/hand_fire.png" id="5"]
-[ext_resource type="PackedScene" path="res://common/shadow.tscn" id="6"]
-[ext_resource type="Script" path="res://player/weapon_pivot.gd" id="7"]
+[ext_resource type="PackedScene" uid="uid://2o2k4nyqroe" path="res://common/shadow.tscn" id="6"]
+[ext_resource type="Script" uid="uid://byokigfwjub1v" path="res://player/weapon_pivot.gd" id="7"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 19.0754

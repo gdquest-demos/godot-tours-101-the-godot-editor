@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bupkynq73ufaa"]
 
-[ext_resource type="Script" path="res://levels/base_room.gd" id="1"]
+[ext_resource type="Script" uid="uid://b2wn13qnn7orh" path="res://levels/base_room.gd" id="1"]
 [ext_resource type="TileSet" uid="uid://bq65uwha45com" path="res://levels/rooms/floating_dungeon_tileset.tres" id="2"]
 [ext_resource type="TileSet" uid="uid://cqb2wtrubw0n6" path="res://levels/rooms/tileset_invisible_walls.tres" id="5"]
 

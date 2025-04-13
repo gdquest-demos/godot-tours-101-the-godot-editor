@@ -63,7 +63,6 @@ func _process(_delta: float) -> void:
 func add_weapon(new_weapon: PackedScene) -> void:
 	for weapon_type in _weapons:
 		if weapon_type.resource_path == new_weapon.resource_path:
-			_set_weapon_index(_weapons.find(new_weapon))
 			return
 
 	_weapons.append(new_weapon)

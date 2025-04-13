@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://cfay3xheebusb"]
 
-[ext_resource type="Script" path="res://game.gd" id="1_25vm7"]
+[ext_resource type="Script" uid="uid://c8bobnn0pww6u" path="res://game.gd" id="1_25vm7"]
 [ext_resource type="Texture2D" uid="uid://51k2u7iwra8e" path="res://levels/rooms/tileset_bridges.png" id="2_lrrw3"]
 [ext_resource type="TileSet" uid="uid://cqb2wtrubw0n6" path="res://levels/rooms/tileset_invisible_walls.tres" id="3_vklf7"]
 [ext_resource type="PackedScene" uid="uid://dds7yrrx56gcy" path="res://player/player.tscn" id="4_idksr"]
@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dgayuh42w4v6u" path="res://levels/rooms/room_b.tscn" id="6_d2i4m"]
 [ext_resource type="PackedScene" uid="uid://dw1qted83s8gw" path="res://pickups/weapon_pickup.tscn" id="6_w1fjs"]
 [ext_resource type="PackedScene" uid="uid://cq0mmphkbrvmm" path="res://levels/rooms/room_c.tscn" id="7_g7cph"]
-[ext_resource type="PackedScene" path="res://pickups/health_pickup.tscn" id="7_uk5d2"]
+[ext_resource type="PackedScene" uid="uid://t1i763qyaaii" path="res://pickups/health_pickup.tscn" id="7_uk5d2"]
 [ext_resource type="PackedScene" uid="uid://wdey00p3syru" path="res://levels/background/background_blue_sky.tscn" id="11_7e8yr"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_po4yl"]
