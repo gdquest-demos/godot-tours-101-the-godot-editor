@@ -530,9 +530,12 @@ func steps_090_conclusion() -> void:
 	)
 	bubble_set_background(TEXTURE_BUBBLE_BACKGROUND)
 	bubble_add_texture(TEXTURE_GDQUEST_LOGO)
-	bubble_set_title(gtr("Congratulations on your first Godot Tour!"))
-	bubble_add_text([gtr("[center]Next, we'll practice and learn more by assembling a game[/center]")])
+	bubble_set_title("")
+	bubble_add_text([bbcode_wrap_font_size(gtr("[center][b]Congratulations on your first Godot Tour![/b][/center]"), 32)])
+	bubble_add_text([gtr("[center]That's it for your first steps with the Godot editor.[/center]"),
+		gtr("[center]If you haven't already, check out the free app [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It's a free module from our complete course to learn game development with Godot.[/center]"),
+		gtr("[center][b]I hope to see you around the GDQuest community![/b][/center]"),]
+	)
 	# TODO: add video of other parts here if on free version
 	bubble_set_footer((CREDITS_FOOTER_GDQUEST))
 	complete_step()
-
