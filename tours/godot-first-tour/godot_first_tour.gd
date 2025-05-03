@@ -534,9 +534,10 @@ func steps_090_conclusion() -> void:
 	bubble_add_text([bbcode_wrap_font_size(gtr("[center][b]Congratulations on your first Godot Tour![/b][/center]"), 32)])
 	bubble_add_text([
 		gtr("[center]That's it for your first steps with the Godot editor. Ready to keep learning?[/center]"),
-		gtr("[center]If you haven't already, check out the free app [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It teaches you the basics of coding through 20+ lessons with dozens of interactive exercises where you can immediately practice what you've learned.[/center]"),
-		gtr("[center]You can also explore our courses to [color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]Pick Up Gamedev From Zero[/url][/b][/color], which offer a comprehensive path to build a game developer's mindset and become independent.[/center]"),
-		gtr("[center][b]I hope to see you around the GDQuest community![/b][/center]"),]
+		gtr("[center]You can find the next tours in our study programs designed to help you [color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]Pick Up Gamedev From Zero[/url][/b][/color] and build a developer's mindset to become independent![/center]"),
+		gtr("[center]If you're still learning how to code, check out the free app [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color][/center]. It teaches you the basics through 20+ lessons with dozens of interactive exercises."),
+		gtr("[center][b]See you around the GDQuest community![/b][/center]"),
+		"", ""]
 	)
 	bubble_set_footer((CREDITS_FOOTER_GDQUEST))
 	complete_step()

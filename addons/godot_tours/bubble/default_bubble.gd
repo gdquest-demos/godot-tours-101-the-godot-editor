@@ -221,8 +221,11 @@ func on_tour_step_changed(index: int) -> void:
 		next_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER | Control.SIZE_EXPAND
 		next_button.theme_type_variation = "NextButton"
 	elif index == step_count - 1:
+		back_button.visible = false
 		next_button.visible = false
 		finish_button.visible = true
+		var margin_horizontal_finish_button := 120.0
+		finish_button.custom_minimum_size.x = buttons_panel_container.size.x - margin_horizontal_finish_button * editor_scale * 2.0
 	else:
 		back_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 		next_button.size_flags_horizontal = Control.SIZE_SHRINK_END | Control.SIZE_EXPAND

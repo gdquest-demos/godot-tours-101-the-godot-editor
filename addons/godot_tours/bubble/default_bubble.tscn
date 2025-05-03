@@ -138,8 +138,8 @@ text = "NEXT"
 
 [node name="FinishButton" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent/ButtonsPanelContainer"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_default_cursor_shape = 2
 theme_type_variation = &"BoxButton"
 text = "END TOUR AND CONTINUE LEARNING"
