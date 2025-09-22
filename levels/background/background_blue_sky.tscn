@@ -1,9 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://wdey00p3syru"]
+[gd_scene load_steps=19 format=3 uid="uid://wdey00p3syru"]
 
 [ext_resource type="Texture2D" uid="uid://dbwguhyctscrg" path="res://levels/background/far_island_1.png" id="1"]
 [ext_resource type="Shader" uid="uid://b05n7ri50e86c" path="res://levels/background/background_blue_sky.gdshader" id="1_e0ril"]
 [ext_resource type="Script" uid="uid://chyxyhcjek7br" path="res://levels/background/background_blue_sky.gd" id="1_fri1r"]
 [ext_resource type="Texture2D" uid="uid://m6jil4hanvyn" path="res://levels/background/island_3.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dl0j21abfuadd" path="res://assets/sky_blue.png" id="2_olci4"]
 [ext_resource type="Texture2D" uid="uid://ygwsrnwk7bi6" path="res://levels/background/wind_fx.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://bv1grb303mt6o" path="res://levels/background/cloud_c.png" id="4"]
 [ext_resource type="PackedScene" uid="uid://cdt4r8jxc3owr" path="res://levels/background/loop_clouds.tscn" id="5"]
@@ -73,12 +74,10 @@ _data = {
 [node name="BackgroundBlueSky" type="ParallaxBackground"]
 script = ExtResource("1_fri1r")
 
-[node name="BlueSky" type="ColorRect" parent="."]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-color = Color(0.419608, 0.772549, 0.882353, 1)
+[node name="BlueSky" type="Sprite2D" parent="."]
+position = Vector2(960.5, 538.5)
+scale = Vector2(37.4038, 25.5227)
+texture = ExtResource("2_olci4")
 
 [node name="LayerBottom" type="ParallaxLayer" parent="."]
 modulate = Color(1, 1, 1, 0.384314)
@@ -105,8 +104,8 @@ texture = ExtResource("1")
 [node name="WindParticle" type="GPUParticles2D" parent="LayerMiddle"]
 position = Vector2(960, 540)
 amount = 20
-process_material = SubResource("33")
 texture = ExtResource("3")
+process_material = SubResource("33")
 
 [node name="Fade2" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -139,7 +138,7 @@ texture = ExtResource("4")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="LayerTop"]
 unique_name_in_owner = true
 libraries = {
-"": SubResource("AnimationLibrary_erbys")
+&"": SubResource("AnimationLibrary_erbys")
 }
 autoplay = "loop"
 

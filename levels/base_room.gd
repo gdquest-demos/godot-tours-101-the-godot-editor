@@ -14,9 +14,6 @@ var _enemies := []
 func _ready() -> void:
 	invisible_walls.hide()
 	for child in get_children():
-		if child is RoomEntrance:
-			_entrances.append(child)
-			child.connect("player_entered", Callable(self, "_on_player_entered"))
 		if child is BaseEnemyAI:
 			_enemies.append(child)
 			child.connect("died", Callable(self, "_on_enemy_died").bind(child))

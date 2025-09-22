@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d08now2ab4buo"
-path="res://.godot/imported/door_beam.png-374ab1ac12e3ddddc58b563a587cb447.ctex"
+uid="uid://dl0j21abfuadd"
+path="res://.godot/imported/sky_blue.png-3b3eb0ea1a7ac356838ca8c0f09080a0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://levels/rooms/entrances/door_beam.png"
-dest_files=["res://.godot/imported/door_beam.png-374ab1ac12e3ddddc58b563a587cb447.ctex"]
+source_file="res://assets/sky_blue.png"
+dest_files=["res://.godot/imported/sky_blue.png-3b3eb0ea1a7ac356838ca8c0f09080a0.ctex"]
 
 [params]
 

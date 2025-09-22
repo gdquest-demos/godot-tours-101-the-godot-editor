@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cfay3xheebusb"]
+[gd_scene load_steps=14 format=4 uid="uid://cfay3xheebusb"]
 
 [ext_resource type="Script" uid="uid://c8bobnn0pww6u" path="res://game.gd" id="1_25vm7"]
 [ext_resource type="Texture2D" uid="uid://51k2u7iwra8e" path="res://levels/rooms/tileset_bridges.png" id="2_lrrw3"]
@@ -72,18 +72,16 @@ sources/0 = SubResource("TileSetAtlasSource_po4yl")
 [node name="Main" type="Node2D"]
 script = ExtResource("1_25vm7")
 
-[node name="Bridges" type="TileMap" parent="."]
+[node name="Bridges" type="TileMapLayer" parent="."]
+use_parent_material = true
+tile_map_data = PackedByteArray("AAALAAQAAAABAAEAAAAMAAQAAAAAAAEAAAANAAQAAAAAAAEAAAAOAAQAAAAAAAEAAAAPAAQAAAAAAAAAAAARAAYAAAACAAEAAAAXAPr/AAAFAAEAAAAXAPv/AAADAAEAAAAXAPz/AAADAAEAAAAXAP3/AAADAAEAAAAXAP7/AAADAAEAAAAXAP//AAACAAAAAAAYAP//AAAAAAEAAAAZAP//AAAAAAAAAAAZAAAAAAADAAEAAAAZAAEAAAAEAAEAAAAQAAYAAAAAAAEAAAAPAAYAAAACAAAAAAAPAAUAAAADAAEAAAA=")
 tile_set = SubResource("TileSet_ci3ya")
 rendering_quadrant_size = 128
-format = 2
-layer_0/name = "Bridges"
-layer_0/tile_data = PackedInt32Array(262155, 65536, 1, 262156, 0, 1, 262157, 0, 1, 262158, 0, 1, 262159, 0, 0, 393233, 131072, 1, -393193, 327680, 1, -327657, 196608, 1, -262121, 196608, 1, -196585, 196608, 1, -131049, 196608, 1, -65513, 131072, 0, -65512, 0, 1, -65511, 0, 0, 25, 196608, 1, 65561, 262144, 1, 393232, 0, 1, 393231, 131072, 0, 327695, 196608, 1)
 
-[node name="InvisibleWalls" type="TileMap" parent="."]
+[node name="InvisibleWalls" type="TileMapLayer" parent="."]
+use_parent_material = true
+tile_map_data = PackedByteArray("AAAHAAoAAAAAAAAAAAAMAAUAAAAAAAAAAAANAAUAAAAAAAAAAAAOAAUAAAAAAAAAAAAOAAYAAAAAAAAAAAAOAAcAAAAAAAAAAAAPAAcAAAAAAAAAAAAQAAcAAAAAAAAAAAAQAAUAAAAAAAAAAAAQAAQAAAAAAAAAAAAQAAMAAAAAAAAAAAAPAAMAAAAAAAAAAAAOAAMAAAAAAAAAAAANAAMAAAAAAAAAAAAMAAMAAAAAAAAAAAAYAAAAAAAAAAAAAAAXAAAAAAAAAAAAAAAWAAAAAAAAAAAAAAAWAP//AAAAAAAAAAAWAP7/AAAAAAAAAAAWAP3/AAAAAAAAAAAWAPz/AAAAAAAAAAAZAPz/AAAAAAAAAAAYAPz/AAAAAAAAAAAYAP3/AAAAAAAAAAAYAP7/AAAAAAAAAAAZAP7/AAAAAAAAAAAaAP7/AAAAAAAAAAAaAP//AAAAAAAAAAAaAAAAAAAAAAAAAAA=")
 tile_set = ExtResource("3_vklf7")
-format = 2
-layer_0/name = "Invisible walls"
-layer_0/tile_data = PackedInt32Array(655367, 0, 0, 327692, 0, 0, 327693, 0, 0, 327694, 0, 0, 393230, 0, 0, 458766, 0, 0, 458767, 0, 0, 458768, 0, 0, 327696, 0, 0, 262160, 0, 0, 196624, 0, 0, 196623, 0, 0, 196622, 0, 0, 196621, 0, 0, 196620, 0, 0, 24, 0, 0, 23, 0, 0, 22, 0, 0, -65514, 0, 0, -131050, 0, 0, -196586, 0, 0, -262122, 0, 0, -262119, 0, 0, -262120, 0, 0, -196584, 0, 0, -131048, 0, 0, -131047, 0, 0, -131046, 0, 0, -65510, 0, 0, 26, 0, 0)
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 layer = 100

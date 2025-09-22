@@ -7,14 +7,12 @@
 [node name="Start" type="Node2D"]
 script = ExtResource("2")
 
-[node name="Bridges" type="TileMap" parent="."]
+[node name="Bridges" type="TileMapLayer" parent="."]
+use_parent_material = true
 tile_set = ExtResource("2_vnf5n")
-format = 2
-layer_0/name = "Bridges"
 metadata/_edit_lock_ = true
 
-[node name="InvisibleWalls" type="TileMap" parent="."]
+[node name="InvisibleWalls" type="TileMapLayer" parent="."]
+use_parent_material = true
 tile_set = ExtResource("3")
-format = 2
-layer_0/name = "Invisible walls"
 metadata/_edit_lock_ = true

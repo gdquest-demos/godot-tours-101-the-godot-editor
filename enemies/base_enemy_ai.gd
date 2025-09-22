@@ -18,7 +18,7 @@ var _is_active := false
 
 var _target: Player
 var _velocity := Vector2.ZERO
-var _drag_factor := 6.0
+var _ground_friction_factor := 6.0
 
 @onready var _detection_area: Area2D = $DetectionArea
 @onready var _hit_box: Area2D = $HitBox
@@ -39,7 +39,7 @@ func activate() -> void:
 func follow(target_global_position: Vector2) -> void:
 	var desired_velocity := global_position.direction_to(target_global_position) * speed
 	var steering := desired_velocity - _velocity
-	_velocity += steering / _drag_factor
+	_velocity += steering / _ground_friction_factor
 	set_velocity(_velocity)
 	move_and_slide()
 	_velocity = velocity
@@ -69,7 +69,7 @@ func die() -> void:
 	collision_layer = 0
 	collision_mask = 0
 	set_physics_process(false)
-	
+
 	_die_sound.pitch_scale = randf_range(0.95, 1.05)
 	_die_sound.play()
 	await _die_sound.finished

@@ -19,7 +19,7 @@ const DEATH_SOUNDS := [
 
 @export var max_health := 5
 @export var speed := 460.0
-@export var drag_factor := 5.0
+@export var ground_friction_factor := 5.0
 
 var health := max_health: set = set_health
 
@@ -43,7 +43,7 @@ func _physics_process(_delta: float) -> void:
 
 	var desired_velocity := speed * move_direction
 	var steering := desired_velocity - velocity
-	velocity += steering / drag_factor
+	velocity += steering / ground_friction_factor
 	set_velocity(velocity)
 	move_and_slide()
 
