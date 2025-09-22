@@ -50,6 +50,8 @@ var script_chest := "res://levels/rooms/chests/chest.gd"
 
 
 func _build() -> void:
+	ended.connect(OS.shell_open.bind("https://school.gdquest.com/courses/learn_2d_gamedev_godot_4/learn_gdscript/learn_gdscript_app"))
+
 	# Set editor state according to the tour's needs.
 	queue_command(func reset_editor_state_for_tour():
 		interface.canvas_item_editor_toolbar_grid_button.button_pressed = false
@@ -539,4 +541,8 @@ func steps_090_conclusion() -> void:
 		gtr("[center][b]I hope to see you around the GDQuest community![/b][/center]"),]
 	)
 	bubble_set_footer((CREDITS_FOOTER_GDQUEST))
+	queue_command(
+		func bubble_set_finish_text() -> void:
+			bubble.set_finish_button_text(gtr("CONTINUE LEARNING ON GDSCHOOL"))
+	)
 	complete_step()
