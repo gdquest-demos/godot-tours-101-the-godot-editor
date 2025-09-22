@@ -13,7 +13,7 @@ const CLASS_IMG := r"[img=%dx%d]res://addons/godot_tours/bubble/assets/icons/$1.
 const COMMIT_MESSAGE := """It seems you're not done with this step! [color=#FF8A00]You may get stuck later on in the Tour if you skip ahead without completing all the tasks.[/color] You can try going back one step before skipping.
 
 If you decide to skip the step, note down the tasks and do them before you start the following steps."""
-const LOG_MESSAGE := """[color=#FF8A00][b]Godot Tours[/b] is an experimental Edtech that evolves with the Godot engine and requires ongoing testing. It's not uncommon to encounter bugs.[/color]
+const LOG_MESSAGE := """[color=#FF8A00][b]GDTour[/b] is an experimental Edtech that evolves with the Godot engine and requires ongoing testing. It's not uncommon to encounter bugs.[/color]
 Please be patient and try the following:
 
 [indent]1. Check that you're using the recommended version of Godot. For this tour it’s Godot 4.3.[/indent]
@@ -38,7 +38,7 @@ Please be patient and try the following:
 		paragraph_separation = new_value
 		if main_v_box_container == null:
 			await ready
-		main_v_box_container.add_theme_constant_override("separation", paragraph_separation)
+		main_v_box_container.add_theme_constant_override("separation", paragraph_separation * EditorInterface.get_editor_scale())
 
 var img_size := 24 * EditorInterface.get_editor_scale()
 var regex_class := RegEx.new()
@@ -49,6 +49,7 @@ var regex_class := RegEx.new()
 @onready var footer_rich_text_label: RichTextLabel = %FooterRichTextLabel
 @onready var footer_spacer: Control = %FooterSpacer
 @onready var main_v_box_container: VBoxContainer = %MainVBoxContainer
+@onready var tasks_margin_container: MarginContainer = %TasksMarginContainer
 @onready var tasks_v_box_container: VBoxContainer = %TasksVBoxContainer
 
 @onready var buttons_panel_container: PanelContainer = %ButtonsPanelContainer
@@ -138,7 +139,7 @@ func _ready() -> void:
 	finish_button.pressed.connect(finish_requested.emit)
 	info_rich_text_label.finished.connect(_on_info_rich_text_label_finished)
 
-	for node in [header_rich_text_label, main_v_box_container, tasks_v_box_container, footer_rich_text_label, footer_spacer]:
+	for node in [header_rich_text_label, main_v_box_container, tasks_margin_container, footer_rich_text_label, footer_spacer]:
 		node.visible = false
 
 	paragraph_separation *= editor_scale
@@ -219,7 +220,7 @@ func on_tour_step_changed(index: int) -> void:
 	if index == 0:
 		back_button.visible = false
 		next_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER | Control.SIZE_EXPAND
-		next_button.theme_type_variation = "NextButton"
+		next_button.theme_type_variation = "BoxButton"
 	elif index == step_count - 1:
 		next_button.visible = false
 		finish_button.visible = true
@@ -244,6 +245,8 @@ func clear_elements_and_tasks() -> void:
 	for control in [main_v_box_container, tasks_v_box_container]:
 		for node in control.get_children():
 			node.queue_free()
+
+	for control in [main_v_box_container, tasks_margin_container]:
 		control.visible = false
 
 
@@ -297,7 +300,7 @@ func add_video(stream: VideoStream) -> void:
 
 
 func add_task(description: String, repeat: int, repeat_callable: Callable, error_predicate: Callable) -> void:
-	tasks_v_box_container.visible = true
+	tasks_margin_container.visible = true
 	var task := TaskPackedScene.instantiate()
 	tasks_v_box_container.add_child(task)
 	task.status_changed.connect(check_tasks)

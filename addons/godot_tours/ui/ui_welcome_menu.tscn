@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bhu2wc07q7fxk"]
+[gd_scene load_steps=5 format=3 uid="uid://bhu2wc07q7fxk"]
 
 [ext_resource type="Script" uid="uid://bx5iqc8vdroml" path="res://addons/godot_tours/ui/ui_welcome_menu.gd" id="1_kfmbk"]
 [ext_resource type="Theme" uid="uid://7hcgepakmhxl" path="res://addons/godot_tours/ui/theme_welcome_menu.tres" id="2_0icf0"]
 [ext_resource type="Texture2D" uid="uid://cb4s7cxc5wtdv" path="res://addons/godot_tours/assets/icons/reload.svg" id="3_rgtlm"]
+[ext_resource type="Texture2D" uid="uid://bidxqlunyylhn" path="res://addons/godot_tours/bubble/assets/close.svg" id="4_3rpq1"]
 
 [node name="UIWelcomeMenu" type="CanvasLayer"]
 script = ExtResource("1_kfmbk")
@@ -57,7 +58,7 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"WelcomeMenuTitleLabel"
-text = "Welcome to Godot Tour!"
+text = "Welcome to GDTour!"
 
 [node name="ToursColumn" type="VBoxContainer" parent="Control/PanelContainer/MarginContainer/ViewMenu"]
 unique_name_in_owner = true
@@ -142,7 +143,7 @@ text = "OK"
 
 [node name="ButtonClose" type="Button" parent="Control/PanelContainer/MarginContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(40, 40)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
@@ -150,36 +151,15 @@ mouse_default_cursor_shape = 2
 theme_type_variation = &"CloseButton"
 flat = true
 
-[node name="ColorRect" type="ColorRect" parent="Control/PanelContainer/MarginContainer/ButtonClose"]
+[node name="CloseTextureRect" type="TextureRect" parent="Control/PanelContainer/MarginContainer/ButtonClose"]
+unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -3.0
-offset_right = 20.0
-offset_bottom = 3.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-rotation = 0.785398
-pivot_offset = Vector2(20, 3)
 mouse_filter = 2
-
-[node name="ColorRect2" type="ColorRect" parent="Control/PanelContainer/MarginContainer/ButtonClose"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -3.0
-offset_right = 20.0
-offset_bottom = 3.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 2.35619
-pivot_offset = Vector2(20, 3)
-mouse_filter = 2
+texture = ExtResource("4_3rpq1")
+expand_mode = 1
+stretch_mode = 5

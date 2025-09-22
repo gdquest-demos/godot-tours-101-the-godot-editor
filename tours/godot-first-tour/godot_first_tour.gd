@@ -54,7 +54,7 @@ func _build() -> void:
 	queue_command(func reset_editor_state_for_tour():
 		interface.canvas_item_editor_toolbar_grid_button.button_pressed = false
 		interface.canvas_item_editor_toolbar_smart_snap_button.button_pressed = false
-		interface.bottom_button_output.button_pressed = false
+		interface.bottom_output_button.button_pressed = false
 	)
 
 	steps_010_intro()
@@ -109,7 +109,7 @@ func steps_010_intro() -> void:
 		[gtr("Great! Now let's take a quick tour of the editor."),]
 	)
 	queue_command(func():
-		interface.bottom_button_output.button_pressed = false
+		interface.bottom_output_button.button_pressed = false
 	)
 	complete_step()
 
@@ -236,7 +236,7 @@ func steps_020_first_look() -> void:
 
 	# 0046: bottom panels
 	queue_command(func debugger_open():
-		interface.bottom_button_debugger.button_pressed = true
+		interface.bottom_debugger_button.button_pressed = true
 	)
 	highlight_controls([interface.debugger])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.BOTTOM_CENTER)
@@ -250,7 +250,7 @@ func steps_020_first_look() -> void:
 	complete_step()
 
 	queue_command(func debugger_close():
-		interface.bottom_button_debugger.button_pressed = false
+		interface.bottom_debugger_button.button_pressed = false
 	)
 
 
@@ -501,7 +501,7 @@ func steps_050_signals() -> void:
 	complete_step()
 
 	queue_command(func debugger_close():
-		interface.bottom_button_debugger.button_pressed = false
+		interface.bottom_debugger_button.button_pressed = false
 	)
 
 

@@ -111,8 +111,12 @@ func _on_overlay_alpha_h_slider_value_changed(value: float) -> void:
 func populate_tours_item_list() -> void:
 	tours_item_list.clear()
 	for index in range(tour_paths.size()):
-		tours_item_list.add_item(tour_paths[index].get_file())
-		tours_item_list.set_item_metadata(index, tour_paths[index])
+		var tour_path := tour_paths[index]
+		var tour_id := ResourceUID.text_to_id(tour_path)
+		if ResourceUID.has_id(tour_id):
+			tour_path = ResourceUID.get_id_path(tour_id)
+		tours_item_list.add_item(tour_path.get_file())
+		tours_item_list.set_item_metadata(index, tour_path)
 
 
 func _update_spinbox_step_count() -> void:

@@ -31,4 +31,4 @@ Is a collection of utilities dealing with themes for developing consistent plugi
 
 ## Notes
 
-These functions are extracted from theme utils in [Godot Tours](https://github.com/GDQuest/godot-tours/).
+These functions are extracted from theme utils in [GDTour](https://github.com/GDQuest/godot-tours/).

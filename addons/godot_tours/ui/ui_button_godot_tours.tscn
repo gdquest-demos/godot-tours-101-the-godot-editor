@@ -62,5 +62,5 @@ Button/styles/pressed = SubResource("StyleBoxFlat_3flm3")
 unique_name_in_owner = true
 mouse_default_cursor_shape = 2
 theme = SubResource("Theme_l356x")
-text = "GODOT TOURS"
+text = "GDTOUR"
 script = ExtResource("1_m0m61")

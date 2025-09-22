@@ -3,6 +3,10 @@
 @tool
 extends CanvasLayer
 
+# HACK: we use this to avoid scaling theme resources multiple times, which can
+# break the layout. This can happen when swapping bubbles at runtime.
+static var _scaled_theme: Theme = null
+
 ## Emitted to go backward one step in the tour.
 signal back_button_pressed
 ## Emitted to go forward one step in the tour.
@@ -97,9 +101,13 @@ func _ready() -> void:
 	panel_container.gui_input.connect(_on_panel_container_gui_input)
 	editor_scale = EditorInterface.get_editor_scale()
 	panel_container.custom_minimum_size *= editor_scale
-	if panel_container.theme:
-		panel_container.theme = ThemeUtils.request_fallback_font(panel_container.theme)
-		panel_container.theme = ThemeUtils.generate_scaled_theme(panel_container.theme)
+	if panel_container.theme != null:
+		if _scaled_theme == null:
+			_scaled_theme = ThemeUtils.request_fallback_font(panel_container.theme)
+			_scaled_theme  = ThemeUtils.generate_scaled_theme(_scaled_theme)
+			panel_container.theme = _scaled_theme
+		else:
+			panel_container.theme = _scaled_theme
 
 
 func _process(delta: float) -> void:

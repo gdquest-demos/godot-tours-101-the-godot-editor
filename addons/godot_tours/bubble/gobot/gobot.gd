@@ -35,7 +35,7 @@ func _ready() -> void:
 
 
 func do_wink() -> void:
-	animation_tree.set("parameters/OneShot/request", true)
+	animation_tree.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 
 
 func set_expression(value: Expressions) -> void:

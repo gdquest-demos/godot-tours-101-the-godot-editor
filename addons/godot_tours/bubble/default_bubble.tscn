@@ -10,6 +10,7 @@
 
 [node name="Bubble" type="CanvasLayer"]
 script = ExtResource("1_q308r")
+paragraph_separation = 4
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 unique_name_in_owner = true
@@ -19,10 +20,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -256.0
-offset_top = -114.5
-offset_right = 256.0
-offset_bottom = 71.5
+offset_left = -292.0
+offset_top = -151.5
+offset_right = 220.0
+offset_bottom = 18.5
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_mkok2")
@@ -102,10 +103,16 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"MainVBoxContainer"
+theme_override_constants/separation = 8
 
-[node name="TasksVBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent"]
+[node name="TasksMarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent"]
 unique_name_in_owner = true
 visible = false
+layout_mode = 2
+theme_type_variation = &"TasksMarginContainer"
+
+[node name="TasksVBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent/TasksMarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 
@@ -120,6 +127,7 @@ theme_type_variation = &"ButtonsPanelContainer"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
+size_flags_vertical = 4
 focus_mode = 0
 mouse_default_cursor_shape = 2
 shortcut_in_tooltip = false
@@ -130,9 +138,10 @@ flat = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
+size_flags_vertical = 4
 focus_mode = 0
 mouse_default_cursor_shape = 2
-theme_type_variation = &"GrayButton"
+theme_type_variation = &"NextButton"
 shortcut_in_tooltip = false
 text = "NEXT"
 
@@ -187,6 +196,7 @@ autowrap_mode = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/ViewClose"]
 layout_mode = 2
 size_flags_vertical = 8
+theme_type_variation = &"CloseHBoxContainer"
 alignment = 1
 
 [node name="ButtonCloseNo" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/ViewClose/HBoxContainer"]
@@ -361,6 +371,7 @@ fit_content = true
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"OutlinePanelContainer"
+metadata/_edit_lock_ = true
 
 [node name="Avatar" parent="PanelContainer" instance=ExtResource("8_oayod")]
 unique_name_in_owner = true

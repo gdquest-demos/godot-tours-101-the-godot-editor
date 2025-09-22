@@ -1,8 +1,8 @@
-## UI component for one tour on Godot tour's welcome menu.
+## UI component for one tour on GDTour's welcome menu.
 @tool
 extends Control
 
-const GodotTourEntry = preload("../godot_tour_entry.gd")
+const GDTourMetadata = preload("../gdtour_metadata.gd")
 
 const COLOR_DISABLED_TEXT := Color(0.51764708757401, 0.59607845544815, 0.74509805440903)
 
@@ -14,6 +14,7 @@ static var group := ButtonGroup.new()
 		if not label_free:
 			await ready
 		label_free.visible = is_free
+
 @export var title := "":
 	set(value):
 		title = value
@@ -47,8 +48,9 @@ var tour_path := ""
 @onready var button: Button = %Button
 
 
-func setup(tour_entry: GodotTourEntry) -> void:
-	self.tour_path = tour_entry.tour_path
+func setup(tour_entry: GDTourMetadata.TourMetadata) -> void:
+	var tour_id := ResourceUID.text_to_id(tour_entry.tour_path)
+	tour_path = ResourceUID.get_id_path(tour_id) if ResourceUID.has_id(tour_id) else tour_entry.tour_path
 	title = tour_entry.title
 	is_free = tour_entry.is_free
 	is_locked = tour_entry.is_locked

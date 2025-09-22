@@ -108,6 +108,9 @@ func _build() -> void:
 	pass
 
 
+## Cleans up resources used by the tour, including removing input actions,
+## clearing mouse animation and guides, and freeing the bubble UI.
+## Called when the tour is closed or ends.
 func clean_up() -> void:
 	for key in EVENTS:
 		var action: StringName = "tour_%s" % key
@@ -121,18 +124,29 @@ func clean_up() -> void:
 		bubble.queue_free()
 
 
+## Sets the current step index and runs the steps between the current index and the new one.
+## This is used to navigate between steps, either going forward or backward, but
+## also to jump and skip many steps.
+##
+## Parameters:
+## - value: The target step index to move to.
 func set_index(value: int) -> void:
 	log.reopen()
 	var step_count := steps.size()
-	var stride := Direction.BACK if value < index else Direction.NEXT
 	value = clampi(value, -1, step_count)
-	for index in range(index + stride, clampi(value + stride, -1, step_count), stride):
-		log.info("[step_commands: %d]\n%s" % [index, interface.logger_rich_text_label.get_parsed_text()])
-		run(steps[index])
+	log.info("[step_commands: %d]\n%s" % [value, interface.logger_rich_text_label.get_parsed_text()])
+	run(steps[value])
 	index = clampi(value, 0, step_count - 1)
 	step_changed.emit(index)
 
 
+## Loads and initializes the bubble UI for the tour.
+## Frees any existing bubble and instantiates a new one, sets up connections
+## to handle navigation, closing, and completing the tour.
+##
+## Parameters:
+## - BubblePackedScene: Optional custom bubble scene. If null, uses the default
+## bubble in the tour system.
 func load_bubble(BubblePackedScene: PackedScene = null) -> void:
 	if bubble != null:
 		bubble.queue_free()
@@ -160,12 +174,14 @@ func load_bubble(BubblePackedScene: PackedScene = null) -> void:
 
 
 ## Goes back to the previous step.
+## Stops the currently playing scene and navigates to the previous step in the tour.
 func back() -> void:
 	EditorInterface.stop_playing_scene()
 	set_index(index + Direction.BACK)
 
 
 ## Goes to the next step, or shows a button to end the tour if the last step is reached.
+## Stops the currently playing scene and navigates to the next step in the tour.
 func next() -> void:
 	EditorInterface.stop_playing_scene()
 	set_index(index + Direction.NEXT)
@@ -186,9 +202,10 @@ func auto_next() -> void:
 		next()
 	)
 
+
 ## Completes the current step's commands, adding some more commands to clear the bubble, overlays, and the mouse.
 ## Then, this function appends the completed step (an array of
-## ["addons/godot_tours/tour.gd".Command] objects) to the tour.
+## [Command] objects) to the tour.
 func complete_step() -> void:
 	var step_start: Array[Command] = [
 		Command.new(func() -> void: bubble.clear()),
@@ -202,9 +219,14 @@ func complete_step() -> void:
 	step_commands = []
 
 
+## Runs all commands in a step sequentially.
+## Each command is executed and the function waits for it to complete before moving to the next.
+##
+## Parameters:
+## - current_step: An array of Command objects to execute.
 func run(current_step: Array[Command]) -> void:
-	for l in current_step:
-		await l.force()
+	for current_command in current_step:
+		await current_command.force()
 
 
 ## Appends a command to the currently edited step. Commands are executed in the order they are added.
@@ -213,10 +235,20 @@ func queue_command(callable: Callable, parameters := []) -> void:
 	step_commands.push_back(Command.new(callable, parameters))
 
 
+## Replace the current bubble with a new one.
+## Use this to change the bubble UI appearance during the tour.
+##
+## Parameters:
+## - BubblePackedScene: The new bubble scene to use. If null, uses the default bubble.
 func swap_bubble(BubblePackedScene: PackedScene = null) -> void:
 	queue_command(load_bubble, [BubblePackedScene])
 
 
+## Open a scene in the editor.
+## If the scene is already open, it will be reloaded.
+##
+## Parameters:
+## - path: The file path to the scene to open. It must exist and have a .tscn extension.
 func scene_open(path: String) -> void:
 	if not FileAccess.file_exists(path) and path.get_extension() != "tscn":
 		warn("[b]'path(=%s)'[/b] doesn't exist or has wrong extension" % path, "scene_open")
@@ -229,6 +261,11 @@ func scene_open(path: String) -> void:
 	)
 
 
+## Select nodes in the current scene by their node paths.
+## First deselects all nodes, then selects the specified nodes.
+##
+## Parameters:
+## - paths: Array of node paths to select. Paths should be relative to the scene root.
 func scene_select_nodes_by_path(paths: Array[String] = []) -> void:
 	scene_deselect_all_nodes()
 	queue_command(func() -> void:
@@ -238,6 +275,12 @@ func scene_select_nodes_by_path(paths: Array[String] = []) -> void:
 	)
 
 
+## Lock or unlock nodes in the current scene by their paths.
+## Locked nodes can't be selected or moved in the editor viewport.
+##
+## Parameters:
+## - paths: Array of node paths to lock/unlock. Paths should be relative to the scene root.
+## - is_locked: If true, lock (true) or unlock (false) the nodes.
 func scene_toggle_lock_nodes_by_path(paths: Array[String] = [], is_locked := true) -> void:
 	queue_command(func get_and_lock_nodes() -> void:
 		var nodes := Utils.find_children_by_path(EditorInterface.get_edited_scene_root(), paths)
@@ -247,11 +290,14 @@ func scene_toggle_lock_nodes_by_path(paths: Array[String] = [], is_locked := tru
 	)
 
 
+## Deselect all nodes in the editor.
+## This clears the current editor selection.
 func scene_deselect_all_nodes() -> void:
 	queue_command(editor_selection.clear)
 
 
 ## Frees the `Guide3D` nodes from the currently edited scene.
+## This cleans up any visual guide indicators that were added to help users during the tour.
 func clear_guides() -> void:
 	var scene_root := EditorInterface.get_edited_scene_root()
 	if scene_root == null:
@@ -262,6 +308,11 @@ func clear_guides() -> void:
 	guides = {}
 
 
+## Set a TabBar to a specific tab index.
+##
+## Parameters:
+## - tabs: The TabBar to manipulate
+## - index: The index of the tab to select. Must be within range of available tabs.
 func tabs_set_to_index(tabs: TabBar, index: int) -> void:
 	if index < 0 or index >= tabs.tab_count:
 		warn("[b]'index(=%d)'[/b] not in [b]'range(0, tabs.tab_count(=%d))'[/b]." % [index, tabs.tab_count], "tabs_set_to_index")
@@ -269,6 +320,12 @@ func tabs_set_to_index(tabs: TabBar, index: int) -> void:
 	queue_command(tabs.set_current_tab, [index])
 
 
+## Set a TabBar to a specific tab by its title.
+## Finds the tab with the matching title and selects it.
+##
+## Parameters:
+## - tabs: The TabBar to manipulate
+## - title: The title of the tab to select. Must match an existing tab title.
 func tabs_set_to_title(tabs: TabBar, title: String) -> void:
 	var index := find_tabs_title(tabs, title)
 	if index == -1:
@@ -278,6 +335,12 @@ func tabs_set_to_title(tabs: TabBar, title: String) -> void:
 		tabs_set_to_index(tabs, index)
 
 
+## Switch a TabContainer's active tab to display the tab
+## containing a specific control.
+##
+## Parameters:
+## - control: The control to find and show in its parent TabContainer.
+##   Must be a direct child of a TabContainer.
 func tabs_set_by_control(control: Control) -> void:
 	const FUNC_NAME := "tabs_set_to_control"
 	if control == null or (control != null and not control.get_parent() is TabContainer):
@@ -292,6 +355,12 @@ func tabs_set_by_control(control: Control) -> void:
 		tabs_set_to_index(tab_container.get_tab_bar(), tab_idx)
 
 
+## Set the TileSet editor tabs to the tab containing a
+## specific control.
+##
+## Parameters:
+## - control: The control to find and show in the TileSet editor tabs.
+##   Must be a control in the interface.tileset_panels array.
 func tileset_tabs_set_by_control(control: Control) -> void:
 	var index := interface.tileset_panels.find(control)
 	if index == -1:
@@ -300,6 +369,11 @@ func tileset_tabs_set_by_control(control: Control) -> void:
 		tabs_set_to_index(interface.tileset_tabs, index)
 
 
+## Set the TileMap editor tabs to the tab containing a specific control.
+##
+## Parameters:
+## - control: The control to find and show in the TileMap editor tabs.
+##   Must be a control in the interface.tilemap_panels array.
 func tilemap_tabs_set_by_control(control: Control) -> void:
 	var index := interface.tilemap_panels.find(control)
 	if index == -1:
@@ -308,6 +382,12 @@ func tilemap_tabs_set_by_control(control: Control) -> void:
 		tabs_set_to_index(interface.tilemap_tabs, index)
 
 
+## Find and activate tree items that start with a specific prefix.
+## Useful for activating specific signals, nodes, or resources in tree views.
+##
+## Parameters:
+## - tree: The Tree control to search in
+## - prefix: The text prefix to search for in tree items
 func tree_activate_by_prefix(tree: Tree, prefix: String) -> void:
 	queue_command(func() -> void:
 		if tree == interface.node_dock_signals_tree and interface.signals_dialog_window.visible:
@@ -324,6 +404,11 @@ func tree_activate_by_prefix(tree: Tree, prefix: String) -> void:
 	)
 
 
+## Center the 2D viewport at a specific position with a specific zoom level.
+##
+## Parameters:
+## - position: The position to center the viewport at. Defaults to Vector2.ZERO.
+## - zoom: The zoom level to set, where 1.0 is 100%. Defaults to 1.0.
 func canvas_item_editor_center_at(position := Vector2.ZERO, zoom := 1.0) -> void:
 	queue_command(func() -> void:
 		await delay_process_frame()
@@ -337,7 +422,11 @@ func canvas_item_editor_zoom_reset() -> void:
 	queue_command(interface.canvas_item_editor_zoom_widget.set_zoom.bind(1.0))
 
 
-## Plays a flash animation in the 2D game viewport, over the desired rect.
+## Play a flash animation in the 2D viewport over a specific rectangle area.
+## Useful for drawing attention to a specific part of the scene.
+##
+## Parameters:
+## - rect: The rectangle area to flash in the 2D viewport
 func canvas_item_editor_flash_area(rect: Rect2) -> void:
 	queue_command(func flash_canvas_item_editor() -> void:
 		var flash_area := FlashAreaPackedScene.instantiate()
@@ -349,7 +438,8 @@ func canvas_item_editor_flash_area(rect: Rect2) -> void:
 	)
 
 
-# TODO: test?
+## Focus the 3D viewport on the currently selected node.
+## This simulates pressing the "F" key in the 3D viewport to frame the selection.
 func spatial_editor_focus() -> void:
 	queue_command(func() -> void:
 		for surface in interface.spatial_editor_surfaces:
@@ -358,7 +448,11 @@ func spatial_editor_focus() -> void:
 	)
 
 
-# TODO: test?
+## Select nodes by their paths and then focus the 3D viewport on them.
+## This combines selecting nodes and framing them in the 3D viewport.
+##
+## Parameters:
+## - paths: Array of node paths to select and focus on
 func spatial_editor_focus_node_by_paths(paths: Array[String]) -> void:
 	scene_select_nodes_by_path(paths)
 	spatial_editor_focus()
@@ -395,69 +489,139 @@ func spatial_editor_change_viewport_layout(layout: ViewportLayouts) -> void:
 	)
 
 
+## Switch the editor to a specific main screen context.
+## You can use the specific context_set functions, like [context_set_2d], [context_set_3d], etc. instead.
+##
+## Parameters:
+## - type: The editor context to switch to (e.g., "2D", "3D", "Script", etc.)
 func context_set(type: String) -> void:
 	queue_command(EditorInterface.set_main_screen_editor, [type])
 
 
+## Switch the editor to the 2D context.
+## Shorthand for context_set("2D").
 func context_set_2d() -> void:
 	context_set("2D")
 
 
+## Switch the editor to the 3D context.
+## Shorthand for context_set("3D").
 func context_set_3d() -> void:
 	context_set("3D")
 
 
+## Switch the editor to the Script context.
+## Shorthand for context_set("Script").
 func context_set_script() -> void:
 	context_set("Script")
 
 
+## Switch the editor to the Game context.
+## Shorthand for context_set("Game").
 func context_set_game() -> void:
 	context_set("Game")
 
 
+## Switch the editor to the Asset Library context.
+## Shorthand for context_set("AssetLib").
 func context_set_asset_lib() -> void:
 	context_set("AssetLib")
 
 
+## Set the title of the bubble UI component.
+##
+## Parameters:
+## - title_text: The text to set as the bubble's title
 func bubble_set_title(title_text: String) -> void:
 	queue_command(func bubble_set_title() -> void: bubble.set_title(title_text))
 
 
+## Add text paragraphs to the bubble UI component.
+##
+## Parameters:
+## - text: Array of strings, each representing a paragraph to add to the bubble
 func bubble_add_text(text: Array[String]) -> void:
 	queue_command(func bubble_add_text() -> void: bubble.add_text(text))
 
 
+## Add a texture to the bubble UI component.
+##
+## Parameters:
+## - texture: The texture to add to the bubble
+## - max_height: Optional maximum height for the texture in pixels, scaled by editor scale.
+##   If 0, the texture will use its natural height.
 func bubble_add_texture(texture: Texture2D, max_height := 0.0) -> void:
 	queue_command(func bubble_add_texture() -> void:
 		bubble.add_texture(texture, max_height * EditorInterface.get_editor_scale())
 	)
 
 
+## Add code with syntax highlighting to the bubble UI component.
+##
+## Parameters:
+## - lines: Array of strings, each representing a line of code to add to the bubble
 func bubble_add_code(lines: Array[String]) -> void:
 	queue_command(func bubble_add_code() -> void: bubble.add_code(lines))
 
 
+## Add a video player to the bubble UI component.
+##
+## Parameters:
+## - stream: The VideoStream resource to play in the bubble
 func bubble_add_video(stream: VideoStream) -> void:
 	queue_command(func bubble_add_video() -> void: bubble.add_video(stream))
 
 
+## Set the header text of the bubble UI component.
+## This text appears above the title section.
+##
+## Parameters:
+## - text: The text to set as the bubble's header
 func bubble_set_header(text: String) -> void:
 	queue_command(func bubble_set_header() -> void: bubble.set_header(text))
 
 
+## Set the footer text of the bubble UI component.
+## This text appears below the content section. You can use it for side notes
+## and less important information.
+##
+## Parameters:
+## - text: The text to set as the bubble's footer
 func bubble_set_footer(text: String) -> void:
 	queue_command(func bubble_set_footer() -> void: bubble.set_footer(text))
 
 
+## Set the background texture of the bubble UI component.
+##
+## Parameters:
+## - texture: The texture to use as the bubble's background
 func bubble_set_background(texture: Texture2D) -> void:
 	queue_command(func bubble_set_background() -> void: bubble.set_background(texture))
 
 
-# TODO: test?
+## Add a task to the bubble UI component.
+## Tasks are interactive elements that wait for the user to complete a specific action.
+## The action is determined by the `repeat_callable` function, which is called
+## every frame. The task is passed if the value returned by `repeat_callable` is
+## equal to `repeat`.
+##
+## Parameters:
+## - description: Text description of the task for the user
+## - repeat: Number of times the task needs to be completed
+## - repeat_callable: Function that checks if the task is complete and returns its progress
+## - error_predicate: Optional function that returns true if the task has an error state
 func bubble_add_task(description: String, repeat: int, repeat_callable: Callable, error_predicate := noop_error_predicate) -> void:
 	queue_command(func() -> void: bubble.add_task(description, repeat, repeat_callable, error_predicate))
 
 
+## Creates a task that waits for the user to press a specific button.
+## This is commonly used for guiding users through the interface by having
+## them interact with specific buttons.
+##
+## Parameters:
+## - button: The Button that the user needs to press
+## - description: Optional custom task description. If empty, uses button text or tooltip.
+##   and automatically generates a description like "Press the [ButtonName] button."
 func bubble_add_task_press_button(button: Button, description := "") -> void:
 	var text: String = description
 	if text.is_empty():
@@ -478,16 +642,28 @@ func bubble_add_task_press_button(button: Button, description := "") -> void:
 	)
 
 
+## Creates a task that waits for the user to toggle a button to a specific state.
+## This is useful for teaching users about toggle buttons and how to activate or
+## deactivate features in the editor.
+##
+## Parameters:
+## - button: The Button that needs to be toggled
+## - is_toggled: The target toggle state (true for ON, false for OFF)
+## - description: Optional custom task description. If empty, automatically generates
+##   a description like "Turn the [ButtonName] button ON/OFF."
 func bubble_add_task_toggle_button(button: Button, is_toggled := true, description := "") -> void:
-	var text := button.tooltip_text if button.text.is_empty() else button.text
-	text = text.replace(".", "")
-
 	if not button.toggle_mode:
 		warn("[b]'button(=%s)'[/b] at [b]'path(=%s)'[/b] doesn't have toggle_mode ON." % [str(button), button.get_path()], "bubble_add_task_toggle_button")
 		return
 
 	const TOGGLE_MAP := {true: "ON", false: "OFF"}
 	if description.is_empty():
+		var text: String
+		if button.text.is_empty():
+			text = button.tooltip_text
+		else:
+			text = button.text
+		text = text.replace(".", "")
 		description = gtr("Turn the [b]%s[/b] button %s.") % [text, TOGGLE_MAP[is_toggled]]
 
 	bubble_add_task(
@@ -498,6 +674,15 @@ func bubble_add_task_toggle_button(button: Button, is_toggled := true, descripti
 	)
 
 
+## Creates a task that waits for the user to select a specific tab by its index.
+## Use this to guide users through tabbed docks like the Inspector,
+## FileSystem, or other docked panels.
+##
+## Parameters:
+## - tabs: The TabBar control containing the tabs
+## - index: The index of the tab that needs to be selected
+## - description: Optional custom task description. If empty, automatically generates
+##   a description like "Change to the [TabTitle] tab."
 func bubble_add_task_set_tab_to_index(tabs: TabBar, index: int, description := "") -> void:
 	if index < 0 or index >= tabs.tab_count:
 		warn("[b]'index(=%d)'[/b] not in [b]'range(0, tabs.tab_count(=%d))'[/b]" % [index, tabs.tab_count], "bubble_add_task_set_tab_to_index")
@@ -507,6 +692,15 @@ func bubble_add_task_set_tab_to_index(tabs: TabBar, index: int, description := "
 	bubble_add_task(description, 1, func(_task: Task) -> int: return 1 if index == tabs.current_tab else 0, noop_error_predicate)
 
 
+## Creates a task that waits for the user to select a specific tab by its title.
+## Similar to [method bubble_add_task_set_tab_to_index], but uses the tab's title
+## to find the index.
+##
+## Parameters:
+## - tabs: The TabBar control containing the tabs
+## - title: The title of the tab that needs to be selected
+## - description: Optional custom task description. If empty, inherits the description
+##   from bubble_add_task_set_tab_to_index
 func bubble_add_task_set_tab_to_title(tabs: TabBar, title: String, description := "") -> void:
 	var index := find_tabs_title(tabs, title)
 	if index == -1:
@@ -516,6 +710,14 @@ func bubble_add_task_set_tab_to_title(tabs: TabBar, title: String, description :
 		bubble_add_task_set_tab_to_index(tabs, index, description)
 
 
+## Creates a task that waits for the user to select a tab containing a specific control.
+## This is useful when you have a reference to a control inside a tab, but don't know
+## its index or title.
+##
+## Parameters:
+## - control: The Control that's a direct child of a TabContainer
+## - description: Optional custom task description. If empty, inherits the description
+##   from bubble_add_task_set_tab_to_index
 func bubble_add_task_set_tab_by_control(control: Control, description := "") -> void:
 	if control == null or (control != null and not control.get_parent() is TabContainer):
 		warn("[b]'control(=%s)'[/b] is 'null' or parent is not TabContainer." % [control], "bubble_add_task_set_tab_to_title")
@@ -527,6 +729,14 @@ func bubble_add_task_set_tab_by_control(control: Control, description := "") -> 
 	bubble_add_task_set_tab_to_index(tabs, index, description)
 
 
+## Creates a task that waits for the user to select a specific tab in the TileSet editor.
+## This is specifically for guiding users through the TileSet editor interface, which has
+## tabs for different tileset editing features.
+##
+## Parameters:
+## - control: The control in the TileSet editor tabs that needs to be shown
+## - description: Optional custom task description. If empty, inherits the description
+##   from bubble_add_task_set_tab_to_index
 func bubble_add_task_set_tileset_tab_by_control(control: Control, description := "") -> void:
 	var index := interface.tileset_panels.find(control)
 	if index == -1:
@@ -535,6 +745,14 @@ func bubble_add_task_set_tileset_tab_by_control(control: Control, description :=
 		bubble_add_task_set_tab_to_index(interface.tileset_tabs, index, description)
 
 
+## Creates a task that waits for the user to select a specific tab in the TileMap editor.
+## This is for guiding users through the TileMap editor interface, which has
+## special tabs for terrains etc.
+##
+## Parameters:
+## - control: The control in the TileMap editor tabs that needs to be shown
+## - description: Optional custom task description. If empty, inherits the description
+##   from bubble_add_task_set_tab_to_index
 func bubble_add_task_set_tilemap_tab_by_control(control: Control, description := "") -> void:
 	var index := interface.tilemap_panels.find(control)
 	if index == -1:
@@ -543,6 +761,12 @@ func bubble_add_task_set_tilemap_tab_by_control(control: Control, description :=
 		bubble_add_task_set_tab_to_index(interface.tilemap_tabs, index, description)
 
 
+## Creates a task that waits for the user to select specific nodes in the Scene Dock.
+##
+## Parameters:
+## - node_paths: Array of paths to nodes that need to be selected
+## - description_override: Optional custom task description. If empty, automatically generates
+##   a description like "Select the [NodeName] node(s) in the Scene Dock."
 func bubble_add_task_select_nodes_by_path(node_paths: Array[String], description_override := "") -> void:
 	var description := description_override
 	if description.is_empty():
@@ -560,6 +784,15 @@ func bubble_add_task_select_nodes_by_path(node_paths: Array[String], description
 	)
 
 
+## Creates a task that waits for the user to set multiple Range controls to specific values.
+## This is useful for teaching users how to use sliders, spinboxes, and other numeric input
+## controls for settings like grid size, snap values, etc.
+##
+## Parameters:
+## - ranges: Dictionary mapping Range controls to their target values
+## - label_text: The label to show in the task description (e.g., "Grid Size")
+## - description: Optional custom task description. If empty, automatically generates
+##   a description like "Set [label_text] to [values]"
 func bubble_add_task_set_ranges(ranges: Dictionary, label_text: String, description := "") -> void:
 	var controls := ranges.keys()
 	if controls.any(func(n: Node) -> bool: return not n is Range):
@@ -581,6 +814,16 @@ func bubble_add_task_set_ranges(ranges: Dictionary, label_text: String, descript
 		)
 
 
+## Creates a task that waits for the user to set a property of a node to a specific value.
+## This is useful for teaching users how to modify node properties in the Inspector dock,
+## like changing a sprite's texture, a control's size, or a body's collision layers.
+##
+## Parameters:
+## - node_name: The name of the node whose property needs to be modified
+## - property_name: The name of the property to change (e.g., "position", "texture")
+## - property_value: The target value for the property
+## - description: Optional custom task description. If empty, automatically generates
+##   a description like "Set [NodeName]'s [PropertyName] property to [Value]"
 func bubble_add_task_set_node_property(node_name: String, property_name: String, property_value: Variant, description := "") -> void:
 	if description.is_empty():
 		description = gtr("""Set [b]%s[/b]'s [b]%s[/b] property to [b]%s[/b]""") % [node_name, property_name.capitalize(), str(property_value).get_file()]
@@ -623,6 +866,12 @@ func bubble_add_task_set_node_property(node_name: String, property_name: String,
 	)
 
 
+## Creates a task that waits for the user to open a specific scene.
+##
+## Parameters:
+## - path: The file path to the scene that needs to be opened
+## - description: Optional custom task description. If empty, automatically generates
+##   a description like "Open the scene [SceneName]"
 func bubble_add_task_open_scene(path: String, description := "") -> void:
 	if description.is_empty():
 		description = gtr("""Open the scene [b]%s[/b]""") % path.get_file()
@@ -633,6 +882,12 @@ func bubble_add_task_open_scene(path: String, description := "") -> void:
 	)
 
 
+## Creates a task that waits for the user to expand a property in the Inspector dock.
+##
+## Parameters:
+## - property_name: The name of the property that needs to be expanded
+## - description: Optional custom task description. If empty, automatically generates
+##   a description like "Expand the property [PropertyName] in the Inspector"
 func bubble_add_task_expand_inspector_property(property_name: String, description := "") -> void:
 	if description.is_empty():
 		description = gtr("""Expand the property [b]%s[/b] in the [b]Inspector[/b]""") % property_name.capitalize()
@@ -676,6 +931,7 @@ class Guide3DTaskParameters:
 		self.global_position = p_global_position
 		self.check_mode = p_check_mode
 
+
 ## Adds a task to move a given node to a specific position or within a box. The location to move to is represented by a transparent guide box.
 func bubble_add_task_node_to_guide(parameters: Guide3DTaskParameters) -> void:
 	if parameters.description_override.is_empty():
@@ -717,6 +973,14 @@ func bubble_add_task_node_to_guide(parameters: Guide3DTaskParameters) -> void:
 	)
 
 
+## Creates a task that waits for the user to instantiate a scene as a child of a specific node.
+##
+## Parameters:
+## - file_path: The file path to the scene that needs to be instantiated
+## - node_name: The name the instantiated node should have
+## - parent_node_name: The name of the node that should be the parent of the instantiated scene
+## - description: Optional custom task description. If empty, automatically generates
+##   a description like "Instantiate the [SceneName] scene as a child of [ParentName]"
 func bubble_add_task_instantiate_scene(file_path: String, node_name: String, parent_node_name: String, description := "") -> void:
 	if description.is_empty():
 		description = gtr("Instantiate the [b]%s[/b] scene as a child of [b]%s[/b]") % [file_path.get_file(), parent_node_name]
@@ -734,6 +998,12 @@ func bubble_add_task_instantiate_scene(file_path: String, node_name: String, par
 	)
 
 
+## Creates a task that waits for the user to focus the camera on a specific node in the 3D view.
+##
+## Parameters:
+## - node_name: The name of the node to focus on
+## - description: Optional custom task description. If empty, automatically generates
+##   a description like "Focus the [NodeName] node"
 func bubble_add_task_focus_node(node_name: String, description := "") -> void:
 	if description.is_empty():
 		description = gtr("""Focus the [b]%s[/b] node""" % node_name)
@@ -752,11 +1022,23 @@ func bubble_add_task_focus_node(node_name: String, description := "") -> void:
 
 ## Moves and anchors the bubble relative to the given control.
 ## You can optionally set a margin and an offset to fine-tune the bubble's position.
+## This allows positioning the bubble UI near relevant elements in the editor to guide the user's
+## attention to specific parts of the interface.
+##
+## Parameters:
+## - control: The Control to anchor the bubble to
+## - at: The anchor position (use the Bubble.At enum) relative to the control
+## - margin: The distance between the bubble and the control in pixels
+## - offset: Additional pixel offset from the anchored position
 func bubble_move_and_anchor(control: Control, at := Bubble.At.CENTER, margin := 16.0, offset := Vector2.ZERO) -> void:
 	queue_command(func() -> void: bubble.move_and_anchor(control, at, margin, offset))
 
 
-## Places the avatar on the given side at the top of the bubble.
+## Places the avatar on the given side of the bubble.
+## The avatar is a mascot that guides the user through the tour.
+##
+## Parameters:
+## - at: The position to place the avatar (use the Bubble.AvatarAt enum)
 func bubble_set_avatar_at(at: Bubble.AvatarAt) -> void:
 	queue_command(func() -> void: bubble.set_avatar_at(at))
 
@@ -771,42 +1053,139 @@ func bubble_set_minimum_size_scaled(size := Vector2.ZERO) -> void:
 	queue_command(func() -> void: bubble.panel_container.set_custom_minimum_size(size * EditorInterface.get_editor_scale()))
 
 
+## Highlights nodes in the Scene dock by their names.
+##
+## Parameters:
+## - names: Array of node names to highlight
+## - button_index: Optional button index for tree items that have buttons or icons, to highlight only specify icons (like the visibility icon). Use -1 to highlight the entire item.
+## - do_center: If true, center the view on the highlighted items
+## - play_flash: If true, plays a flash animation on the highlighted items
 func highlight_scene_nodes_by_name(names: Array[String], button_index := -1, do_center := true, play_flash := true) -> void:
 	queue_command(overlays.highlight_scene_nodes_by_name, [names, button_index, do_center, play_flash])
 
 
+## Highlights nodes in the Scene dock by their paths.
+## This is more precise than highlighting by name when there are nodes with the same name.
+##
+## Parameters:
+## - paths: Array of node paths to highlight
+## - button_index: Optional button index for tree items that have buttons (-1 for entire item)
+## - do_center: If true, center the view on the highlighted items
+## - play_flash: If true, plays a flash animation on the highlighted items
 func highlight_scene_nodes_by_path(paths: Array[String], button_index := -1, do_center := true, play_flash := true) -> void:
 	queue_command(overlays.highlight_scene_nodes_by_path, [paths, button_index, do_center, play_flash])
 
 
+## Highlights files or directories in the FileSystem dock.
+## This helps users locate files they need to work with, like scenes or scripts.
+##
+## Parameters:
+## - paths: Array of file or directory paths to highlight
+## - do_center: If true, center the view on the highlighted items
+## - play_flash: If true, plays a flash animation on the highlighted items
 func highlight_filesystem_paths(paths: Array[String], do_center := true, play_flash := true) -> void:
 	queue_command(overlays.highlight_filesystem_paths, [paths, do_center, play_flash])
 
 
+## Expands a specific resource property in the Inspector dock if this property
+## has a valid resource assigned. This is useful when you need to access
+## sub-properties of a resource that are hidden when the resource is collapsed
+## in the inspector. Call this method with the [code]name[/code] of the resource
+## property you want to expand first, then call [method
+## highlight_inspector_properties] to highlight the expanded property.
+##
+## Parameters:
+## - resource_property_name: The name of the resource property to expand
+func expand_inspector_resource(resource_property_name: StringName) -> void:
+	queue_command(overlays.expand_inspector_resource, [resource_property_name])
+
+
+## Highlights properties in the Inspector dock.
+## This helps users find specific properties they need to modify in the currently selected node.
+## [b]WARNING[/b]: It does not support section-like properties with a checkbox (in Godot 4.5+). Use
+## [method highlight_inspector_section_property] for that.
+##
+## Parameters:
+## - names: Array of property names to highlight
+## - do_center: If true, center the view on the highlighted properties
+## - play_flash: If true, plays a flash animation on the highlighted properties
 func highlight_inspector_properties(names: Array[StringName], do_center := true, play_flash := true) -> void:
-	queue_command(overlays.highlight_inspector_properties, [names, do_center, play_flash])
+	for current_name in names:
+		queue_command(overlays.highlight_inspector_property, [current_name, do_center, play_flash])
 
 
+## Highlights a specific property that is section-like with a checkbox in the Inspector dock.
+## These properties are not exposed to the editor API directly, so this method helps find them
+## by specifying their first child property names.
+##
+## Parameters:
+## - first_child_names: Array of the first-level child property names of the section property to highlight.
+func highlight_inspector_section_properties(first_child_names: Array[StringName], do_center := true, play_flash := true) -> void:
+	for current_name in first_child_names:
+		queue_command(overlays.highlight_inspector_section_property, [current_name, do_center, play_flash])
+
+
+## Highlights signals in the Node dock's Signals tab.
+## This helps users locate specific signals when working with signal connections.
+##
+## Parameters:
+## - paths: Array of signal paths to highlight (in format "node_name/signal_name")
+## - do_center: If true, center the view on the highlighted signals
+## - play_flash: If true, plays a flash animation on the highlighted signals
 func highlight_signals(paths: Array[String], do_center := true, play_flash := true) -> void:
 	queue_command(overlays.highlight_signals, [paths, do_center, play_flash])
 
 
+## Highlights code in the script editor.
+## This draws attention to specific lines of code in the currently edited script.
+##
+## Parameters:
+## - start: The starting line number to highlight
+## - end: The ending line number to highlight (if 0, only highlights the start line)
+## - caret: The line to place the text cursor on (if 0, places it at the start line)
+## - do_center: If true, center the view on the highlighted code
+## - play_flash: If true, play a flash animation on the highlighted code
 func highlight_code(start: int, end := 0, caret := 0, do_center := true, play_flash := false) -> void:
 	queue_command(overlays.highlight_code, [start, end, caret, do_center, play_flash])
 
 
+## Highlights UI controls in the editor.
+## This draws attention to specific UI elements like buttons, panels, or fields.
+##
+## Parameters:
+## - controls: Array of Control nodes to highlight
+## - play_flash: If true, play a flash animation on the highlighted controls
 func highlight_controls(controls: Array[Control], play_flash := false) -> void:
 	queue_command(overlays.highlight_controls, [controls, play_flash])
 
 
+## Highlights a tab in a TabBar or TabContainer by its index.
+##
+## Parameters:
+## - tabs: The TabBar or TabContainer control containing the tabs
+## - index: The index of the tab to highlight (-1 for all tabs)
+## - play_flash: If true, play a flash animation on the highlighted tab
 func highlight_tabs_index(tabs: Control, index := -1, play_flash := true) -> void:
 	queue_command(overlays.highlight_tab_index, [tabs, index, play_flash])
 
 
+## Highlights a tab in a TabBar or TabContainer by its title.
+##
+## Parameters:
+## - tabs: The TabBar or TabContainer control containing the tabs
+## - title: The title of the tab to highlight
+## - play_flash: If true, play a flash animation on the highlighted tab
 func highlight_tabs_title(tabs: Control, title: String, play_flash := true) -> void:
 	queue_command(overlays.highlight_tab_title, [tabs, title, play_flash])
 
 
+## Highlights a rectangular area in the 2D viewport.
+## This draws attention to a specific area in the scene being edited, like a node's
+## position or a region the user needs to work with.
+##
+## Parameters:
+## - rect: The rectangle area to highlight in the 2D viewport
+## - play_flash: If true, play a flash animation on the highlighted area
 func highlight_canvas_item_editor_rect(rect: Rect2, play_flash := false) -> void:
 	queue_command(func() -> void:
 		var rect_getter := func() -> Rect2:
@@ -820,10 +1199,27 @@ func highlight_canvas_item_editor_rect(rect: Rect2, play_flash := false) -> void
 	)
 
 
+## Highlights an item in an ItemList control in the TileMap editor.
+## This is useful for drawing attention to specific tiles or patterns in the tileset.
+##
+## Parameters:
+## - item_list: The ItemList control containing the items
+## - item_index: The index of the item to highlight
+## - play_flash: If true, play a flash animation on the highlighted item
 func highlight_tilemap_list_item(item_list: ItemList, item_index: int, play_flash := true) -> void:
 	queue_command(overlays.highlight_tilemap_list_item.bind(item_list, item_index, play_flash))
 
 
+## Highlights a 2D, rectangular region of the 3D viewport defined by two 3D
+## corner points projected back onto the viewport.
+## This does not highlight an area in the 3D view, but rather highlights
+## the area in the 2D view that corresponds to the 3D region.
+##
+## Parameters:
+## - start: The starting corner position of the region in 3D space
+## - end: The ending corner position of the region in 3D space
+## - index: The index of the camera view to use in split-view mode
+## - play_flash: If true, play a flash animation on the highlighted region
 func highlight_spatial_editor_camera_region(start: Vector3, end: Vector3, index := 0, play_flash := false) -> void:
 	if index < 0 or index > interface.spatial_editor_cameras.size():
 		warn("[b]'index(=%d)'[/b] not in [b]'range(0, interface.spatial_editor_cameras.size()(=%d))'[/b]." % [index, interface.spatial_editor_cameras.size()], "highlight_spatial_editor_camera_region")
@@ -842,7 +1238,10 @@ func highlight_spatial_editor_camera_region(start: Vector3, end: Vector3, index 
 	)
 
 
-# FIXME: follow scroll and parametrize to highlight a previoew other than "material" property.
+## Highlights the material preview in the Inspector dock.
+##
+## Note: Currently limited to finding and highlighting only the "material" property.
+## FIXME: follow scroll and parametrize to highlight a preview other than "material" property.
 func highlight_material_preview() -> void:
 	queue_command(func highlight_preview() -> void:
 		interface.inspector_editor.scroll_vertical = 0
@@ -855,6 +1254,12 @@ func highlight_material_preview() -> void:
 	)
 
 
+## Moves an animated mouse cursor from one position to another using global
+## coordinates.
+##
+## Parameters:
+## - from: The starting position in global coordinates
+## - to: The target position in global coordinates
 func mouse_move_by_position(from: Vector2, to: Vector2) -> void:
 	queue_command(func() -> void:
 		ensure_mouse()
@@ -862,6 +1267,13 @@ func mouse_move_by_position(from: Vector2, to: Vector2) -> void:
 	)
 
 
+## Moves an animated mouse cursor from one position to another using callable
+## functions that return positions. This is useful when target positions need to
+## be calculated at runtime.
+##
+## Parameters:
+## - from: A callable that returns the starting position
+## - to: A callable that returns the target position
 func mouse_move_by_callable(from: Callable, to: Callable) -> void:
 	queue_command(func() -> void:
 		ensure_mouse()
@@ -870,6 +1282,13 @@ func mouse_move_by_callable(from: Callable, to: Callable) -> void:
 	)
 
 
+## Displays an animated mouse pointer clicking and dragging from one position to
+## another using callable functions.
+##
+## Parameters:
+## - from: The starting position in global coordinates
+## - to: The target position in global coordinates
+## - press_texture: Optional texture to display during the press action
 func mouse_click_drag_by_position(from: Vector2, to: Vector2, press_texture: CompressedTexture2D = null) -> void:
 	queue_command(func() -> void:
 		ensure_mouse()
@@ -879,6 +1298,13 @@ func mouse_click_drag_by_position(from: Vector2, to: Vector2, press_texture: Com
 	)
 
 
+## Displays an animated mouse pointer clicking and dragging from one position to another using callable functions.
+## This is useful when the positions need to be calculated at runtime.
+##
+## Parameters:
+## - from: A callable that returns the starting position
+## - to: A callable that returns the target position
+## - press_texture: Optional texture to display during the press action
 func mouse_click_drag_by_callable(from: Callable, to: Callable, press_texture: CompressedTexture2D = null) -> void:
 	queue_command(func() -> void:
 		ensure_mouse()
@@ -888,6 +1314,12 @@ func mouse_click_drag_by_callable(from: Callable, to: Callable, press_texture: C
 	)
 
 
+## Makes an animated mouse pointer bounce at a specific position to draw
+## attention to it.
+##
+## Parameters:
+## - loops: Number of times to bounce the mouse pointer in a row
+## - at: A callable that returns the position to bounce at
 func mouse_bounce(loops := 2, at := Callable()) -> void:
 	queue_command(func() -> void:
 		ensure_mouse()
@@ -896,6 +1328,11 @@ func mouse_bounce(loops := 2, at := Callable()) -> void:
 	)
 
 
+## Animates an animated mouse pointer pressing the mouse button down.
+## Used as part of multi-step mouse interactions.
+##
+## Parameters:
+## - press_texture: Optional texture to display during the press action
 func mouse_press(press_texture: CompressedTexture2D = null) -> void:
 	queue_command(func() -> void:
 		ensure_mouse()
@@ -903,6 +1340,8 @@ func mouse_press(press_texture: CompressedTexture2D = null) -> void:
 	)
 
 
+## Animates a mouse pointer doing a release action.
+## Used as part of multi-step mouse interactions, typically after [method mouse_press] and moving the pointer.
 func mouse_release() -> void:
 	queue_command(func() -> void:
 		ensure_mouse()
@@ -910,6 +1349,10 @@ func mouse_release() -> void:
 	)
 
 
+## Animates a mouse pointer clicking the mouse (press and release) a specified number of times.
+##
+## Parameters:
+## - loops: Number of times to click the mouse (default: 1)
 func mouse_click(loops := 1) -> void:
 	queue_command(func() -> void:
 		ensure_mouse()
@@ -917,6 +1360,8 @@ func mouse_click(loops := 1) -> void:
 	)
 
 
+## Ensures that the mouse pointer node exists in the scene.
+## If no mouse pointer exists, creates and adds one to the viewport.
 func ensure_mouse() -> void:
 	if mouse == null:
 		# We don't preload to avoid errors on a project's first import, to distribute the tour to
@@ -926,17 +1371,27 @@ func ensure_mouse() -> void:
 		interface.base_control.get_viewport().add_child(mouse)
 
 
+## Removes the mouse pointer node from the scene if it exists.
+## This is typically called during cleanup when a tour ends.
 func clear_mouse() -> void:
 	if mouse != null:
 		mouse.queue_free()
 		mouse = null
 
 
+## Starts the mouse pointer animation.
+## This function ensures the mouse pointer exists and then starts its animation.
 func play_mouse() -> void:
 	ensure_mouse()
 	mouse.play()
 
 
+## Finds and returns a node in the current scene by its path.
+##
+## Parameters:
+## - path: The path of the node to find, relative to the scene root
+##
+## Returns: The found node, or null if no node is found at the given path
 func get_scene_node_by_path(path: String) -> Node:
 	var result: Node = null
 	var root := EditorInterface.get_edited_scene_root()
@@ -950,6 +1405,12 @@ func get_scene_node_by_path(path: String) -> Node:
 	return result
 
 
+## Finds and returns multiple nodes in the current scene by their paths.
+##
+## Parameters:
+## - paths: Array of node paths to find, relative to the scene root
+##
+## Returns: Array of found nodes. If a path doesn't match any node, it's not included in the result.
 func get_scene_nodes_by_path(paths: Array[String]) -> Array[Node]:
 	var result: Array[Node] = []
 	for path in paths:
@@ -959,6 +1420,12 @@ func get_scene_nodes_by_path(paths: Array[String]) -> Array[Node]:
 	return result
 
 
+## Finds and returns all nodes in the current scene whose names start with a specific prefix.
+##
+## Parameters:
+## - prefix: The name prefix to search for
+##
+## Returns: Array of nodes whose names start with the given prefix
 func get_scene_nodes_by_prefix(prefix: String) -> Array[Node]:
 	var result: Array[Node] = []
 	var root := EditorInterface.get_edited_scene_root()
@@ -966,6 +1433,14 @@ func get_scene_nodes_by_prefix(prefix: String) -> Array[Node]:
 	return result
 
 
+## Finds the center position of a tree item identified by its path.
+##
+## Parameters:
+## - tree: The Tree control to search in
+## - path: The path of the tree item to find
+## - button_index: Optional index of a button within the tree item (-1 for the entire item)
+##
+## Returns: The global center position of the tree item, or Vector2.ZERO if not found
 func get_tree_item_center_by_path(tree: Tree, path: String, button_index := -1) -> Vector2:
 	var result := Vector2.ZERO
 	var root := tree.get_root()
@@ -978,6 +1453,13 @@ func get_tree_item_center_by_path(tree: Tree, path: String, button_index := -1) 
 	return result
 
 
+## Finds the center position of a tree item identified by its name.
+##
+## Parameters:
+## - tree: The Tree control to search in
+## - name: The name of the tree item to find
+##
+## Returns: The global center position of the tree item, or Vector2.ZERO if not found
 func get_tree_item_center_by_name(tree: Tree, name: String) -> Vector2:
 	var result := Vector2.ZERO
 	var root := tree.get_root()
@@ -990,6 +1472,12 @@ func get_tree_item_center_by_name(tree: Tree, name: String) -> Vector2:
 	return result
 
 
+## Calculates the global rectangle (in pixels) covered by a TileMap.
+##
+## Parameters:
+## - tilemap_node: The TileMap node to calculate the rectangle for
+##
+## Returns: A Rect2 representing the global area covered by the TileMap in pixels
 func get_tilemap_global_rect_pixels(tilemap_node: TileMap) -> Rect2:
 	var rect := Rect2(tilemap_node.get_used_rect())
 	rect.size *= Vector2(tilemap_node.tile_set.tile_size)
@@ -997,6 +1485,12 @@ func get_tilemap_global_rect_pixels(tilemap_node: TileMap) -> Rect2:
 	return rect
 
 
+## Finds the center position of a property in the Inspector dock.
+##
+## Parameters:
+## - name: The name of the property to find in the Inspector
+##
+## Returns: The global center position of the property control, or Vector2.ZERO if not found
 func get_inspector_property_center(name: String) -> Vector2:
 	var result := Vector2.ZERO
 	var properties := interface.inspector_editor.find_children("", "EditorProperty", true, false)
@@ -1008,10 +1502,22 @@ func get_inspector_property_center(name: String) -> Vector2:
 
 
 
+## Returns the global center position of a Control node.
+##
+## Parameters:
+## - control: The Control node to get the center position of
+##
+## Returns: The global center position of the control
 func get_control_global_center(control: Control) -> Vector2:
 	return control.get_global_rect().get_center()
 
 
+## Finds the full path of a node by its name in the currently edited scene.
+##
+## Parameters:
+## - node_name: The name of the node to find
+##
+## Returns: The full path of the node relative to the scene root, or an empty string if not found
 func node_find_path(node_name: String) -> String:
 	var root_node := EditorInterface.get_edited_scene_root()
 	var found_node := root_node.find_child(node_name)
@@ -1021,6 +1527,13 @@ func node_find_path(node_name: String) -> String:
 	return path_from_root
 
 
+## Finds the index of a tab in a TabBar by its title.
+##
+## Parameters:
+## - tabs: The TabBar to search in
+## - title: The title of the tab to find
+##
+## Returns: The index of the tab with the matching title, or -1 if not found
 func find_tabs_title(tabs: TabBar, title: String) -> int:
 	var result := -1
 	for index in range(tabs.tab_count):
@@ -1031,6 +1544,13 @@ func find_tabs_title(tabs: TabBar, title: String) -> int:
 	return result
 
 
+## Finds the index of a tab in a TabContainer by its control.
+##
+## Parameters:
+## - tab_container: The TabContainer to search in
+## - control: The control to find in the TabContainer
+##
+## Returns: The index of the tab containing the control, or -1 if not found
 func find_tabs_control(tab_container: TabContainer, control: Control) -> int:
 	var result := -1
 	var predicate := func(idx: int) -> bool: return tab_container.get_tab_control(idx) == control
@@ -1048,18 +1568,26 @@ func toggle_visible(is_visible: bool) -> void:
 	overlays.toggle_dimmers(is_visible)
 
 
+## A predicate function that always returns false.
+## Used as a default for task checks that should never succeed.
 func noop_error_predicate(_task: Task) -> bool:
 	return false
 
 
+## Returns the translation of a given String from English to the currently set
+## editor language. Requires translation files to be included with the tour.
 func gtr(src_message: StringName, context: StringName = "") -> String:
 	return translation_service.get_tour_message(src_message, context)
 
 
+## Returns the plural translation of a given String from English to the currently set
+## editor language. Requires translation files to be included with the tour.
 func gtr_n(src_message: StringName, src_plural_message: StringName, n: int, context: StringName = "") -> String:
 	return translation_service.get_tour_plural_message(src_message, src_plural_message, n, context)
 
 
+## Returns the path of a translated resource (like an image used for a specific language)
+## based on the current editor language.
 func ptr(resource_path: String) -> String:
 	return translation_service.get_resource_path(resource_path)
 
@@ -1093,16 +1621,38 @@ func bbcode_wrap_font_size(text: String, size_pixels: int) -> String:
 	return "[font_size=%s]" % size_scaled + text + "[/font_size]"
 
 
+## Waits for a specified number of frames to pass.
+## This is a coroutine that can be used with `await` to introduce delays.
+## You can use this for automated testing or occasionally to work around editor
+## limitations like a process running in a thread that doesn't provide a signal
+## when it finishes but reliably updates after a certain number of frames.
+##
+## Parameters:
+## - frames: The number of frames to wait for (default: 1)
 func delay_process_frame(frames := 1) -> void:
 	for _frame in range(frames):
 		await interface.base_control.get_tree().process_frame
 
 
+## Checks if a control has keyboard focus.
+##
+## Parameters:
+## - c: The Control node to check
+##
+## Returns: True if the control has focus, false otherwise
 func control_has_focus(c: Control) -> bool: return c.has_focus()
 
 
+## Compares two nodes by their paths for sorting in ascending order.
+##
+## Parameters:
+## - a: First node to compare
+## - b: Second node to compare
+##
+## Returns: True if node a's path comes before node b's path alphabetically
 func sort_ascending_by_path(a: Node, b: Node) -> bool: return str(a.get_path()) < str(b.get_path())
 
 
+## Closes the bottom panel in the editor by setting the output button to unpressed.
 func _close_bottom_panel() -> void:
-	interface.bottom_button_output.button_pressed = false
+	interface.bottom_output_button.button_pressed = false
