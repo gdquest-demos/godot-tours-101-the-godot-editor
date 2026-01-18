@@ -8,7 +8,7 @@ const FALLBACK_FONT_MAP := {
 	"italics_font": "italic",
 	"mono_font": "mono",
 	"normal_font": "regular",
-	"font": "regular"
+	"font": "regular",
 }
 
 
@@ -22,7 +22,7 @@ static func scale_font_size(text_node: Control) -> void:
 
 ## Gets and scales the margins of the input margin_container using the editor scale.
 ## Adds a theme constant override for each margin property directly.
-static func scale_margin_container_margins(margin_container: MarginContainer, extra_scale: Dictionary[String, float] = {}) -> void:
+static func scale_margin_container_margins(margin_container: MarginContainer, extra_scale: Dictionary[String, float] = { }) -> void:
 	var editor_scale := EditorInterface.get_editor_scale()
 	if is_equal_approx(editor_scale, 1.0):
 		return

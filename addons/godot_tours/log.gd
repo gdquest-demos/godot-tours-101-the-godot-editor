@@ -4,7 +4,7 @@ extends RefCounted
 
 const LOG_FILE_PATH := "user://tour.log"
 
-enum Level {DEBUG, INFO, WARN, ERROR, FATAL}
+enum Level { DEBUG, INFO, WARN, ERROR, FATAL }
 
 var log_file := FileAccess.open(LOG_FILE_PATH, FileAccess.WRITE)
 
@@ -50,7 +50,7 @@ func fatal(msg: String) -> void:
 
 func write(level: Level, msg: String) -> void:
 	log_file.store_string(
-		"%s:%s: %s\n" % [Time.get_datetime_string_from_system(true), Level.keys()[level], msg]
+		"%s:%s: %s\n" % [Time.get_datetime_string_from_system(true), Level.keys()[level], msg],
 	)
 	flush()
 

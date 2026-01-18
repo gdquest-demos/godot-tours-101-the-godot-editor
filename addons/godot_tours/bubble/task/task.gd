@@ -57,7 +57,10 @@ var _panel_stylebox: StyleBoxFlat = null
 
 
 func setup(
-	description: String, repeat: int, repeat_callable: Callable, error_predicate: Callable
+		description: String,
+		repeat: int,
+		repeat_callable: Callable,
+		error_predicate: Callable,
 ) -> void:
 	self.description = description
 	self.repeat = repeat
@@ -68,7 +71,7 @@ func setup(
 	_panel_stylebox = get_theme_stylebox("panel", "TaskCheckboxPanel")
 	if _panel_stylebox == null:
 		printerr(
-			"Could not get task checkbox panel stylebox. Task scene instance will not render properly."
+			"Could not get task checkbox panel stylebox. Task scene instance will not render properly.",
 		)
 	else:
 		_panel_stylebox = _panel_stylebox.duplicate()

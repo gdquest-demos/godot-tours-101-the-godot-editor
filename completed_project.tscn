@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://cfay3xheebusb"]
+[gd_scene format=4 uid="uid://cfay3xheebusb"]
 
 [ext_resource type="Script" uid="uid://c8bobnn0pww6u" path="res://game.gd" id="1_25vm7"]
 [ext_resource type="Texture2D" uid="uid://51k2u7iwra8e" path="res://levels/rooms/tileset_bridges.png" id="2_lrrw3"]
@@ -69,49 +69,49 @@ terrain_set_0/terrain_0/name = "Bridge"
 terrain_set_0/terrain_0/color = Color(0.219608, 0.172549, 0.647059, 1)
 sources/0 = SubResource("TileSetAtlasSource_po4yl")
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=989840674]
 script = ExtResource("1_25vm7")
 
-[node name="Bridges" type="TileMapLayer" parent="."]
+[node name="Bridges" type="TileMapLayer" parent="." unique_id=476513658]
 use_parent_material = true
 tile_map_data = PackedByteArray("AAALAAQAAAABAAEAAAAMAAQAAAAAAAEAAAANAAQAAAAAAAEAAAAOAAQAAAAAAAEAAAAPAAQAAAAAAAAAAAARAAYAAAACAAEAAAAXAPr/AAAFAAEAAAAXAPv/AAADAAEAAAAXAPz/AAADAAEAAAAXAP3/AAADAAEAAAAXAP7/AAADAAEAAAAXAP//AAACAAAAAAAYAP//AAAAAAEAAAAZAP//AAAAAAAAAAAZAAAAAAADAAEAAAAZAAEAAAAEAAEAAAAQAAYAAAAAAAEAAAAPAAYAAAACAAAAAAAPAAUAAAADAAEAAAA=")
 tile_set = SubResource("TileSet_ci3ya")
 rendering_quadrant_size = 128
 
-[node name="InvisibleWalls" type="TileMapLayer" parent="."]
+[node name="InvisibleWalls" type="TileMapLayer" parent="." unique_id=14947494]
 use_parent_material = true
 tile_map_data = PackedByteArray("AAAHAAoAAAAAAAAAAAAMAAUAAAAAAAAAAAANAAUAAAAAAAAAAAAOAAUAAAAAAAAAAAAOAAYAAAAAAAAAAAAOAAcAAAAAAAAAAAAPAAcAAAAAAAAAAAAQAAcAAAAAAAAAAAAQAAUAAAAAAAAAAAAQAAQAAAAAAAAAAAAQAAMAAAAAAAAAAAAPAAMAAAAAAAAAAAAOAAMAAAAAAAAAAAANAAMAAAAAAAAAAAAMAAMAAAAAAAAAAAAYAAAAAAAAAAAAAAAXAAAAAAAAAAAAAAAWAAAAAAAAAAAAAAAWAP//AAAAAAAAAAAWAP7/AAAAAAAAAAAWAP3/AAAAAAAAAAAWAPz/AAAAAAAAAAAZAPz/AAAAAAAAAAAYAPz/AAAAAAAAAAAYAP3/AAAAAAAAAAAYAP7/AAAAAAAAAAAZAP7/AAAAAAAAAAAaAP7/AAAAAAAAAAAaAP//AAAAAAAAAAAaAAAAAAAAAAAAAAA=")
 tile_set = ExtResource("3_vklf7")
 
-[node name="UILayer" type="CanvasLayer" parent="."]
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1361920234]
 layer = 100
 
-[node name="UIHealthBar" parent="UILayer" instance=ExtResource("4_mukgi")]
+[node name="UIHealthBar" parent="UILayer" unique_id=1980405059 instance=ExtResource("4_mukgi")]
 offset_left = 32.0
 offset_top = 40.0
 offset_right = 381.0
 offset_bottom = 113.0
 
-[node name="Player" parent="." instance=ExtResource("4_idksr")]
+[node name="Player" parent="." unique_id=1528357985 instance=ExtResource("4_idksr")]
 position = Vector2(768, 512)
 
-[node name="RoomA" parent="." instance=ExtResource("5_d5k6w")]
+[node name="RoomA" parent="." unique_id=507904935 instance=ExtResource("5_d5k6w")]
 
-[node name="WeaponPickup" parent="RoomA" instance=ExtResource("6_w1fjs")]
+[node name="WeaponPickup" parent="RoomA" unique_id=1928775694 instance=ExtResource("6_w1fjs")]
 position = Vector2(1023.56, 385.173)
 
-[node name="WeaponPickup2" parent="RoomA" instance=ExtResource("6_w1fjs")]
+[node name="WeaponPickup2" parent="RoomA" unique_id=377376344 instance=ExtResource("6_w1fjs")]
 position = Vector2(511.119, 768.586)
 
-[node name="HealthPickup" parent="RoomA" instance=ExtResource("7_uk5d2")]
+[node name="HealthPickup" parent="RoomA" unique_id=860986148 instance=ExtResource("7_uk5d2")]
 position = Vector2(3199.26, 643.667)
 
-[node name="RoomB" parent="." instance=ExtResource("6_d2i4m")]
+[node name="RoomB" parent="." unique_id=1655670824 instance=ExtResource("6_d2i4m")]
 position = Vector2(2304, 256)
 
-[node name="RoomC" parent="." instance=ExtResource("7_g7cph")]
+[node name="RoomC" parent="." unique_id=783297102 instance=ExtResource("7_g7cph")]
 position = Vector2(1792, -2048)
 
-[node name="BackgroundBlueSky" parent="." instance=ExtResource("11_7e8yr")]
+[node name="BackgroundBlueSky" parent="." unique_id=898821633 instance=ExtResource("11_7e8yr")]
 
 [connection signal="health_changed" from="Player" to="UILayer/UIHealthBar" method="set_health"]

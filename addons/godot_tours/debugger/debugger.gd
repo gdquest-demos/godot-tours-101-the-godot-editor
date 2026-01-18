@@ -53,13 +53,15 @@ func setup(plugin_path: String, interface: EditorInterfaceAccess, overlays: Over
 func _ready() -> void:
 	overlays.cleaned_up.connect(overlays.add_highlight_to_control.bind(self))
 	toggle_dimmers_check_button.button_pressed = not overlays.dimmers.is_empty()
-	toggle_dimmers_check_button.toggled.connect(func(is_active: bool) -> void:
-		overlays.toggle_dimmers(is_active)
-		dimmers_alpha_h_slider.editable = is_active
+	toggle_dimmers_check_button.toggled.connect(
+		func(is_active: bool) -> void:
+			overlays.toggle_dimmers(is_active)
+			dimmers_alpha_h_slider.editable = is_active
 	)
-	toggle_bubble_check_button.toggled.connect(func(is_toggled: bool) -> void:
-		if tour != null:
-			tour.bubble.visible = is_toggled
+	toggle_bubble_check_button.toggled.connect(
+		func(is_toggled: bool) -> void:
+			if tour != null:
+				tour.bubble.visible = is_toggled
 	)
 	tours_item_list.item_selected.connect(_on_tours_item_list_item_selected)
 	button_start_tour.pressed.connect(_start_selected_tour)
@@ -129,4 +131,4 @@ func _update_spinbox_step_count() -> void:
 
 
 func _jump_to_step() -> void:
-		tour.index = int(jump_spin_box.value - 1)
+	tour.index = int(jump_spin_box.value - 1)

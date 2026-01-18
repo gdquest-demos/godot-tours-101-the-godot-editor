@@ -43,7 +43,8 @@ func set_expression(value: Expressions) -> void:
 	if not is_node_ready():
 		return
 	animation_tree.set(
-		"parameters/Transition/transition_request", Expressions.find_key(expression).to_lower()
+		"parameters/Transition/transition_request",
+		Expressions.find_key(expression).to_lower(),
 	)
 
 

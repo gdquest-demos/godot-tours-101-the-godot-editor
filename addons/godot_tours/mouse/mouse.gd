@@ -53,24 +53,25 @@ func add_move_operation(from: Callable, to: Callable) -> void:
 	var max_speed := 1000
 	var speed := remap(max(1.0, distance - 400.0), 0.0, EditorInterface.get_base_control().size.x * 0.75, min_speed, max_speed) * editor_scale
 
-	operations.push_back(func() -> void:
-		tween.tween_method(
-			func(progress: float) -> void:
-				# It's important to call from() and to() every frame inside the tween method each frame because:
-				# 1. The user can scroll the editor view, which changes the
-				# global position of the target nodes.
-				# 2. The user can resize the editor window, which changes the
-				# different area sizes (like the viewport)
-				# 3. There can be a race condition when we first get the global
-				# position outside the tween method, giving us an offset start
-				# position.
-				var from_global_position: Vector2 = from.call()
-				var to_global_position: Vector2 = to.call()
-				canvas_group.global_position = from_global_position.lerp(to_global_position, progress),
-			0.0,
-			1.0,
-			max(distance / speed, 0.5)
-		)
+	operations.push_back(
+		func() -> void:
+			tween.tween_method(
+				func(progress: float) -> void:
+					# It's important to call from() and to() every frame inside the tween method each frame because:
+					# 1. The user can scroll the editor view, which changes the
+					# global position of the target nodes.
+					# 2. The user can resize the editor window, which changes the
+					# different area sizes (like the viewport)
+					# 3. There can be a race condition when we first get the global
+					# position outside the tween method, giving us an offset start
+					# position.
+					var from_global_position: Vector2 = from.call()
+					var to_global_position: Vector2 = to.call()
+					canvas_group.global_position = from_global_position.lerp(to_global_position, progress),
+				0.0,
+				1.0,
+				max(distance / speed, 0.5),
+			)
 	)
 
 
@@ -80,16 +81,18 @@ func add_press_operation(texture: CompressedTexture2D = null) -> void:
 
 	const ON_DURATION := 0.2
 
-	operations.push_back(func() -> void:
-		press_sprite.texture = texture
-		tween.tween_property(press_sprite, "scale", Vector2.ONE, ON_DURATION).from(Vector2.ZERO)
+	operations.push_back(
+		func() -> void:
+			press_sprite.texture = texture
+			tween.tween_property(press_sprite, "scale", Vector2.ONE, ON_DURATION).from(Vector2.ZERO)
 	)
 
 
 func add_release_operation() -> void:
 	const OFF_DURATION := 0.1
-	operations.push_back(func() -> void:
-		tween.tween_property(press_sprite, "scale", Vector2.ZERO, OFF_DURATION).from(Vector2.ONE)
+	operations.push_back(
+		func() -> void:
+			tween.tween_property(press_sprite, "scale", Vector2.ZERO, OFF_DURATION).from(Vector2.ONE)
 	)
 
 
@@ -97,9 +100,10 @@ func add_click_operation(loops := 1) -> void:
 	const ON_DURATION := 0.2
 	const OFF_DURATION := 0.1
 	for _loop in range(loops):
-		operations.push_back(func() -> void:
-			tween.tween_property(press_sprite, "scale", Vector2.ONE, ON_DURATION).from(Vector2.ZERO)
-			tween.tween_property(press_sprite, "scale", Vector2.ZERO, OFF_DURATION)
+		operations.push_back(
+			func() -> void:
+				tween.tween_property(press_sprite, "scale", Vector2.ONE, ON_DURATION).from(Vector2.ZERO)
+				tween.tween_property(press_sprite, "scale", Vector2.ZERO, OFF_DURATION)
 		)
 
 
@@ -120,23 +124,24 @@ func add_bounce_operation(loops := 2, at := Callable()) -> void:
 	var amplitude := 30 * Vector2.UP * editor_scale
 
 	for _loop in range(loops):
-		operations.push_back(func() -> void:
-			tween.tween_property(pointer_sprite, "scale:y", SCALE_Y, SCALE_DURATION).from(1.0).set_delay(WAIT)
-			tween.tween_property(pointer_sprite, "scale:y", 1.0, SCALE_DURATION).from(SCALE_Y)
-			tween.parallel().tween_method(
-				func(param: float) -> void:
-					var at_vector: Vector2 = last_to.call()
-					canvas_group.global_position = at_vector.lerp(at_vector + amplitude, param),
-				0.0,
-				1.0,
-				UP_DURATION,
-			).set_trans(Tween.TRANS_SINE)
-			tween.tween_method(
-				func(param: float) -> void:
-					var at_vector: Vector2 = last_to.call()
-					canvas_group.global_position = (at_vector + amplitude).lerp(at_vector, param),
-				0.0,
-				1.0,
-				DOWN_DURATION,
-			).set_trans(Tween.TRANS_BOUNCE)
-	)
+		operations.push_back(
+			func() -> void:
+				tween.tween_property(pointer_sprite, "scale:y", SCALE_Y, SCALE_DURATION).from(1.0).set_delay(WAIT)
+				tween.tween_property(pointer_sprite, "scale:y", 1.0, SCALE_DURATION).from(SCALE_Y)
+				tween.parallel().tween_method(
+					func(param: float) -> void:
+						var at_vector: Vector2 = last_to.call()
+						canvas_group.global_position = at_vector.lerp(at_vector + amplitude, param),
+					0.0,
+					1.0,
+					UP_DURATION,
+				).set_trans(Tween.TRANS_SINE)
+				tween.tween_method(
+					func(param: float) -> void:
+						var at_vector: Vector2 = last_to.call()
+						canvas_group.global_position = (at_vector + amplitude).lerp(at_vector, param),
+					0.0,
+					1.0,
+					DOWN_DURATION,
+				).set_trans(Tween.TRANS_BOUNCE)
+		)

@@ -31,7 +31,6 @@ Please be patient and try the following:
 [indent]5. There are video fall backs available for these tours. You can watch them and follow along in your editor.[/indent]
 """
 
-
 ## Separation between paragraphs of text and elements in the main content in pixels.
 @export var paragraph_separation := 12:
 	set(new_value):
@@ -101,20 +100,23 @@ func _ready() -> void:
 		return
 
 	update_step_count_display(0)
-	Utils.update_locale(translation_service, {
-		back_button: {text = "BACK"},
-		next_button: {text = "NEXT"},
-		finish_button: {text = "END TOUR AND CONTINUE LEARNING"},
-		button_close_no: {text = "NO"},
-		button_close_yes: {text = "YES"},
-		label_close_tour: {text = "Close the tour?"},
-		label_progress_lost: {text = "Your progress will be lost."},
-		help_rich_text_label: {text = "[u]Help[u]"},
-		skip_rich_text_label: {text = "[right][u]Skip[/u][/right]"},
-		skip_step_button: {text = "SKIP STEP"},
-		try_again_button: {text = "TRY AGAIN"},
-		info_rich_text_label: {text = COMMIT_MESSAGE},
-	})
+	Utils.update_locale(
+		translation_service,
+		{
+			back_button: { text = "BACK" },
+			next_button: { text = "NEXT" },
+			finish_button: { text = "END TOUR AND CONTINUE LEARNING" },
+			button_close_no: { text = "NO" },
+			button_close_yes: { text = "YES" },
+			label_close_tour: { text = "Close the tour?" },
+			label_progress_lost: { text = "Your progress will be lost." },
+			help_rich_text_label: { text = "[u]Help[u]" },
+			skip_rich_text_label: { text = "[right][u]Skip[/u][/right]" },
+			skip_step_button: { text = "SKIP STEP" },
+			try_again_button: { text = "TRY AGAIN" },
+			info_rich_text_label: { text = COMMIT_MESSAGE },
+		},
+	)
 
 	# Clear tasks etc. in case we have some for testing in the scene.
 	clear_elements_and_tasks()
@@ -127,13 +129,15 @@ func _ready() -> void:
 	try_again_button.pressed.connect(_close_info)
 	close_info_button.pressed.connect(_close_info)
 	find_log_button.pressed.connect(_on_find_log_button_pressed)
-	button_close.pressed.connect(func() -> void:
-		view_content.hide()
-		view_close.show()
+	button_close.pressed.connect(
+		func() -> void:
+			view_content.hide()
+			view_close.show()
 	)
-	button_close_no.pressed.connect(func() -> void:
-		view_content.show()
-		view_close.hide()
+	button_close_no.pressed.connect(
+		func() -> void:
+			view_content.show()
+			view_close.hide()
 	)
 	button_close_yes.pressed.connect(close_requested.emit)
 	finish_button.pressed.connect(finish_requested.emit)
@@ -149,7 +153,7 @@ func _ready() -> void:
 
 func _on_next_button_pressed() -> void:
 	if next_button.theme_type_variation == "GrayButton":
-		Utils.update_locale(translation_service, {info_rich_text_label: {text = COMMIT_MESSAGE}})
+		Utils.update_locale(translation_service, { info_rich_text_label: { text = COMMIT_MESSAGE } })
 		buttons_panel_container.visible = false
 		bottom_h_box_container.visible = false
 
@@ -166,7 +170,7 @@ func _on_next_button_pressed() -> void:
 
 
 func _on_help_button_pressed() -> void:
-	Utils.update_locale(translation_service, {info_rich_text_label: {text = LOG_MESSAGE}})
+	Utils.update_locale(translation_service, { info_rich_text_label: { text = LOG_MESSAGE } })
 	buttons_panel_container.visible = false
 	bottom_h_box_container.visible = false
 
@@ -287,7 +291,7 @@ func add_texture(texture: Texture2D, max_height := 0.0) -> void:
 	if texture == null:
 		return
 	var texture_rect := TextureRectPackedScene.instantiate()
-	var data := {"texture": texture}
+	var data := { "texture": texture }
 	if max_height > 0.0:
 		data["max_height"] = max_height
 	add_element(texture_rect, data)

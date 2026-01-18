@@ -27,6 +27,7 @@ signal ended
 ## Emitted when the user closes the tour.
 signal closed
 
+
 ## Represents one command to execute in a step_commands. All commands are executed in the order they are added.
 ## Use the [member queue_command] function to create a [code]Command[/code] object and add it to
 ## [member step_commands] faster.
@@ -34,12 +35,15 @@ class Command:
 	var callable := func() -> void: pass
 	var parameters := []
 
+
 	func _init(callable: Callable, parameters := []) -> void:
 		self.callable = callable
 		self.parameters = parameters
 
+
 	func force() -> void:
 		await callable.callv(parameters)
+
 
 const Log := preload("log.gd")
 const Shortcuts := preload("shortcuts.gd")
@@ -58,16 +62,17 @@ const FlashAreaPackedScene := preload("overlays/flash_area/flash_area.tscn")
 
 const WARNING_MESSAGE := "[color=orange][WARN][/color] %s for [b]'%s()'[/b] at [b]'step_commands(=%d)'[/b]."
 
-enum Direction {BACK = -1, NEXT = 1}
+enum Direction { BACK = -1, NEXT = 1 }
 
 const EVENTS := {
 	f = preload("events/f_input_event_key.tres"),
 }
 ## Index of the step_commands currently running.
-var index := -1: set = set_index
+var index := -1:
+	set = set_index
 var steps: Array[Array] = []
 var step_commands: Array[Command] = []
-var guides: Dictionary = {}
+var guides: Dictionary = { }
 
 var log := Log.new()
 var shortcuts := Shortcuts.new()
@@ -80,7 +85,7 @@ var mouse: Mouse = null
 var bubble: Bubble = null
 
 
-func _init(interface: EditorInterfaceAccess, overlays: Overlays,  translation_service: TranslationService) -> void:
+func _init(interface: EditorInterfaceAccess, overlays: Overlays, translation_service: TranslationService) -> void:
 	self.editor_selection = EditorInterface.get_selection()
 	self.interface = interface
 	self.overlays = overlays
@@ -159,16 +164,18 @@ func load_bubble(BubblePackedScene: PackedScene = null) -> void:
 	interface.base_control.add_child(bubble)
 	bubble.back_button_pressed.connect(back)
 	bubble.next_button_pressed.connect(next)
-	bubble.close_requested.connect(func() -> void:
-		toggle_visible(false)
-		closed.emit()
-		clean_up()
+	bubble.close_requested.connect(
+		func() -> void:
+			toggle_visible(false)
+			closed.emit()
+			clean_up()
 	)
-	bubble.finish_requested.connect(func() -> void:
-		toggle_visible(false)
-		clean_up()
-		await get_tree().process_frame
-		ended.emit()
+	bubble.finish_requested.connect(
+		func() -> void:
+			toggle_visible(false)
+			clean_up()
+			await get_tree().process_frame
+			ended.emit()
 	)
 	step_changed.connect(bubble.on_tour_step_changed)
 
@@ -189,17 +196,19 @@ func next() -> void:
 
 ## Waits for the next frame and goes back to the previous step. Used for automated testing.
 func auto_back() -> void:
-	queue_command(func() -> void:
-		await delay_process_frame()
-		back()
+	queue_command(
+		func() -> void:
+			await delay_process_frame()
+			back()
 	)
 
 
 ## Waits for the next frame and advances to the next step. Used for automated testing.
 func auto_next() -> void:
-	queue_command(func wait_for_frame_and_advance() -> void:
-		await delay_process_frame()
-		next()
+	queue_command(
+		func wait_for_frame_and_advance() -> void:
+			await delay_process_frame()
+			next()
 	)
 
 
@@ -253,11 +262,12 @@ func scene_open(path: String) -> void:
 	if not FileAccess.file_exists(path) and path.get_extension() != "tscn":
 		warn("[b]'path(=%s)'[/b] doesn't exist or has wrong extension" % path, "scene_open")
 		return
-	queue_command(func() -> void:
-		if path in EditorInterface.get_open_scenes():
-			EditorInterface.reload_scene_from_path(path)
-		else:
-			EditorInterface.open_scene_from_path(path)
+	queue_command(
+		func() -> void:
+			if path in EditorInterface.get_open_scenes():
+				EditorInterface.reload_scene_from_path(path)
+			else:
+				EditorInterface.open_scene_from_path(path)
 	)
 
 
@@ -268,10 +278,11 @@ func scene_open(path: String) -> void:
 ## - paths: Array of node paths to select. Paths should be relative to the scene root.
 func scene_select_nodes_by_path(paths: Array[String] = []) -> void:
 	scene_deselect_all_nodes()
-	queue_command(func() -> void:
-		var scene_root := EditorInterface.get_edited_scene_root()
-		for node in Utils.find_children_by_path(scene_root, paths):
-			editor_selection.add_node(node)
+	queue_command(
+		func() -> void:
+			var scene_root := EditorInterface.get_edited_scene_root()
+			for node in Utils.find_children_by_path(scene_root, paths):
+				editor_selection.add_node(node)
 	)
 
 
@@ -282,11 +293,12 @@ func scene_select_nodes_by_path(paths: Array[String] = []) -> void:
 ## - paths: Array of node paths to lock/unlock. Paths should be relative to the scene root.
 ## - is_locked: If true, lock (true) or unlock (false) the nodes.
 func scene_toggle_lock_nodes_by_path(paths: Array[String] = [], is_locked := true) -> void:
-	queue_command(func get_and_lock_nodes() -> void:
-		var nodes := Utils.find_children_by_path(EditorInterface.get_edited_scene_root(), paths)
-		var prop := &"_edit_lock_"
-		for node in nodes:
-			node.set_meta(prop, is_locked) if is_locked else node.remove_meta(prop)
+	queue_command(
+		func get_and_lock_nodes() -> void:
+			var nodes := Utils.find_children_by_path(EditorInterface.get_edited_scene_root(), paths)
+			var prop := &"_edit_lock_"
+			for node in nodes:
+				node.set_meta(prop, is_locked) if is_locked else node.remove_meta(prop)
 	)
 
 
@@ -305,7 +317,7 @@ func clear_guides() -> void:
 
 	for guide in guides.values():
 		guide.queue_free()
-	guides = {}
+	guides = { }
 
 
 ## Set a TabBar to a specific tab index.
@@ -366,7 +378,8 @@ func tileset_tabs_set_by_control(control: Control) -> void:
 	if index == -1:
 		warn("[b]'control(=%s)'[/] must be found in '[b]interface.tilset_controls[/b]'" % [control], "tileset_set_to_control")
 	else:
-		tabs_set_to_index(interface.tileset_tabs, index)
+		var tileset_tabs := interface.get_dynamic_editor_node(interface.DynamicEditorNodes.TILESET_TABS)
+		tabs_set_to_index(tileset_tabs, index)
 
 
 ## Set the TileMap editor tabs to the tab containing a specific control.
@@ -379,7 +392,8 @@ func tilemap_tabs_set_by_control(control: Control) -> void:
 	if index == -1:
 		warn("[b]'control(=%s)'[/] must be found in '[b]interface.tilmap_controls[/b]'" % [control], "tilemap_set_to_control")
 	else:
-		tabs_set_to_index(interface.tilemap_tabs, index)
+		var tilemap_tabs := interface.get_dynamic_editor_node(interface.DynamicEditorNodes.TILEMAP_TABS)
+		tabs_set_to_index(tilemap_tabs, index)
 
 
 ## Find and activate tree items that start with a specific prefix.
@@ -389,18 +403,19 @@ func tilemap_tabs_set_by_control(control: Control) -> void:
 ## - tree: The Tree control to search in
 ## - prefix: The text prefix to search for in tree items
 func tree_activate_by_prefix(tree: Tree, prefix: String) -> void:
-	queue_command(func() -> void:
-		if tree == interface.node_dock_signals_tree and interface.signals_dialog_window.visible:
-			return
-		await delay_process_frame()
-		tree.deselect_all()
-		var items := Utils.filter_tree_items(
-			tree.get_root(),
-			func(item: TreeItem) -> bool: return item.get_text(0).begins_with(prefix)
-		)
-		for item in items:
-			item.select(0)
-		tree.item_activated.emit()
+	queue_command(
+		func() -> void:
+			if tree == interface.signals_dock_tree and interface.signals_dialog_window.visible:
+				return
+			await delay_process_frame()
+			tree.deselect_all()
+			var items := Utils.filter_tree_items(
+				tree.get_root(),
+				func(item: TreeItem) -> bool: return item.get_text(0).begins_with(prefix)
+			)
+			for item in items:
+				item.select(0)
+			tree.item_activated.emit()
 	)
 
 
@@ -410,10 +425,11 @@ func tree_activate_by_prefix(tree: Tree, prefix: String) -> void:
 ## - position: The position to center the viewport at. Defaults to Vector2.ZERO.
 ## - zoom: The zoom level to set, where 1.0 is 100%. Defaults to 1.0.
 func canvas_item_editor_center_at(position := Vector2.ZERO, zoom := 1.0) -> void:
-	queue_command(func() -> void:
-		await delay_process_frame()
-		interface.canvas_item_editor.center_at(position)
-		interface.canvas_item_editor_zoom_widget.set_zoom(zoom)
+	queue_command(
+		func() -> void:
+			await delay_process_frame()
+			interface.canvas_item_editor.center_at(position)
+			interface.canvas_item_editor_zoom_widget.set_zoom(zoom)
 	)
 
 
@@ -428,23 +444,25 @@ func canvas_item_editor_zoom_reset() -> void:
 ## Parameters:
 ## - rect: The rectangle area to flash in the 2D viewport
 func canvas_item_editor_flash_area(rect: Rect2) -> void:
-	queue_command(func flash_canvas_item_editor() -> void:
-		var flash_area := FlashAreaPackedScene.instantiate()
-		overlays.ensure_get_dimmer_for(interface.canvas_item_editor).add_child(flash_area)
-		interface.canvas_item_editor_viewport.draw.connect(
-			flash_area.refresh.bind(interface.canvas_item_editor_viewport, rect)
-		)
-		flash_area.refresh(interface.canvas_item_editor_viewport, rect)
+	queue_command(
+		func flash_canvas_item_editor() -> void:
+			var flash_area := FlashAreaPackedScene.instantiate()
+			overlays.ensure_get_dimmer_for(interface.canvas_item_editor).add_child(flash_area)
+			interface.canvas_item_editor_viewport.draw.connect(
+				flash_area.refresh.bind(interface.canvas_item_editor_viewport, rect),
+			)
+			flash_area.refresh(interface.canvas_item_editor_viewport, rect)
 	)
 
 
 ## Focus the 3D viewport on the currently selected node.
 ## This simulates pressing the "F" key in the 3D viewport to frame the selection.
 func spatial_editor_focus() -> void:
-	queue_command(func() -> void:
-		for surface in interface.spatial_editor_surfaces:
-			if surface.is_inside_tree():
-				surface.gui_input.emit(EVENTS.f)
+	queue_command(
+		func() -> void:
+			for surface in interface.spatial_editor_surfaces:
+				if surface.is_inside_tree():
+					surface.gui_input.emit(EVENTS.f)
 	)
 
 
@@ -459,33 +477,41 @@ func spatial_editor_focus_node_by_paths(paths: Array[String]) -> void:
 
 
 enum ViewportLayouts {
-	ONE = 0, TWO = 1, TWO_ALT = 2, THREE = 3, THREE_ALT = 4, FOUR = 5
+	ONE = 0,
+	TWO = 1,
+	TWO_ALT = 2,
+	THREE = 3,
+	THREE_ALT = 4,
+	FOUR = 5,
 }
+
+
 ## Changes the layout of the 3D viewport. Corresponds to clicking items in the
 ## View menu in the toolbar above the 3D viewport.
 func spatial_editor_change_viewport_layout(layout: ViewportLayouts) -> void:
-	queue_command(func spatial_editor_change_viewport_layout() -> void:
-		var popup := interface.spatial_editor_toolbar_view_menu_button.get_popup()
-		var event := InputEventKey.new()
-		event.pressed = true
-		event.ctrl_pressed = true
+	queue_command(
+		func spatial_editor_change_viewport_layout() -> void:
+			var popup := interface.spatial_editor_toolbar_view_menu_button.get_popup()
+			var event := InputEventKey.new()
+			event.pressed = true
+			event.ctrl_pressed = true
 
-		if layout == ViewportLayouts.ONE:
-			event.keycode = KEY_1
-		elif layout == ViewportLayouts.TWO:
-			event.keycode = KEY_2
-		elif layout == ViewportLayouts.TWO_ALT:
-			event.keycode = KEY_2
-			event.alt = true
-		elif layout == ViewportLayouts.THREE:
-			event.keycode = KEY_3
-		elif layout == ViewportLayouts.THREE_ALT:
-			event.keycode = KEY_3
-			event.alt = true
-		elif layout == ViewportLayouts.FOUR:
-			event.keycode = KEY_4
+			if layout == ViewportLayouts.ONE:
+				event.keycode = KEY_1
+			elif layout == ViewportLayouts.TWO:
+				event.keycode = KEY_2
+			elif layout == ViewportLayouts.TWO_ALT:
+				event.keycode = KEY_2
+				event.alt = true
+			elif layout == ViewportLayouts.THREE:
+				event.keycode = KEY_3
+			elif layout == ViewportLayouts.THREE_ALT:
+				event.keycode = KEY_3
+				event.alt = true
+			elif layout == ViewportLayouts.FOUR:
+				event.keycode = KEY_4
 
-		popup.activate_item_by_event(event)
+			popup.activate_item_by_event(event)
 	)
 
 
@@ -551,8 +577,9 @@ func bubble_add_text(text: Array[String]) -> void:
 ## - max_height: Optional maximum height for the texture in pixels, scaled by editor scale.
 ##   If 0, the texture will use its natural height.
 func bubble_add_texture(texture: Texture2D, max_height := 0.0) -> void:
-	queue_command(func bubble_add_texture() -> void:
-		bubble.add_texture(texture, max_height * EditorInterface.get_editor_scale())
+	queue_command(
+		func bubble_add_texture() -> void:
+			bubble.add_texture(texture, max_height * EditorInterface.get_editor_scale())
 	)
 
 
@@ -656,7 +683,7 @@ func bubble_add_task_toggle_button(button: Button, is_toggled := true, descripti
 		warn("[b]'button(=%s)'[/b] at [b]'path(=%s)'[/b] doesn't have toggle_mode ON." % [str(button), button.get_path()], "bubble_add_task_toggle_button")
 		return
 
-	const TOGGLE_MAP := {true: "ON", false: "OFF"}
+	const TOGGLE_MAP := { true: "ON", false: "OFF" }
 	if description.is_empty():
 		var text: String
 		if button.text.is_empty():
@@ -742,7 +769,8 @@ func bubble_add_task_set_tileset_tab_by_control(control: Control, description :=
 	if index == -1:
 		warn("[b]'control(=%s)'[/b] must be found in '[b]interface.tilset_controls[/b]'" % [control], "bubble_add_task_set_tileset_tab_by_control")
 	else:
-		bubble_add_task_set_tab_to_index(interface.tileset_tabs, index, description)
+		var tileset_tabs := interface.get_dynamic_editor_node(interface.DynamicEditorNodes.TILESET_TABS)
+		bubble_add_task_set_tab_to_index(tileset_tabs, index, description)
 
 
 ## Creates a task that waits for the user to select a specific tab in the TileMap editor.
@@ -758,7 +786,8 @@ func bubble_add_task_set_tilemap_tab_by_control(control: Control, description :=
 	if index == -1:
 		warn("[b]'control(=%s)'[/] must be found in '[b]interface.tilmap_controls[/b]'" % [control], "bubble_add_task_set_tilemap_tab_by_control")
 	else:
-		bubble_add_task_set_tab_to_index(interface.tilemap_tabs, index, description)
+		var tilemap_tabs := interface.get_dynamic_editor_node(interface.DynamicEditorNodes.TILEMAP_TABS)
+		bubble_add_task_set_tab_to_index(tilemap_tabs, index, description)
 
 
 ## Creates a task that waits for the user to select specific nodes in the Scene Dock.
@@ -801,11 +830,11 @@ func bubble_add_task_set_ranges(ranges: Dictionary, label_text: String, descript
 	else:
 		if description.is_empty():
 			description = gtr(
-				"""Set [b]%s[/b] to [code]%s[/code]"""
-				) % [
-					label_text,
-					"x".join(ranges.keys().map(func(r: Range) -> String: return str(snappedf(ranges[r], r.step)))),
-				]
+				"""Set [b]%s[/b] to [code]%s[/code]""",
+			) % [
+				label_text,
+				"x".join(ranges.keys().map(func(r: Range) -> String: return str(snappedf(ranges[r], r.step)))),
+			]
 		bubble_add_task(
 			description,
 			1,
@@ -827,42 +856,45 @@ func bubble_add_task_set_ranges(ranges: Dictionary, label_text: String, descript
 func bubble_add_task_set_node_property(node_name: String, property_name: String, property_value: Variant, description := "") -> void:
 	if description.is_empty():
 		description = gtr("""Set [b]%s[/b]'s [b]%s[/b] property to [b]%s[/b]""") % [node_name, property_name.capitalize(), str(property_value).get_file()]
-	bubble_add_task(description, 1, func set_node_property(_task: Task) -> int:
-		var scene_root := EditorInterface.get_edited_scene_root()
-		var node := scene_root if node_name == scene_root.name else scene_root.find_child(node_name)
-		if node == null:
-			return 0
+	bubble_add_task(
+		description,
+		1,
+		func set_node_property(_task: Task) -> int:
+			var scene_root := EditorInterface.get_edited_scene_root()
+			var node := scene_root if node_name == scene_root.name else scene_root.find_child(node_name)
+			if node == null:
+				return 0
 
-		var node_property := node.get(property_name)
-		var is_equal := false
-		if (
-			node_property is Vector2 or
-			node_property is Vector2i or
-			node_property is Vector3 or
-			node_property is Vector3i or
-			node_property is Vector4 or
-			node_property is Vector4i or
-			node_property is Rect2 or
-			node_property is Transform2D or
-			node_property is Plane or
-			node_property is Quaternion or
-			node_property is AABB or
-			node_property is Basis or
-			node_property is Transform3D or
-			node_property is Color
-		):
-			is_equal = node_property.is_equal_approx(property_value)
-		elif node_property is float:
-			is_equal = is_equal_approx(node_property, property_value)
-		elif node_property is Node:
-			is_equal = node_property == get_scene_node_by_path(property_value)
-		else:
-			is_equal = node_property == property_value
+			var node_property := node.get(property_name)
+			var is_equal := false
+			if (
+				node_property is Vector2 or
+				node_property is Vector2i or
+				node_property is Vector3 or
+				node_property is Vector3i or
+				node_property is Vector4 or
+				node_property is Vector4i or
+				node_property is Rect2 or
+				node_property is Transform2D or
+				node_property is Plane or
+				node_property is Quaternion or
+				node_property is AABB or
+				node_property is Basis or
+				node_property is Transform3D or
+				node_property is Color
+			):
+				is_equal = node_property.is_equal_approx(property_value)
+			elif node_property is float:
+				is_equal = is_equal_approx(node_property, property_value)
+			elif node_property is Node:
+				is_equal = node_property == get_scene_node_by_path(property_value)
+			else:
+				is_equal = node_property == property_value
 
-		var result := 1 if is_equal else 0
-		if mouse != null:
-			mouse.visible = result == 0
-		return result
+			var result := 1 if is_equal else 0
+			if mouse != null:
+				mouse.visible = result == 0
+			return result
 	)
 
 
@@ -875,10 +907,13 @@ func bubble_add_task_set_node_property(node_name: String, property_name: String,
 func bubble_add_task_open_scene(path: String, description := "") -> void:
 	if description.is_empty():
 		description = gtr("""Open the scene [b]%s[/b]""") % path.get_file()
-	bubble_add_task(description, 1, func open_scene(_task: Task) -> int:
-		var current_tab := interface.main_screen_tabs.current_tab
-		var current_tab_title = interface.main_screen_tabs.get_tab_title(current_tab)
-		return 1 if path in EditorInterface.get_open_scenes() and current_tab_title == path.get_file().get_basename() else 0
+	bubble_add_task(
+		description,
+		1,
+		func open_scene(_task: Task) -> int:
+			var current_tab := interface.main_screen_tabs.current_tab
+			var current_tab_title = interface.main_screen_tabs.get_tab_title(current_tab)
+			return 1 if path in EditorInterface.get_open_scenes() and current_tab_title == path.get_file().get_basename() else 0
 	)
 
 
@@ -891,13 +926,16 @@ func bubble_add_task_open_scene(path: String, description := "") -> void:
 func bubble_add_task_expand_inspector_property(property_name: String, description := "") -> void:
 	if description.is_empty():
 		description = gtr("""Expand the property [b]%s[/b] in the [b]Inspector[/b]""") % property_name.capitalize()
-	bubble_add_task(description, 1, func expand_property(_task: Task) -> int:
-		var result := 0
-		var properties := interface.inspector_editor.find_children("", "EditorProperty", true, false)
-		for property: EditorProperty in properties:
-			if property.is_class("EditorPropertyResource") and property.get_edited_property() == property_name and property.get_child_count() > 1:
-				result = 1
-		return result
+	bubble_add_task(
+		description,
+		1,
+		func expand_property(_task: Task) -> int:
+			var result := 0
+			var properties := interface.inspector_editor.find_children("", "EditorProperty", true, false)
+			for property: EditorProperty in properties:
+				if property.is_class("EditorPropertyResource") and property.get_edited_property() == property_name and property.get_child_count() > 1:
+					result = 1
+			return result
 	)
 
 ## Used to tell [method bubble_add_task_node_to_guide] to check if the node position perfectly matches the guide's position or if it's just in the guide box's bounding box.
@@ -905,8 +943,9 @@ enum Guide3DCheckMode {
 	## The node's position must be the same as the guide's position, or within a small margin of error.
 	POSITION,
 	## The node's position must be within the guide box's bounding box.
-	IN_BOUNDING_BOX
+	IN_BOUNDING_BOX,
 }
+
 
 ## Parameters to add a task to move a node to a specific position. The location to move to is represented by a transparent guide box.
 ## Used by the function [method bubble_add_task_node_to_guide].
@@ -926,6 +965,7 @@ class Guide3DTaskParameters:
 	## The description of the task. If not set, the function generates the description automatically.
 	var description_override := ""
 
+
 	func _init(p_node_name: String, p_global_position: Vector3, p_check_mode := Guide3DCheckMode.POSITION) -> void:
 		self.node_name = p_node_name
 		self.global_position = p_global_position
@@ -937,39 +977,43 @@ func bubble_add_task_node_to_guide(parameters: Guide3DTaskParameters) -> void:
 	if parameters.description_override.is_empty():
 		parameters.description_override = gtr("""Move [b]%s[/b] inside the guide box""") % parameters.node_name
 
-	queue_command(func() -> void:
-		var scene_root := EditorInterface.get_edited_scene_root()
-		var guide := Guide3DPackedScene.instantiate()
-		scene_root.add_child(guide)
-		guides[parameters.node_name] = guide
-		guide.global_position = parameters.global_position
-		guide.box_offset = parameters.box_offset
-		guide.size = parameters.box_size
-		guide.owner = scene_root
-		guide.name = "GDTourGuide"
-		guide.set_meta(&"_edit_lock_", true)
+	queue_command(
+		func() -> void:
+			var scene_root := EditorInterface.get_edited_scene_root()
+			var guide := Guide3DPackedScene.instantiate()
+			scene_root.add_child(guide)
+			guides[parameters.node_name] = guide
+			guide.global_position = parameters.global_position
+			guide.box_offset = parameters.box_offset
+			guide.size = parameters.box_size
+			guide.owner = scene_root
+			guide.name = "GDTourGuide"
+			guide.set_meta(&"_edit_lock_", true)
 	)
-	bubble_add_task(parameters.description_override, 1, func node_to_guide(_task: Task) -> int:
-		var scene_root := EditorInterface.get_edited_scene_root()
-		var node: Node3D = null
-		if parameters.node_name == scene_root.name:
-			node = scene_root
-		else:
-			node = scene_root.find_child(parameters.node_name)
+	bubble_add_task(
+		parameters.description_override,
+		1,
+		func node_to_guide(_task: Task) -> int:
+			var scene_root := EditorInterface.get_edited_scene_root()
+			var node: Node3D = null
+			if parameters.node_name == scene_root.name:
+				node = scene_root
+			else:
+				node = scene_root.find_child(parameters.node_name)
 
-		var guide: Guide3D = guides.get(parameters.node_name, null)
-		var does_match := node != null and guide != null
-		if not does_match:
-			return 0
+			var guide: Guide3D = guides.get(parameters.node_name, null)
+			var does_match := node != null and guide != null
+			if not does_match:
+				return 0
 
-		if parameters.check_mode == Guide3DCheckMode.POSITION:
-			does_match = does_match and node.global_position.distance_to(guide.global_position) < parameters.position_margin
-		elif parameters.check_mode == Guide3DCheckMode.IN_BOUNDING_BOX:
-			var aabb := guide.get_aabb()
-			aabb.position += guide.global_position
-			does_match = does_match and aabb.has_point(node.global_position)
+			if parameters.check_mode == Guide3DCheckMode.POSITION:
+				does_match = does_match and node.global_position.distance_to(guide.global_position) < parameters.position_margin
+			elif parameters.check_mode == Guide3DCheckMode.IN_BOUNDING_BOX:
+				var aabb := guide.get_aabb()
+				aabb.position += guide.global_position
+				does_match = does_match and aabb.has_point(node.global_position)
 
-		return 1 if does_match else 0
+			return 1 if does_match else 0
 	)
 
 
@@ -1187,15 +1231,16 @@ func highlight_tabs_title(tabs: Control, title: String, play_flash := true) -> v
 ## - rect: The rectangle area to highlight in the 2D viewport
 ## - play_flash: If true, play a flash animation on the highlighted area
 func highlight_canvas_item_editor_rect(rect: Rect2, play_flash := false) -> void:
-	queue_command(func() -> void:
-		var rect_getter := func() -> Rect2:
-			var scene_root := EditorInterface.get_edited_scene_root()
-			if scene_root == null:
-				return Rect2()
-			return interface.canvas_item_editor_viewport.get_global_rect().intersection(
-				scene_root.get_viewport().get_screen_transform() * rect
-			)
-		overlays.add_highlight_to_control(interface.canvas_item_editor_viewport, rect_getter, play_flash),
+	queue_command(
+		func() -> void:
+			var rect_getter := func() -> Rect2:
+				var scene_root := EditorInterface.get_edited_scene_root()
+				if scene_root == null:
+					return Rect2()
+				return interface.canvas_item_editor_viewport.get_global_rect().intersection(
+					scene_root.get_viewport().get_screen_transform() * rect,
+				)
+			overlays.add_highlight_to_control(interface.canvas_item_editor_viewport, rect_getter, play_flash),
 	)
 
 
@@ -1225,16 +1270,17 @@ func highlight_spatial_editor_camera_region(start: Vector3, end: Vector3, index 
 		warn("[b]'index(=%d)'[/b] not in [b]'range(0, interface.spatial_editor_cameras.size()(=%d))'[/b]." % [index, interface.spatial_editor_cameras.size()], "highlight_spatial_editor_camera_region")
 		return
 	var camera := interface.spatial_editor_cameras[index]
-	queue_command(func() -> void:
-		if camera.is_position_behind(start) or camera.is_position_behind(end):
-			return
-		var rect_getter := func() -> Rect2:
-			var s := camera.unproject_position(start)
-			var e := camera.unproject_position(end)
-			return interface.spatial_editor.get_global_rect().intersection(
-				camera.get_viewport().get_screen_transform() * Rect2(Vector2(min(s.x, e.x), min(s.y, e.y)), (e - s).abs())
-			)
-		overlays.add_highlight_to_control(interface.spatial_editor, rect_getter, play_flash),
+	queue_command(
+		func() -> void:
+			if camera.is_position_behind(start) or camera.is_position_behind(end):
+				return
+			var rect_getter := func() -> Rect2:
+				var s := camera.unproject_position(start)
+				var e := camera.unproject_position(end)
+				return interface.spatial_editor.get_global_rect().intersection(
+					camera.get_viewport().get_screen_transform() * Rect2(Vector2(min(s.x, e.x), min(s.y, e.y)), (e - s).abs()),
+				)
+			overlays.add_highlight_to_control(interface.spatial_editor, rect_getter, play_flash),
 	)
 
 
@@ -1243,14 +1289,15 @@ func highlight_spatial_editor_camera_region(start: Vector3, end: Vector3, index 
 ## Note: Currently limited to finding and highlighting only the "material" property.
 ## FIXME: follow scroll and parametrize to highlight a preview other than "material" property.
 func highlight_material_preview() -> void:
-	queue_command(func highlight_preview() -> void:
-		interface.inspector_editor.scroll_vertical = 0
-		var properties := interface.inspector_editor.find_children("", "EditorProperty", true, false)
-		for property: EditorProperty in properties:
-			if property.is_class("EditorPropertyResource") and property.get_edited_property() == "material" and property.get_child_count() > 1:
-				var controls: Array[Control] = []
-				controls.assign(property.find_children("", "MaterialEditor", true, false))
-				overlays.highlight_controls(controls)
+	queue_command(
+		func highlight_preview() -> void:
+			interface.inspector_editor.scroll_vertical = 0
+			var properties := interface.inspector_editor.find_children("", "EditorProperty", true, false)
+			for property: EditorProperty in properties:
+				if property.is_class("EditorPropertyResource") and property.get_edited_property() == "material" and property.get_child_count() > 1:
+					var controls: Array[Control] = []
+					controls.assign(property.find_children("", "MaterialEditor", true, false))
+					overlays.highlight_controls(controls)
 	)
 
 
@@ -1261,9 +1308,10 @@ func highlight_material_preview() -> void:
 ## - from: The starting position in global coordinates
 ## - to: The target position in global coordinates
 func mouse_move_by_position(from: Vector2, to: Vector2) -> void:
-	queue_command(func() -> void:
-		ensure_mouse()
-		mouse.add_move_operation(func() -> Vector2: return from, func() -> Vector2: return to)
+	queue_command(
+		func() -> void:
+			ensure_mouse()
+			mouse.add_move_operation(func() -> Vector2: return from, func() -> Vector2: return to)
 	)
 
 
@@ -1275,10 +1323,11 @@ func mouse_move_by_position(from: Vector2, to: Vector2) -> void:
 ## - from: A callable that returns the starting position
 ## - to: A callable that returns the target position
 func mouse_move_by_callable(from: Callable, to: Callable) -> void:
-	queue_command(func() -> void:
-		ensure_mouse()
-		await delay_process_frame()
-		mouse.add_move_operation(from, to),
+	queue_command(
+		func() -> void:
+			ensure_mouse()
+			await delay_process_frame()
+			mouse.add_move_operation(from, to),
 	)
 
 
@@ -1290,11 +1339,12 @@ func mouse_move_by_callable(from: Callable, to: Callable) -> void:
 ## - to: The target position in global coordinates
 ## - press_texture: Optional texture to display during the press action
 func mouse_click_drag_by_position(from: Vector2, to: Vector2, press_texture: CompressedTexture2D = null) -> void:
-	queue_command(func() -> void:
-		ensure_mouse()
-		mouse.add_press_operation(press_texture)
-		mouse.add_move_operation(func() -> Vector2: return from, func() -> Vector2: return to)
-		mouse.add_release_operation()
+	queue_command(
+		func() -> void:
+			ensure_mouse()
+			mouse.add_press_operation(press_texture)
+			mouse.add_move_operation(func() -> Vector2: return from, func() -> Vector2: return to)
+			mouse.add_release_operation()
 	)
 
 
@@ -1306,11 +1356,12 @@ func mouse_click_drag_by_position(from: Vector2, to: Vector2, press_texture: Com
 ## - to: A callable that returns the target position
 ## - press_texture: Optional texture to display during the press action
 func mouse_click_drag_by_callable(from: Callable, to: Callable, press_texture: CompressedTexture2D = null) -> void:
-	queue_command(func() -> void:
-		ensure_mouse()
-		mouse.add_press_operation(press_texture)
-		mouse.add_move_operation(from, to)
-		mouse.add_release_operation()
+	queue_command(
+		func() -> void:
+			ensure_mouse()
+			mouse.add_press_operation(press_texture)
+			mouse.add_move_operation(from, to)
+			mouse.add_release_operation()
 	)
 
 
@@ -1321,10 +1372,11 @@ func mouse_click_drag_by_callable(from: Callable, to: Callable, press_texture: C
 ## - loops: Number of times to bounce the mouse pointer in a row
 ## - at: A callable that returns the position to bounce at
 func mouse_bounce(loops := 2, at := Callable()) -> void:
-	queue_command(func() -> void:
-		ensure_mouse()
-		await delay_process_frame()
-		mouse.add_bounce_operation(loops, at),
+	queue_command(
+		func() -> void:
+			ensure_mouse()
+			await delay_process_frame()
+			mouse.add_bounce_operation(loops, at),
 	)
 
 
@@ -1334,18 +1386,20 @@ func mouse_bounce(loops := 2, at := Callable()) -> void:
 ## Parameters:
 ## - press_texture: Optional texture to display during the press action
 func mouse_press(press_texture: CompressedTexture2D = null) -> void:
-	queue_command(func() -> void:
-		ensure_mouse()
-		mouse.add_press_operation(press_texture)
+	queue_command(
+		func() -> void:
+			ensure_mouse()
+			mouse.add_press_operation(press_texture)
 	)
 
 
 ## Animates a mouse pointer doing a release action.
 ## Used as part of multi-step mouse interactions, typically after [method mouse_press] and moving the pointer.
 func mouse_release() -> void:
-	queue_command(func() -> void:
-		ensure_mouse()
-		mouse.add_release_operation()
+	queue_command(
+		func() -> void:
+			ensure_mouse()
+			mouse.add_release_operation()
 	)
 
 
@@ -1354,9 +1408,10 @@ func mouse_release() -> void:
 ## Parameters:
 ## - loops: Number of times to click the mouse (default: 1)
 func mouse_click(loops := 1) -> void:
-	queue_command(func() -> void:
-		ensure_mouse()
-		mouse.add_click_operation(loops)
+	queue_command(
+		func() -> void:
+			ensure_mouse()
+			mouse.add_click_operation(loops)
 	)
 
 
@@ -1501,7 +1556,6 @@ func get_inspector_property_center(name: String) -> Vector2:
 	return result
 
 
-
 ## Returns the global center position of a Control node.
 ##
 ## Parameters:
@@ -1640,7 +1694,8 @@ func delay_process_frame(frames := 1) -> void:
 ## - c: The Control node to check
 ##
 ## Returns: True if the control has focus, false otherwise
-func control_has_focus(c: Control) -> bool: return c.has_focus()
+func control_has_focus(c: Control) -> bool:
+	return c.has_focus()
 
 
 ## Compares two nodes by their paths for sorting in ascending order.
@@ -1650,9 +1705,12 @@ func control_has_focus(c: Control) -> bool: return c.has_focus()
 ## - b: Second node to compare
 ##
 ## Returns: True if node a's path comes before node b's path alphabetically
-func sort_ascending_by_path(a: Node, b: Node) -> bool: return str(a.get_path()) < str(b.get_path())
+func sort_ascending_by_path(a: Node, b: Node) -> bool:
+	return str(a.get_path()) < str(b.get_path())
 
 
 ## Closes the bottom panel in the editor by setting the output button to unpressed.
 func _close_bottom_panel() -> void:
-	interface.bottom_output_button.button_pressed = false
+	# TODO: restore, inline
+	return
+	# interface.bottom_output_button.button_pressed = false

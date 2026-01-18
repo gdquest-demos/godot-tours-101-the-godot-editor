@@ -2,11 +2,14 @@
 extends Node3D
 
 ## Changes the size of the guide box.
-var size := Vector3.ONE: set = set_size
+var size := Vector3.ONE:
+	set = set_size
 ## Offsets the child box mesh relative to this node.
-var box_offset := Vector3.ZERO: set = set_box_offset
+var box_offset := Vector3.ZERO:
+	set = set_box_offset
 ## Changes the transparency of the guide box.
-var alpha := 0.4: set = set_alpha
+var alpha := 0.4:
+	set = set_alpha
 
 @onready var mesh_instance_3d: MeshInstance3D = %MeshInstance3D
 

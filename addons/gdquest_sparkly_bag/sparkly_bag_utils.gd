@@ -7,6 +7,7 @@ class Result:
 	var return_code := ReturnCode.OK
 	var result: Variant = null
 
+
 	func _init(result: Variant = null) -> void:
 		self.result = result
 
@@ -91,13 +92,13 @@ static func os_execute(exe: String, args: Array, do_read_stderr := true) -> Retu
 
 
 static func os_parse_user_args(help_description := [], supported_args := []) -> Result:
-	var result := Result.new({args = {}})
+	var result := Result.new({ args = { } })
 
 	const ARG_HELP := ["-h", "--help", "Show this help message."]
 	supported_args = [ARG_HELP] + supported_args
 
 	var is_arg_predicate := func(s: String) -> bool: return s.begins_with("-")
-	var arg_to_help := func(a: Array) -> String: 
+	var arg_to_help := func(a: Array) -> String:
 		var args := a.filter(is_arg_predicate)
 		var help_message := a.filter(func(s: String) -> bool: return not s.begins_with("-"))
 		return "  %s" % "\n\t".join([" ".join(args), "".join(help_message)])
@@ -130,7 +131,7 @@ static func os_parse_user_args(help_description := [], supported_args := []) -> 
 
 
 static func flatten_unique(array: Array) -> Array:
-	var result := {}
+	var result := { }
 	for key in flatten(array):
 		result[key] = null
 	return result.keys()
@@ -163,4 +164,3 @@ static func check_godot_files(dir_path: String) -> ReturnCode:
 		if result != ReturnCode.OK:
 			break
 	return result
-

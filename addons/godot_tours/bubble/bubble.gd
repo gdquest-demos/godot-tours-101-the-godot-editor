@@ -46,15 +46,15 @@ enum At {
 enum AvatarAt { LEFT, CENTER, RIGHT }
 
 const GROW_DIRECTIONS := {
-	At.TOP_LEFT: {h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_END},
-	At.TOP_RIGHT: {h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_END},
-	At.BOTTOM_RIGHT: {h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_BEGIN},
-	At.BOTTOM_LEFT: {h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_BEGIN},
-	At.CENTER_LEFT: {h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_BOTH},
-	At.TOP_CENTER: {h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_END},
-	At.BOTTOM_CENTER: {h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_BEGIN},
-	At.CENTER_RIGHT: {h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_BOTH},
-	At.CENTER: {h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_BOTH},
+	At.TOP_LEFT: { h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_END },
+	At.TOP_RIGHT: { h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_END },
+	At.BOTTOM_RIGHT: { h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_BEGIN },
+	At.BOTTOM_LEFT: { h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_BEGIN },
+	At.CENTER_LEFT: { h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_BOTH },
+	At.TOP_CENTER: { h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_END },
+	At.BOTTOM_CENTER: { h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_BEGIN },
+	At.CENTER_RIGHT: { h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_BOTH },
+	At.CENTER: { h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_BOTH },
 }
 
 var _state: State = State.IDLE
@@ -63,17 +63,17 @@ var is_debug := false
 
 var interface: EditorInterfaceAccess = null
 var translation_service: TranslationService = null
-var step_count := 0  ## Tour step count.
+var step_count := 0 ## Tour step count.
 var log: Log = null
 
-var at := At.CENTER  ## Bubble location relative to a given Control node. See [enum At] for details.
-var avatar_at := AvatarAt.LEFT  ## Avatar location relative to the bubble. See [enum AvatarAt] for details.
+var at := At.CENTER ## Bubble location relative to a given Control node. See [enum At] for details.
+var avatar_at := AvatarAt.LEFT ## Avatar location relative to the bubble. See [enum AvatarAt] for details.
 
 ## Margin offset for [method move_and_anchor]. It keeps the bubble at [code]margin[/code] pixels away relative to
 ## the Control border.
 var margin := 16.0
-var offset_vector := Vector2.ZERO  ## Custom offset for [method move_and_anchor] for extra control.
-var control: Control = null  ## Reference to the control node passed to [method move_and_anchor].
+var offset_vector := Vector2.ZERO ## Custom offset for [method move_and_anchor] for extra control.
+var control: Control = null ## Reference to the control node passed to [method move_and_anchor].
 var drag_margin := 32.0 * EditorInterface.get_editor_scale()
 var is_left_click := false
 var was_moved := false
@@ -104,7 +104,7 @@ func _ready() -> void:
 	if panel_container.theme != null:
 		if _scaled_theme == null:
 			_scaled_theme = ThemeUtils.request_fallback_font(panel_container.theme)
-			_scaled_theme  = ThemeUtils.generate_scaled_theme(_scaled_theme)
+			_scaled_theme = ThemeUtils.generate_scaled_theme(_scaled_theme)
 			panel_container.theme = _scaled_theme
 		else:
 			panel_container.theme = _scaled_theme
@@ -218,10 +218,10 @@ func set_finish_button_text(text: String) -> void:
 
 ## [b]Virtual[/b] method to add a task.
 func add_task(
-	description: String,
-	repeat: int,
-	repeat_callable: Callable,
-	error_predicate: Callable,
+		description: String,
+		repeat: int,
+		repeat_callable: Callable,
+		error_predicate: Callable,
 ) -> void:
 	pass
 
@@ -235,7 +235,10 @@ func check_tasks() -> bool:
 ## Moves and anchors the bubble relative to the given control node. Check out [member at], [member margin], and
 ## [member offset_vector] for details on the parameters.
 func move_and_anchor(
-	control: Control, at := At.CENTER, margin := 16.0, offset_vector := Vector2.ZERO
+		control: Control,
+		at := At.CENTER,
+		margin := 16.0,
+		offset_vector := Vector2.ZERO,
 ) -> void:
 	self.control = control
 	self.at = at
@@ -270,7 +273,10 @@ func set_avatar_at(at := AvatarAt.LEFT) -> void:
 			avatar_tween_position.kill()
 		avatar_tween_position = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		avatar_tween_position.tween_property(
-			avatar, "position", new_avatar_position, TWEEN_DURATION_AVATAR
+			avatar,
+			"position",
+			new_avatar_position,
+			TWEEN_DURATION_AVATAR,
 		)
 
 	if not is_equal_approx(avatar.rotation, new_avatar_rotation):
@@ -278,7 +284,10 @@ func set_avatar_at(at := AvatarAt.LEFT) -> void:
 			avatar_tween_rotation.kill()
 		avatar_tween_rotation = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		avatar_tween_rotation.tween_property(
-			avatar, "rotation_degrees", new_avatar_rotation, TWEEN_DURATION_AVATAR
+			avatar,
+			"rotation_degrees",
+			new_avatar_rotation,
+			TWEEN_DURATION_AVATAR,
 		)
 
 
@@ -291,19 +300,13 @@ func refresh() -> void:
 
 	var at_offset := {
 		At.TOP_LEFT: margin * Vector2.ONE,
-		At.TOP_CENTER:
-		Vector2((control.size.x - panel_container.size.x) / 2.0, 0.0) + margin * Vector2.DOWN,
-		At.TOP_RIGHT:
-		Vector2(control.size.x - panel_container.size.x, 0.0) + margin * Vector2(-1.0, 1.0),
+		At.TOP_CENTER: Vector2((control.size.x - panel_container.size.x) / 2.0, 0.0) + margin * Vector2.DOWN,
+		At.TOP_RIGHT: Vector2(control.size.x - panel_container.size.x, 0.0) + margin * Vector2(-1.0, 1.0),
 		At.BOTTOM_RIGHT: control.size - panel_container.size - margin * Vector2.ONE,
-		At.BOTTOM_CENTER:
-		Vector2(0.5, 1.0) * (control.size - panel_container.size) + margin * Vector2.UP,
-		At.BOTTOM_LEFT:
-		Vector2(0.0, control.size.y - panel_container.size.y) + margin * Vector2(1.0, -1.0),
-		At.CENTER_LEFT:
-		Vector2(0.0, (control.size.y - panel_container.size.y) / 2.0) + margin * Vector2.RIGHT,
-		At.CENTER_RIGHT:
-		Vector2(1.0, 0.5) * (control.size - panel_container.size) + margin * Vector2.LEFT,
+		At.BOTTOM_CENTER: Vector2(0.5, 1.0) * (control.size - panel_container.size) + margin * Vector2.UP,
+		At.BOTTOM_LEFT: Vector2(0.0, control.size.y - panel_container.size.y) + margin * Vector2(1.0, -1.0),
+		At.CENTER_LEFT: Vector2(0.0, (control.size.y - panel_container.size.y) / 2.0) + margin * Vector2.RIGHT,
+		At.CENTER_RIGHT: Vector2(1.0, 0.5) * (control.size - panel_container.size) + margin * Vector2.LEFT,
 		At.CENTER: (control.size - panel_container.size) / 2.0,
 	}
 
@@ -313,6 +316,9 @@ func refresh() -> void:
 			tween.kill()
 		tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween.tween_property(
-			panel_container, "global_position", new_global_position, TWEEN_DURATION
+			panel_container,
+			"global_position",
+			new_global_position,
+			TWEEN_DURATION,
 		)
 	set_avatar_at(avatar_at)

@@ -6,8 +6,8 @@ const UI_KEY := "ui"
 
 var tour_key := ""
 var locale := ""
-var translations := {}
-var translation_remaps := {}
+var translations := { }
+var translation_remaps := { }
 
 
 func _init(tour_paths: Array[String], editor_settings: EditorSettings) -> void:
@@ -24,16 +24,19 @@ func get_message(key: StringName, src_message: StringName, context: StringName =
 
 
 func get_plural_message(
-	key: StringName,
-	src_message: StringName,
-	src_plural_message: StringName,
-	n: int,
-	context: StringName = ""
+		key: StringName,
+		src_message: StringName,
+		src_plural_message: StringName,
+		n: int,
+		context: StringName = "",
 ) -> String:
 	var result := ""
 	if has_translation(key):
 		result = translations[key][locale].get_plural_message(
-			src_message, src_plural_message, n, context
+			src_message,
+			src_plural_message,
+			n,
+			context,
 		)
 	return src_message if n == 1 else src_plural_message if result.is_empty() else result
 
@@ -43,7 +46,10 @@ func get_tour_message(src_message: StringName, context: StringName = "") -> Stri
 
 
 func get_tour_plural_message(
-	src_message: StringName, src_plural_message: StringName, n: int, context: StringName = ""
+		src_message: StringName,
+		src_plural_message: StringName,
+		n: int,
+		context: StringName = "",
 ) -> String:
 	return get_plural_message(tour_key, src_message, src_plural_message, n, context)
 
@@ -65,12 +71,7 @@ func get_resource_path(path: String) -> String:
 func load_translations(tours_path: Array[String]) -> void:
 	translations.clear()
 	var locale_dir_path: String = (
-		get_script()
-		. resource_path
-		. get_base_dir()
-		. get_base_dir()
-		. path_join(UI_DIR)
-		. path_join(LOCALE_DIR)
+		get_script().resource_path.get_base_dir().get_base_dir().path_join(UI_DIR).path_join(LOCALE_DIR)
 	)
 	load_translations_dir(locale_dir_path)
 
@@ -84,7 +85,7 @@ func load_translations_dir(locale_dir_path: String) -> void:
 	if DirAccess.dir_exists_absolute(locale_dir_path):
 		var key := locale_dir_path.trim_suffix(LOCALE_DIR).get_base_dir().get_file()
 		if not key in translations:
-			translations[key] = {}
+			translations[key] = { }
 
 		for locale_file in DirAccess.get_files_at(locale_dir_path):
 			if locale_file.get_extension() in EXTENSIONS:

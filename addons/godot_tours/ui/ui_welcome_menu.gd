@@ -45,40 +45,49 @@ func _ready() -> void:
 
 
 func setup(translation_service: TranslationService, tour_metadata: GDTourMetadata) -> void:
-	Utils.update_locale(translation_service, {
-		label_title: {text = "Welcome to GDTour!"},
-		button_start_learning: {text = "START LEARNING"},
-		button_reset_no: {text = "NO"},
-		button_reset_yes: {text = "YES"},
-	})
+	Utils.update_locale(
+		translation_service,
+		{
+			label_title: { text = "Welcome to GDTour!" },
+			button_start_learning: { text = "START LEARNING" },
+			button_reset_no: { text = "NO" },
+			button_reset_yes: { text = "YES" },
+		},
+	)
 
-	button_close.pressed.connect(func emit_closed_and_free() -> void:
-		closed.emit()
-		queue_free()
+	button_close.pressed.connect(
+		func emit_closed_and_free() -> void:
+			closed.emit()
+			queue_free()
 	)
-	button_start_learning.pressed.connect(func request_tour() -> void:
-		tour_start_requested.emit(get_selectable_tour().get_index())
+	button_start_learning.pressed.connect(
+		func request_tour() -> void:
+			tour_start_requested.emit(get_selectable_tour().get_index())
 	)
-	button_reset_selected.pressed.connect(func open_reset_menu() -> void:
-		view_reset_confirmation.show()
-		view_menu.hide()
-		button_reset_ok.hide()
-		button_reset_no.show()
-		button_reset_yes.show()
-		label_reset_title.text = tr("Reset the tour?")
-		label_reset_explanation.text = tr("Do you want to reset [b]%s[/b]?" % get_selectable_tour().title)
-		label_reset_explanation.text += "\n" + tr("This will reset the files to the tour starting point, overwriting your changes.")
+	button_reset_selected.pressed.connect(
+		func open_reset_menu() -> void:
+			view_reset_confirmation.show()
+			view_menu.hide()
+			button_reset_ok.hide()
+			button_reset_no.show()
+			button_reset_yes.show()
+			label_reset_title.text = tr("Reset the tour?")
+			label_reset_explanation.text = tr("Do you want to reset [b]%s[/b]?" % get_selectable_tour().title)
+			label_reset_explanation.text += "\n" + tr("This will reset the files to the tour starting point, overwriting your changes.")
 	)
-	button_reset_no.pressed.connect(func open_welcome_menu() -> void:
-		view_menu.show()
-		view_reset_confirmation.hide()
+	button_reset_no.pressed.connect(
+		func open_welcome_menu() -> void:
+			view_menu.show()
+			view_reset_confirmation.hide()
 	)
-	button_reset_yes.pressed.connect(func emit_reset_tour() -> void:
-		tour_reset_requested.emit(get_selectable_tour().tour_path)
+	button_reset_yes.pressed.connect(
+		func emit_reset_tour() -> void:
+			tour_reset_requested.emit(get_selectable_tour().tour_path)
 	)
-	button_reset_ok.pressed.connect(func open_welcome_menu() -> void:
-		view_menu.show()
-		view_reset_confirmation.hide()
+	button_reset_ok.pressed.connect(
+		func open_welcome_menu() -> void:
+			view_menu.show()
+			view_reset_confirmation.hide()
 	)
 
 	for tour_entry: GDTourMetadata.TourMetadata in tour_metadata.list:
@@ -117,6 +126,7 @@ func show_reset_success() -> void:
 	button_reset_no.hide()
 	button_reset_yes.hide()
 	button_reset_ok.show()
+
 
 ## Shows a message to the user that a tour reset failed.
 ## Called by the plugin after a tour has been reset.

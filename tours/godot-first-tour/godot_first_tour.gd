@@ -52,11 +52,12 @@ var script_chest := "res://levels/rooms/chests/chest.gd"
 func _build() -> void:
 	ended.connect(OS.shell_open.bind("https://school.gdquest.com/courses/learn_2d_gamedev_godot_4/learn_gdscript/learn_gdscript_app"))
 
-	# Set editor state according to the tour's needs.
+	# TODO: figure out resetting the UI at the beginning of the tour. Consider adding function in
+	# tour API to normalize the editor UI (close any open bottom tab, etc.) or just verify we apply
+	# the default layout.
 	queue_command(func reset_editor_state_for_tour():
 		interface.canvas_item_editor_toolbar_grid_button.button_pressed = false
 		interface.canvas_item_editor_toolbar_smart_snap_button.button_pressed = false
-		interface.bottom_output_button.button_pressed = false
 	)
 
 	steps_010_intro()
@@ -110,9 +111,10 @@ func steps_010_intro() -> void:
 	bubble_add_text(
 		[gtr("Great! Now let's take a quick tour of the editor."),]
 	)
-	queue_command(func():
-		interface.bottom_output_button.button_pressed = false
-	)
+	# TODO: restore, add necessary API to framework to toggle bottom panel buttons
+	# queue_command(func():
+	# 	interface.bottom_output_button.button_pressed = false
+	# )
 	complete_step()
 
 
@@ -138,15 +140,14 @@ func steps_020_first_look() -> void:
 	complete_step()
 
 	# 0041: looking around
-	var controls_0041: Array[Control] = []
-	controls_0041.assign([
-		interface.scene_dock,
-		interface.filesystem_dock,
-		interface.inspector_dock,
-		interface.context_switcher,
-		interface.run_bar,
-	] + interface.bottom_buttons)
-	highlight_controls(controls_0041)
+	highlight_controls([
+			interface.scene_dock,
+			interface.filesystem_dock,
+			interface.inspector_dock,
+			interface.context_switcher,
+			interface.run_bar,
+			interface.bottom_panels_tab_bar,
+		])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(gtr("Let's look around"))
@@ -237,9 +238,6 @@ func steps_020_first_look() -> void:
 
 
 	# 0046: bottom panels
-	queue_command(func debugger_open():
-		interface.bottom_debugger_button.button_pressed = true
-	)
 	highlight_controls([interface.debugger])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.BOTTOM_CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
@@ -250,10 +248,6 @@ func steps_020_first_look() -> void:
 		gtr("These editors are contextual. We'll see what that means in the next tour."),
 	])
 	complete_step()
-
-	queue_command(func debugger_close():
-		interface.bottom_debugger_button.button_pressed = false
-	)
 
 
 func steps_030_opening_scene() -> void:
@@ -414,24 +408,24 @@ func steps_050_signals() -> void:
 	complete_step()
 
 	highlight_scene_nodes_by_path(["Main/Player"])
-	highlight_controls([interface.node_dock_signals_editor])
+	highlight_controls([interface.signals_dock])
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(gtr("Click the signal icon"))
 	bubble_add_text([
 		gtr("In the [b]Scene Dock[/b] at the top-left, look at the [b]Player[/b] node."),
 		gtr("You can see the [b]Signal Emission[/b] %s icon emitting little waves. This icon tells you that the node has a signal connection.") % bbcode_generate_icon_image_string(ICONS_MAP.node_signal_connected),
-		gtr("Click the icon to open the [b]Node Dock[/b] at the right of the editor."),
+		gtr("Click the icon to open the [b]Signals Dock[/b] at the right of the editor."),
 	])
-	bubble_add_task_set_tab_by_control(interface.node_dock, gtr("Click the signal emission icon next to the [b]Player[/b] node and open the [b]Node Dock[/b]."))
+	bubble_add_task_set_tab_by_control(interface.signals_dock, gtr("Click the signal emission icon next to the [b]Player[/b] node and open the [b]Signals Dock[/b]."))
 	complete_step()
 
-	highlight_controls([interface.node_dock_signals_editor], true)
+	highlight_controls([interface.signals_dock], true)
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
-	bubble_set_title(gtr("The Node Dock"))
+	bubble_set_title(gtr("The Signals Dock"))
 	bubble_add_text([
-		gtr("On the right, you can see the [b]Node Dock[/b]. It lists all the signals of the selected node. In this case, it's the [b]Player[/b] node."),
+		gtr("On the right, you can see the [b]Signals Dock[/b]. It lists all the signals of the selected node. In this case, it's the [b]Player[/b] node."),
 		gtr("The signal list is long: nodes emit many signals, because there are many kinds of events we need to react to in a game."),
 	])
 	complete_step()
@@ -501,10 +495,6 @@ func steps_050_signals() -> void:
 		gtr("This happens thanks to the [b]health_changed[/b] signal connection."),]
 	)
 	complete_step()
-
-	queue_command(func debugger_close():
-		interface.bottom_debugger_button.button_pressed = false
-	)
 
 
 func steps_090_conclusion() -> void:

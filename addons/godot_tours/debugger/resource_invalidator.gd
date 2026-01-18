@@ -1,6 +1,5 @@
 extends RefCounted
 
-
 ## Forces the editor to reload a cached resource by creating a copy of it and having the new copy
 ## overwrite the original resource.
 static func resource_force_editor_reload(resource_path: String) -> Resource:

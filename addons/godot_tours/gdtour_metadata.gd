@@ -5,16 +5,18 @@ extends Node
 
 const NAME := "GDTourMetadata"
 
+
 ## Represents the metadata of a given tour.
 ## You need to create these objects and append them to the list property in your project's godot_tours.gd file.
 class TourMetadata:
-	var _cache := {}
+	var _cache := { }
 
 	var id := ""
 	var title := ""
 	var is_free := false
 	var is_locked := false
 	var tour_path := ""
+
 
 	func _init(id: String, title: String, tour_path: String, is_free := false, is_locked := false) -> void:
 		self.id = id
@@ -23,17 +25,20 @@ class TourMetadata:
 		self.is_free = is_free
 		self.is_locked = is_locked
 
+
 	func _to_string() -> String:
 		return str(to_dictionary())
+
 
 	func to_dictionary(exclude: Array[String] = ["@*", "_*"]) -> Dictionary:
 		if "dictionary" in _cache:
 			return _cache.dictionary
 
 		var result := inst_to_dict(self)
-		var predicate := func(key: String) -> bool: return exclude.any(
-			func(e: String) -> bool: return key.match(e)
-		)
+		var predicate := func(key: String) -> bool:
+			return exclude.any(
+				func(e: String) -> bool: return key.match(e)
+			)
 
 		for key in result.keys().filter(predicate):
 			result.erase(key)
@@ -47,6 +52,7 @@ var list: Array[TourMetadata] = []
 ## If true, the welcome menu will pop up automatically when opening the
 ## project in Godot.
 var open_welcome_menu_automatically := true
+
 
 ## Register a single tour with the given parameters.
 func register_tour(id: String, title: String, tour_path: String, is_free := false, is_locked := false) -> void:

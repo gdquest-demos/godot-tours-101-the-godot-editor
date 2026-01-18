@@ -199,7 +199,7 @@ func expand_inspector_resource(resource_property_name: StringName) -> void:
 	var matching_index := all_properties.find_custom(predicate_name_matches)
 	if matching_index < 0:
 		push_warning(
-			"expand_inspector_resource: Could not find resource property with name '%s' in Inspector. The property could not be expanded." % resource_property_name
+			"expand_inspector_resource: Could not find resource property with name '%s' in Inspector. The property could not be expanded." % resource_property_name,
 		)
 		return
 	var matching_property: EditorProperty = all_properties[matching_index]
@@ -296,7 +296,7 @@ func highlight_inspector_section_property(first_property_name: StringName, do_ce
 		return
 
 	if do_center:
-		interface.inspector_editor.scroll_vertical += ( matching_section.global_position.y + scroll_offset - interface.inspector_editor.global_position.y - interface.inspector_editor.size.y / 2.0 )
+		interface.inspector_editor.scroll_vertical += (matching_section.global_position.y + scroll_offset - interface.inspector_editor.global_position.y - interface.inspector_editor.size.y / 2.0)
 	else:
 		interface.inspector_editor.ensure_control_visible(matching_section)
 
@@ -324,7 +324,7 @@ func highlight_inspector_section_property(first_property_name: StringName, do_ce
 ## for details on the other parameters.
 func highlight_signals(signal_names: Array[String], do_center := true, play_flash := false) -> void:
 	highlight_tree_items(
-		interface.node_dock_signals_tree,
+		interface.signals_dock_tree,
 		func(item: TreeItem) -> bool:
 			var predicate := func(sn: String) -> bool: return item.get_text(0).begins_with(sn)
 			return signal_names.any(predicate),
@@ -374,6 +374,35 @@ func highlight_controls(controls: Array[Control], play_flash := false) -> void:
 		if control == null:
 			continue
 		add_highlight_to_control(control, Callable(), play_flash)
+
+
+## Highlights a dynamic editor Control like UI nodes in the TileMap editor.
+## The node is resolved from the enum value each frame.
+func highlight_dynamic_control(node_enum: EditorInterfaceAccess.DynamicEditorNodes, play_flash := false) -> void:
+	var rect_getter := func() -> Rect2:
+		var control := interface.get_dynamic_editor_node(node_enum)
+		if control == null or not control.is_inside_tree() or not control.is_visible_in_tree():
+			return Rect2()
+		return control.get_global_rect()
+
+	# We use base_control as the dimmer anchor since the actual control may not exist yet.
+	# base_control is always visible, so the visibility check passes, and the rect_getter
+	# handles showing and hiding the highlight based on the node's availability.
+	var dimmer := ensure_get_dimmer_for(interface.base_control)
+
+	var highlight := HighlightPackedScene.instantiate()
+	dimmer.add_child(highlight)
+	if play_flash:
+		highlight.flash()
+
+	highlight.setup(rect_getter, dimmer, _highlight_style_scaled)
+	highlight.controls.push_back(interface.base_control)
+
+
+## Highlights multiple dynamic editor controls. See [method highlight_dynamic_control].
+func highlight_dynamic_controls(node_enums: Array[EditorInterfaceAccess.DynamicEditorNodes], play_flash := false) -> void:
+	for node_enum in node_enums:
+		highlight_dynamic_control(node_enum, play_flash)
 
 
 ## Highlights either the whole [code]tabs[/code] [TabBar] if [code]index == -1[/code] or the given [TabContainer] tab

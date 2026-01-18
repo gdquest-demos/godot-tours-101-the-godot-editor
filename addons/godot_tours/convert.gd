@@ -33,7 +33,7 @@ func _init() -> void:
 func convert_to_test(md_file_path: String) -> void:
 	var tour_file_path := "%s.gd" % md_file_path.get_basename()
 	print_rich(
-		"\n[color=blue]Generating[/color] '%s' from '%s'..." % [tour_file_path, md_file_path]
+		"\n[color=blue]Generating[/color] '%s' from '%s'..." % [tour_file_path, md_file_path],
 	)
 	if FileAccess.file_exists(tour_file_path):
 		print_rich("'%s' already exists. [color=yellow]SKIP[/color]..." % tour_file_path)
@@ -96,7 +96,7 @@ func to_bubble_title(line: String) -> String:
 
 
 func to_call(s: String) -> Dictionary:
-	var result := {function = "", parameters = []}
+	var result := { function = "", parameters = [] }
 	var strip_edges := func(s: String) -> String: return s.strip_edges()
 	var extraction: Array = Array(s.lstrip(MD_CALL).split(":")).map(strip_edges)
 	result.function = extraction.front().to_lower()

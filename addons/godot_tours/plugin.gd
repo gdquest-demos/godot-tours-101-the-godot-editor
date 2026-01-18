@@ -23,8 +23,8 @@ const UIButtonGodotToursPackedScene = preload("ui/ui_button_godot_tours.tscn")
 const ALERT_TEXT := "You're using Godot '%s', but GDTour does not support this version currently.\nPlease use one of the supported versions: '%s <= VERSION <= %s'."
 
 var _supported_versions := {
-	min = {major = 4, minor = 4, op = func(a: int, b: int) -> bool: return a <= b},
-	max = {major = 4, minor = 5, op = func(a: int, b: int) -> bool: return a >= b},
+	min = { major = 4, minor = 6, op = func(a: int, b: int) -> bool: return a <= b },
+	max = { major = 4, minor = 6, op = func(a: int, b: int) -> bool: return a >= b },
 }
 var version_info := Engine.get_version_info()
 
@@ -56,8 +56,8 @@ func _enter_tree() -> void:
 		var accept_dialog := AcceptDialog.new()
 		add_child(accept_dialog)
 		accept_dialog.dialog_text = ALERT_TEXT % ([version_info.string] + _supported_versions.keys().map(
-			func(k: String) -> String: return "{major}.{minor}".format(_supported_versions[k])
-		))
+				func(k: String) -> String: return "{major}.{minor}".format(_supported_versions[k])
+			) )
 		accept_dialog.initial_position = AcceptDialog.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 		accept_dialog.exclusive = false
 		accept_dialog.show()
@@ -128,12 +128,13 @@ func _show_welcome_menu() -> void:
 	EditorInterface.get_base_control().add_child(welcome_menu)
 	welcome_menu.setup(translation_service, tour_metadata)
 	welcome_menu.tour_start_requested.connect(start_tour)
-	welcome_menu.tour_reset_requested.connect(func reset_tour(tour_path: String) -> void:
-		var was_reset_successful := _reset_tour_files(tour_path)
-		if was_reset_successful:
-			welcome_menu.show_reset_success()
-		else:
-			welcome_menu.show_reset_failure()
+	welcome_menu.tour_reset_requested.connect(
+		func reset_tour(tour_path: String) -> void:
+			var was_reset_successful := _reset_tour_files(tour_path)
+			if was_reset_successful:
+				welcome_menu.show_reset_success()
+			else:
+				welcome_menu.show_reset_failure()
 	)
 	welcome_menu.closed.connect(_button_top_bar.show)
 
@@ -215,7 +216,7 @@ func get_tours() -> GDTourMetadata:
 				return script.new()
 
 	push_warning(
-		"GDTour: no tours found. Create a script file at one of these paths to register tours: %s" % ", ".join(TOUR_SCRIPT_PATHS)
+		"GDTour: no tours found. Create a script file at one of these paths to register tours: %s" % ", ".join(TOUR_SCRIPT_PATHS),
 	)
 	return null
 
@@ -273,7 +274,7 @@ func _reset_tour_files(tour_path: String) -> bool:
 			var file_access := FileAccess.open(destination_file_path, FileAccess.WRITE)
 			if file_access == null:
 				push_error(
-					"GDTour: could not open file '%s' for writing. Resetting the tour '%s' was not successful." % [destination_file_path, tour_path]
+					"GDTour: could not open file '%s' for writing. Resetting the tour '%s' was not successful." % [destination_file_path, tour_path],
 				)
 				was_reset_successful = false
 				break
@@ -284,7 +285,7 @@ func _reset_tour_files(tour_path: String) -> bool:
 			var error := DirAccess.copy_absolute(tour_file_path, destination_file_path)
 			if error != OK:
 				push_error(
-					"GDTour: could not copy folder '%s' to '%s'. Resetting the tour '%s' was not successful." % [tour_file_path, destination_file_path, tour_path]
+					"GDTour: could not copy folder '%s' to '%s'. Resetting the tour '%s' was not successful." % [tour_file_path, destination_file_path, tour_path],
 				)
 				was_reset_successful = false
 				break

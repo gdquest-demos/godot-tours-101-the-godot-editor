@@ -2,6 +2,7 @@ class Helper:
 	static func noop() -> void:
 		pass
 
+
 const TranslationService := preload("translation/translation_service.gd")
 
 const SEP := "/"

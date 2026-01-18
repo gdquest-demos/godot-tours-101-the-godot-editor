@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://bq65uwha45com"]
+[gd_resource type="TileSet" format=3 uid="uid://bq65uwha45com"]
 
 [ext_resource type="Texture2D" uid="uid://cj1uipouljspx" path="res://levels/rooms/dungeon.png" id="1"]
 
