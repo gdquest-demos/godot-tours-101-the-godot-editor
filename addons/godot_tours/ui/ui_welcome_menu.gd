@@ -44,6 +44,12 @@ func _ready() -> void:
 	button_reset_yes.show()
 
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.keycode == KEY_ESCAPE and event.pressed:
+		closed.emit()
+		queue_free()
+
+
 func setup(translation_service: TranslationService, tour_metadata: GDTourMetadata) -> void:
 	Utils.update_locale(
 		translation_service,

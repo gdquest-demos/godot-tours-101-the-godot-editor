@@ -12,9 +12,6 @@ const Utils := preload("../utils.gd")
 const HighlightPackedScene := preload("highlight/highlight.tscn")
 const DimmerPackedScene := preload("dimmer/dimmer.tscn")
 
-## Used to grow the [TreeItem] rectangle to calculate overlaps for highlights.
-const RECT_GROW := 5
-
 var interface: EditorInterfaceAccess = null
 var dimmers: Array[Dimmer] = []
 
@@ -68,12 +65,40 @@ func add_highlight_to_control(control: Control, rect_getter := Callable(), play_
 			rect_getter = control.get_global_rect
 
 	var editor_scale := EditorInterface.get_editor_scale()
-	var rect := rect_getter.call()
+	var rect: Rect2 = rect_getter.call()
 	for child in dimmer.get_children():
 		if child is Highlight:
 			child.refresh()
 			var child_rect := Rect2(child.global_position, child.custom_minimum_size)
-			if (rect.grow(RECT_GROW * editor_scale) if do_grow else rect).intersects(child_rect):
+
+			# We determine if highlights should merge based on their alignment
+			# and proximity. There are two cases in which we want to merge
+			# highlights:
+			#
+			# 1. They are roughly aligned horizontally and touching vertically.
+			# 2. They are roughly aligned vertically and touching horizontally.
+			var should_merge := false
+			var alignment_threshold := 2.0 * editor_scale
+			var grow_amount_px := 4.0 * editor_scale if do_grow else 0.0
+
+			var is_horizontally_aligned := (
+				absf(rect.position.x - child_rect.position.x) < alignment_threshold and
+				absf(rect.size.x - child_rect.size.x) < alignment_threshold
+			)
+			if is_horizontally_aligned:
+				var rect_grown_vertically := rect.grow_individual(0, grow_amount_px, 0, grow_amount_px)
+				should_merge = rect_grown_vertically.intersects(child_rect)
+
+			if not should_merge:
+				var is_vertically_aligned := (
+					absf(rect.position.y - child_rect.position.y) < alignment_threshold and
+					absf(rect.size.y - child_rect.size.y) < alignment_threshold
+				)
+				if is_vertically_aligned:
+					var rect_grown_horizontally := rect.grow_individual(grow_amount_px, 0, grow_amount_px, 0)
+					should_merge = rect_grown_horizontally.intersects(child_rect)
+
+			if should_merge:
 				overlaps.push_back(child)
 
 	var highlight := HighlightPackedScene.instantiate()
@@ -98,6 +123,14 @@ func clean_up() -> void:
 		dimmer.queue_free()
 	dimmers = []
 	cleaned_up.emit()
+
+
+## Removes all highlights associated with a specific control.
+func remove_highlights_for_control(control: Control) -> void:
+	var dimmer := ensure_get_dimmer_for(control)
+	for child in dimmer.get_children():
+		if child is Highlight and control in child.controls:
+			child.queue_free()
 
 
 ## Toggle dimmers visibility on/off.
@@ -235,42 +268,53 @@ func highlight_inspector_property(name: StringName, do_center := true, play_flas
 		return p.get_edited_property() == name
 
 	var matching_index := all_properties.find_custom(predicate_name_matches)
-	if matching_index < 0:
-		return
 
-	var matching_property: EditorProperty = all_properties[matching_index]
-	# Unfold parent sections recursively if necessary.
-	var current_parent := matching_property.get_parent()
-	const MAX_ITERATION_COUNT := 10
-	for i in MAX_ITERATION_COUNT:
-		var parent_class := current_parent.get_class()
-		if parent_class == "EditorInspectorSection":
-			current_parent.unfold()
+	# Only scroll/unfold if the property exists now. If it doesn't exist yet
+	# (wrong node selected), we still create the highlight below so it appears
+	# when the user selects the correct node.
+	if matching_index >= 0:
+		var matching_property: EditorProperty = all_properties[matching_index]
+		# Unfold parent sections recursively if necessary.
+		var current_parent := matching_property.get_parent()
+		const MAX_ITERATION_COUNT := 10
+		for i in MAX_ITERATION_COUNT:
+			var parent_class := current_parent.get_class()
+			if parent_class == "EditorInspectorSection":
+				current_parent.unfold()
 
-		current_parent = current_parent.get_parent()
-		if current_parent == interface.inspector_editor:
-			break
+			current_parent = current_parent.get_parent()
+			if current_parent == interface.inspector_editor:
+				break
 
-	if do_center:
-		interface.inspector_editor.scroll_vertical += (
-			matching_property.global_position.y + scroll_offset
-			- interface.inspector_editor.global_position.y
-			- interface.inspector_editor.size.y / 2.0
-		)
-	else:
-		interface.inspector_editor.ensure_control_visible(matching_property)
+		if do_center:
+			interface.inspector_editor.scroll_vertical += (
+				matching_property.global_position.y + scroll_offset
+				- interface.inspector_editor.global_position.y
+				- interface.inspector_editor.size.y / 2.0
+			)
+		else:
+			interface.inspector_editor.ensure_control_visible(matching_property)
 
 	var dimmer := ensure_get_dimmer_for(interface.inspector_dock)
 	# We need to find the property again in case the inspector changed (e.g. the
 	# user selected another node or deselected the node).
-	# TODO: this could be perhaps cached in the future. For now, we want to
-	# ensure we always highlight the right property and re-run this frequently.
+	#
+	# TODO: this could be better cached or made more efficient. Notably, we
+	# shouldn't have to constantly poll editor properties. However, the inspector
+	# state changes depending on user actions. Notably, in recent versions of
+	# Godot, toggle properties can spawn more editor properties. We could use
+	# the EditorInspector signals to cache some information and refresh the list as needed.
+	#
+	# FIXME: this also needs to be refreshed when the inspector state changes in
+	# case the property was not initially found. If the user has not selected
+	# the relevant node and changes selection to the correct node after this
+	# was called, it will not be highlighted.
 	var rect_getter := func inspector_property_rect_getter() -> Rect2:
 		all_properties = interface.inspector_editor.find_children("", "EditorProperty", true, false)
 		var matching_property_index := all_properties.find_custom(predicate_name_matches)
 		if matching_property_index < 0:
 			return Rect2()
-		var editor_property: EditorProperty = all_properties[matching_index]
+		var editor_property: EditorProperty = all_properties[matching_property_index]
 		if editor_property.is_visible_in_tree():
 			var rect := editor_property.get_global_rect()
 			rect.position.x = interface.inspector_editor.global_position.x
@@ -369,6 +413,7 @@ func highlight_code(start: int, end := 0, caret := 0, do_center := true, play_fl
 
 
 ## Highlights arbitrary [code]controls[/code]. See [method highlight_tree_items] for [code]play_flash[/code].
+## TODO: deprecate and remove once we've replaced the editor interface access library.
 func highlight_controls(controls: Array[Control], play_flash := false) -> void:
 	for control in controls:
 		if control == null:
@@ -376,11 +421,18 @@ func highlight_controls(controls: Array[Control], play_flash := false) -> void:
 		add_highlight_to_control(control, Callable(), play_flash)
 
 
+## Highlights editor nodes by [code]controls[/code]. See [method highlight_tree_items] for [code]play_flash[/code].
+func highlight_editor_nodes_by_enum_member(editor_node_ids: Array[EditorInterfaceAccess.EditorNodes], play_flash := false) -> void:
+	for current_id in editor_node_ids:
+		var control := interface.get_editor_node(current_id)
+		add_highlight_to_control(control, Callable(), play_flash)
+
+
 ## Highlights a dynamic editor Control like UI nodes in the TileMap editor.
 ## The node is resolved from the enum value each frame.
-func highlight_dynamic_control(node_enum: EditorInterfaceAccess.DynamicEditorNodes, play_flash := false) -> void:
+func highlight_dynamic_control(node_enum: EditorInterfaceAccess.EditorNodes, play_flash := false) -> void:
 	var rect_getter := func() -> Rect2:
-		var control := interface.get_dynamic_editor_node(node_enum)
+		var control := interface.get_editor_node(node_enum)
 		if control == null or not control.is_inside_tree() or not control.is_visible_in_tree():
 			return Rect2()
 		return control.get_global_rect()
@@ -400,7 +452,7 @@ func highlight_dynamic_control(node_enum: EditorInterfaceAccess.DynamicEditorNod
 
 
 ## Highlights multiple dynamic editor controls. See [method highlight_dynamic_control].
-func highlight_dynamic_controls(node_enums: Array[EditorInterfaceAccess.DynamicEditorNodes], play_flash := false) -> void:
+func highlight_dynamic_controls(node_enums: Array[EditorInterfaceAccess.EditorNodes], play_flash := false) -> void:
 	for node_enum in node_enums:
 		highlight_dynamic_control(node_enum, play_flash)
 

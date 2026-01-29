@@ -378,7 +378,7 @@ func tileset_tabs_set_by_control(control: Control) -> void:
 	if index == -1:
 		warn("[b]'control(=%s)'[/] must be found in '[b]interface.tilset_controls[/b]'" % [control], "tileset_set_to_control")
 	else:
-		var tileset_tabs := interface.get_dynamic_editor_node(interface.DynamicEditorNodes.TILESET_TABS)
+		var tileset_tabs := interface.get_editor_node(interface.EditorNodes.TILESET_TABS)
 		tabs_set_to_index(tileset_tabs, index)
 
 
@@ -392,7 +392,7 @@ func tilemap_tabs_set_by_control(control: Control) -> void:
 	if index == -1:
 		warn("[b]'control(=%s)'[/] must be found in '[b]interface.tilmap_controls[/b]'" % [control], "tilemap_set_to_control")
 	else:
-		var tilemap_tabs := interface.get_dynamic_editor_node(interface.DynamicEditorNodes.TILEMAP_TABS)
+		var tilemap_tabs := interface.get_editor_node(interface.EditorNodes.TILEMAP_TABS)
 		tabs_set_to_index(tilemap_tabs, index)
 
 
@@ -769,7 +769,7 @@ func bubble_add_task_set_tileset_tab_by_control(control: Control, description :=
 	if index == -1:
 		warn("[b]'control(=%s)'[/b] must be found in '[b]interface.tilset_controls[/b]'" % [control], "bubble_add_task_set_tileset_tab_by_control")
 	else:
-		var tileset_tabs := interface.get_dynamic_editor_node(interface.DynamicEditorNodes.TILESET_TABS)
+		var tileset_tabs := interface.get_editor_node(interface.EditorNodes.TILESET_TABS)
 		bubble_add_task_set_tab_to_index(tileset_tabs, index, description)
 
 
@@ -786,7 +786,7 @@ func bubble_add_task_set_tilemap_tab_by_control(control: Control, description :=
 	if index == -1:
 		warn("[b]'control(=%s)'[/] must be found in '[b]interface.tilmap_controls[/b]'" % [control], "bubble_add_task_set_tilemap_tab_by_control")
 	else:
-		var tilemap_tabs := interface.get_dynamic_editor_node(interface.DynamicEditorNodes.TILEMAP_TABS)
+		var tilemap_tabs := interface.get_editor_node(interface.EditorNodes.TILEMAP_TABS)
 		bubble_add_task_set_tab_to_index(tilemap_tabs, index, description)
 
 
@@ -930,12 +930,15 @@ func bubble_add_task_expand_inspector_property(property_name: String, descriptio
 		description,
 		1,
 		func expand_property(_task: Task) -> int:
-			var result := 0
 			var properties := interface.inspector_editor.find_children("", "EditorProperty", true, false)
 			for property: EditorProperty in properties:
-				if property.is_class("EditorPropertyResource") and property.get_edited_property() == property_name and property.get_child_count() > 1:
-					result = 1
-			return result
+				if (
+					property.is_class("EditorPropertyResource") and
+					property.get_edited_property() == property_name and
+					property.get_child(property.get_child_count() - 1) is EditorInspector
+				):
+					return 1
+			return 0
 	)
 
 ## Used to tell [method bubble_add_task_node_to_guide] to check if the node position perfectly matches the guide's position or if it's just in the guide box's bounding box.
@@ -1193,14 +1196,26 @@ func highlight_code(start: int, end := 0, caret := 0, do_center := true, play_fl
 	queue_command(overlays.highlight_code, [start, end, caret, do_center, play_flash])
 
 
-## Highlights UI controls in the editor.
+## Highlights UI controls in the editor using a direct reference to a control node.
 ## This draws attention to specific UI elements like buttons, panels, or fields.
+##
+## NOTE: this function will be deprecated then removed in a future update.
 ##
 ## Parameters:
 ## - controls: Array of Control nodes to highlight
 ## - play_flash: If true, play a flash animation on the highlighted controls
 func highlight_controls(controls: Array[Control], play_flash := false) -> void:
 	queue_command(overlays.highlight_controls, [controls, play_flash])
+
+
+## Highlights UI controls in the editor.
+## This draws attention to specific UI elements like buttons, panels, or fields.
+##
+## Parameters:
+## - controls: Array of Control nodes to highlight
+## - play_flash: If true, play a flash animation on the highlighted controls
+func highlight_editor_nodes(editor_node_ids: Array[EditorInterfaceAccess.EditorNodes], play_flash := false) -> void:
+	queue_command(overlays.highlight_editor_nodes_by_enum_member, [editor_node_ids, play_flash])
 
 
 ## Highlights a tab in a TabBar or TabContainer by its index.
@@ -1711,6 +1726,4 @@ func sort_ascending_by_path(a: Node, b: Node) -> bool:
 
 ## Closes the bottom panel in the editor by setting the output button to unpressed.
 func _close_bottom_panel() -> void:
-	# TODO: restore, inline
-	return
-	# interface.bottom_output_button.button_pressed = false
+	interface.select_bottom_tab(interface.BottomTabs.NONE)

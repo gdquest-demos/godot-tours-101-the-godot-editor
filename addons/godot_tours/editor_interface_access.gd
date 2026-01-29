@@ -23,7 +23,9 @@ const Utils := preload("utils.gd")
 ## panel's toggle buttons are tabs in a tab bar instead of individual button
 ## nodes.
 enum BottomTabs {
-	OUTPUT,
+	## Use this to deselect bottom tabs and fold bottom panels.
+	NONE = -1,
+	OUTPUT = 0,
 	DEBUGGER,
 	AUDIO,
 	ANIMATION,
@@ -52,15 +54,13 @@ const BOTTOM_TAB_TITLES := {
 	BottomTabs.TILEMAP: "TileMap",
 }
 
-## Enum for identifying editor nodes that may not be available all the time.
-## These nodes only exist when specific conditions are met (e.g., selecting a
-## TileMapLayer brings up the tilemap editor).
-##
-## Use with get_dynamic_editor_node() to turn enum values into Control
-## references. Also APIs in GDTour use this.
+## This enum is used to access nodes. WARNING: WORK IN PROGRESS. Currently, many
+## nodes are still accessed through properties as the editor interface access
+## was initially designed this way. As of Godot 4.6 stable, this enum contains
+## the spriteframes, tilemap, and tileset bottom panel nodes.
 ##
 ## TEMPORARY: to merge/replace with the new cascade editor interface accessor.
-enum DynamicEditorNodes {
+enum EditorNodes {
 	SPRITEFRAMES = 0,
 	SPRITEFRAMES_ANIMATION,
 	SPRITEFRAMES_ANIMATION_TOOLBAR,
@@ -94,7 +94,7 @@ enum DynamicEditorNodes {
 	SPRITEFRAMES_FRAMES_TOOLBAR_ZOOM_OUT_BUTTON,
 	SPRITEFRAMES_FRAMES_TOOLBAR_ZOOM_RESET_BUTTON,
 	SPRITEFRAMES_FRAMES_TOOLBAR_ZOOM_IN_BUTTON,
-	TILEMAP = 50,
+	TILEMAP,
 	TILEMAP_TABS,
 	TILEMAP_LAYERS_BUTTON,
 	TILEMAP_PREVIOUS_BUTTON,
@@ -126,6 +126,7 @@ enum DynamicEditorNodes {
 	TILEMAP_TILES_ATLAS_VIEW_ZOOM_IN_BUTTON,
 	TILEMAP_TILES_ATLAS_VIEW_CENTER_BUTTON,
 	TILEMAP_PATTERNS_PANEL,
+	TILEMAP_PATTERNS_LIST,
 	TILEMAP_TERRAINS_PANEL,
 	TILEMAP_TERRAINS_TREE,
 	TILEMAP_TERRAINS_TILES,
@@ -137,7 +138,7 @@ enum DynamicEditorNodes {
 	TILEMAP_TERRAINS_TOOLBAR_PICKER_BUTTON,
 	TILEMAP_TERRAINS_TOOLBAR_ERASER_BUTTON,
 	TILEMAP_TERRAINS_TOOLBAR_CONTIGUOUS_BUTTON,
-	TILESET = 100,
+	TILESET,
 	TILESET_TABS,
 	TILESET_TILES_PANEL,
 	TILESET_TILES,
@@ -157,6 +158,7 @@ enum DynamicEditorNodes {
 	TILESET_TILES_ATLAS_EDITOR_TOOLBAR,
 	TILESET_TILES_ATLAS_EDITOR_SETUP_TOOLBAR_ERASE_BUTTON,
 	TILESET_TILES_ATLAS_EDITOR_SETUP_TOOLBAR_MENU_BUTTON,
+	TILESET_TILES_ATLAS_EDITOR_PAINT_TOOLBARS,
 	TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW,
 	TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_ZOOM_WIDGET,
 	TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_ZOOM_OUT_BUTTON,
@@ -165,18 +167,35 @@ enum DynamicEditorNodes {
 	TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_CENTER_BUTTON,
 	TILESET_TILES_SCENE_EDITOR,
 	TILESET_TILES_SCENE_EDITOR_PROPERTIES,
-	TILESET_TILES_SCENE_EDITOR_SCENE,
-	TILESET_TILES_SCENE_EDITOR_TILE,
-	TILESET_TILES_SCENE_EDITOR_LIST,
-	TILESET_TILES_SCENE_EDITOR_LIST_TOOLS,
-	TILESET_TILES_SCENE_EDITOR_LIST_TOOLS_ADD_BUTTON,
-	TILESET_TILES_SCENE_EDITOR_LIST_TOOLS_DELETE_BUTTON,
+	TILESET_TILES_SCENE_EDITOR_PROPERTIES_SCENE,
+	TILESET_TILES_SCENE_EDITOR_PROPERTIES_TILE,
+	TILESET_TILES_SCENE_EDITOR_PREVIEW,
+	TILESET_TILES_SCENE_EDITOR_PREVIEW_LIST,
+	TILESET_TILES_SCENE_EDITOR_PREVIEW_TOOLS,
+	TILESET_TILES_SCENE_EDITOR_PREVIEW_TOOLS_ADD_BUTTON,
+	TILESET_TILES_SCENE_EDITOR_PREVIEW_TOOLS_DELETE_BUTTON,
 	TILESET_PATTERNS_PANEL,
+	TILESET_PATTERNS_LIST,
+
+	# This is a shortcut to get the total number of node references we want to
+	# store. We cache them all in a contiguous array sized after this number.
+	# Using this means that if we want to pad the enum to serialize node
+	# accesses in the future and keep their indexes stable across updates,
+	# everything will keep working.
+	MAX
 }
 
-## Array storing references to dynamic editor nodes, indexed by DynamicEditorNodes enum values.
+## Array storing references to editor nodes, indexed by EditorNodes enum values.
 ## Nodes are null until their respective editor is populated (e.g., via populate_spriteframes_editor()).
-var _dynamic_nodes: Array[Control] = []
+##
+## TODO: With the Godot 4.6 update, it's time to tidy up this interface access
+## abstraction layer we've whipped up with tight time constraints. we are
+## reworking it to using enums and not direct variables to further separate the
+## tour API from Godot's editor structure and interface access internals. When
+## we made this, we were waiting to see if the UI in the editor would keep
+## moving much in Godot 4 and also if we were going to make more interactive
+## tours. Now both things are confirmed, we're rewriting the accesses as needed.
+var _node_access_cache: Array[Control] = []
 
 ## This is the base control of the Godot editor, the parent to all UI nodes in the entire
 ## application.
@@ -350,6 +369,7 @@ var history_dock: Control = null
 # This is the EditorBottomPanel node, which contains the bottom panels TabBar
 # and the individually docked bottom panels.
 var bottom_panels_container: Control = null
+var hidden_docks_container: Control = null
 
 ## Array of TileMap editor panels for tab navigation (used by tour.gd).
 ## Populated by populate_tilemap_and_tileset_editors().
@@ -433,8 +453,8 @@ var windows: Array[ConfirmationDialog] = []
 
 func _init() -> void:
 	# Initialize the dynamic nodes array with null values for all possible enum indices
-	_dynamic_nodes.resize(DynamicEditorNodes.size())
-	_dynamic_nodes.fill(null)
+	_node_access_cache.resize(EditorNodes.MAX)
+	_node_access_cache.fill(null)
 
 	var language_offset := (Engine.get_script_language_count() - 1) % 2
 	base_control = EditorInterface.get_base_control()
@@ -612,6 +632,7 @@ func _init() -> void:
 
 	# Bottom
 	bottom_panels_container = Utils.find_child_by_type(base_control, "EditorBottomPanel") as Control
+	hidden_docks_container = Utils.find_child_by_children(base_control, "EditorDock")
 
 	logger = Utils.find_child_by_type(base_control, "EditorLog") as Control
 	logger_rich_text_label = Utils.find_child_by_type(logger, "RichTextLabel")
@@ -632,6 +653,10 @@ func _init() -> void:
 	scene_import_settings_cancel_button = scene_import_settings_window.get_cancel_button()
 	scene_import_settings_ok_button = scene_import_settings_window.get_ok_button()
 
+	populate_spriteframes_editor()
+	populate_tilemap_editor()
+	populate_tileset_editor()
+
 	windows.assign([signals_dialog_window, node_create_window, scene_import_settings_window])
 	for window in windows:
 		window_toggle_tour_mode(window, true)
@@ -641,32 +666,29 @@ func _init() -> void:
 
 ## Populates references for the SpriteFrames editor.
 ##
-## Call this after the user has selected an AnimatedSprite2D or 3D node with a
-## valid SpriteFrames resource or the user just created and expanded a
-## SpriteFrames resource in the Inspector.
+## Returns true if successful, false if the editor is not available.
+## The result is cached, and after a successful execution all
+## subsequent calls immediately return true.
 ##
-## Returns true if successful, false if the editor is not yet available.
-##
-## Also, this function caches the nodes and just returns true after successfully
-## getting all the nodes.
+## The editor is only visible after the user has selected an
+## AnimatedSprite2D or 3D node with a valid SpriteFrames resource,
+## or opened/expanded a SpriteFrames resource directly in the Inspector.
 func populate_spriteframes_editor() -> bool:
-	if _dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES] != null:
+	if _node_access_cache[EditorNodes.SPRITEFRAMES] != null:
 		return true
 
-	var spriteframes := Utils.find_child_by_type(bottom_panels_container, "SpriteFramesEditor", false)
+	var spriteframes := Utils.find_child_by_type_multi([ bottom_panels_container, hidden_docks_container ], "SpriteFramesEditor", false)
 	if spriteframes == null:
 		# Nathan: suppressing the warning because it's for us for debug purposes
 		# in development but we don't want students to see/worry about that.
 		#
 		# push_warning(
-		# 	"The SpriteFrames editor could not be found. " +
-		# 	"Make sure a SpriteFrames resource is being edited before calling populate_spriteframes_editor(). " +
-		# 	"The SpriteFrames editor is only dynamically added to the Godot editor starting in version 4.6, " +
-		# 	"so you need to access and cache references to it when a SpriteFrames resource is expanded in the Inspector.",
+		# 	"The SpriteFrames editor could not be found in any known location. " +
+		# 	"Bad heuristics?",
 		# )
 		return false
 
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES] = spriteframes
+	_node_access_cache[EditorNodes.SPRITEFRAMES] = spriteframes
 
 	# In 4.6, the structure is one H-split container that contains two VBox
 	# Containers that correspond to the left animations pane and the right
@@ -681,35 +703,35 @@ func populate_spriteframes_editor() -> bool:
 	# etc. This is followed by the filter bar line edit and the tree of
 	# animations.
 	var spriteframes_animation: VBoxContainer = spriteframes_containers[0].get_child(1).get_child(0)
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_ANIMATION] = spriteframes_animation
+	_node_access_cache[EditorNodes.SPRITEFRAMES_ANIMATION] = spriteframes_animation
 
 	var spriteframes_animation_toolbar: HBoxContainer = spriteframes_animation.get_child(0)
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR] = spriteframes_animation_toolbar
+	_node_access_cache[EditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR] = spriteframes_animation_toolbar
 
 	var toolbar_buttons := spriteframes_animation_toolbar.find_children("", "Button", true, false)
 	var toolbar_spinboxes := spriteframes_animation_toolbar.find_children("", "SpinBox", true, false)
 	var animation_toolbar_controls: Array[Control] = []
 	animation_toolbar_controls.assign(toolbar_buttons + toolbar_spinboxes)
 
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_ADD_ANIMATION_BUTTON] = animation_toolbar_controls[0]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_ADD_ANIMATION_BUTTON] = animation_toolbar_controls[0]
 	# Currently we skip over one hidden button and the cut animation button, straight to duplicate.
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_COPY_ANIMATION_BUTTON] = animation_toolbar_controls[3]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_PASTE_ANIMATION_BUTTON] = animation_toolbar_controls[4]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_DELETE_ANIMATION_BUTTON] = animation_toolbar_controls[5]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_AUTOPLAY_BUTTON] = animation_toolbar_controls[6]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_LOOPING_BUTTON] = animation_toolbar_controls[7]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_SPEED] = animation_toolbar_controls[8]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_ANIMATION_FILTER] = Utils.find_child_by_type(spriteframes_animation, "LineEdit", true)
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_ANIMATIONS] = Utils.find_child_by_type(spriteframes_animation, "Tree", false)
+	_node_access_cache[EditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_COPY_ANIMATION_BUTTON] = animation_toolbar_controls[3]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_PASTE_ANIMATION_BUTTON] = animation_toolbar_controls[4]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_DELETE_ANIMATION_BUTTON] = animation_toolbar_controls[5]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_AUTOPLAY_BUTTON] = animation_toolbar_controls[6]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_LOOPING_BUTTON] = animation_toolbar_controls[7]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_ANIMATION_TOOLBAR_SPEED] = animation_toolbar_controls[8]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_ANIMATION_FILTER] = Utils.find_child_by_type(spriteframes_animation, "LineEdit", true)
+	_node_access_cache[EditorNodes.SPRITEFRAMES_ANIMATIONS] = Utils.find_child_by_type(spriteframes_animation, "Tree", false)
 
 	# Right VBoxContainer
 	var spriteframes_frames: VBoxContainer = spriteframes_containers[1].get_child(1).get_child(0)
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES] = spriteframes_frames
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES] = spriteframes_frames
 
 	var spriteframes_frames_toolbar: HFlowContainer = spriteframes_frames.get_child(0)
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR] = spriteframes_frames_toolbar
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR] = spriteframes_frames_toolbar
 
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_LIST] = spriteframes_frames.get_child(1)
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_LIST] = spriteframes_frames.get_child(1)
 
 	var spriteframes_frames_toolbar_hboxes := spriteframes_frames_toolbar.find_children("", "HBoxContainer", false, false)
 	var frames_buttons_from_hboxes: Array = spriteframes_frames_toolbar_hboxes.slice(
@@ -727,230 +749,361 @@ func populate_spriteframes_editor() -> bool:
 	var last_hbox_buttons := spriteframes_frames_toolbar_hboxes[-1].find_children("", "Button", true, false)
 	frames_toolbar_controls.append_array(last_hbox_buttons)
 
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_PLAY_BACK_BUTTON] = frames_toolbar_controls[0]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_PLAY_BACK_FROM_END_BUTTON] = frames_toolbar_controls[1]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_STOP_BUTTON] = frames_toolbar_controls[2]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_PLAY_FROM_START_BUTTON] = frames_toolbar_controls[3]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_PLAY_BUTTON] = frames_toolbar_controls[4]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_ADD_FROM_FILE_BUTTON] = frames_toolbar_controls[5]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_ADD_FROM_SHEET_BUTTON] = frames_toolbar_controls[6]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_COPY_BUTTON] = frames_toolbar_controls[7]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_PASTE_BUTTON] = frames_toolbar_controls[8]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_INSERT_BEFORE_BUTTON] = frames_toolbar_controls[9]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_INSERT_AFTER_BUTTON] = frames_toolbar_controls[10]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_MOVE_LEFT_BUTTON] = frames_toolbar_controls[11]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_MOVE_RIGHT_BUTTON] = frames_toolbar_controls[12]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_DELETE_BUTTON] = frames_toolbar_controls[13]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_FRAME_DURATION] = frames_toolbar_controls[14]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_ZOOM_OUT_BUTTON] = frames_toolbar_controls[15]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_ZOOM_RESET_BUTTON] = frames_toolbar_controls[16]
-	_dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_ZOOM_IN_BUTTON] = frames_toolbar_controls[17]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_PLAY_BACK_BUTTON] = frames_toolbar_controls[0]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_PLAY_BACK_FROM_END_BUTTON] = frames_toolbar_controls[1]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_STOP_BUTTON] = frames_toolbar_controls[2]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_PLAY_FROM_START_BUTTON] = frames_toolbar_controls[3]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_PLAY_BUTTON] = frames_toolbar_controls[4]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_ADD_FROM_FILE_BUTTON] = frames_toolbar_controls[5]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_ADD_FROM_SHEET_BUTTON] = frames_toolbar_controls[6]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_COPY_BUTTON] = frames_toolbar_controls[7]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_PASTE_BUTTON] = frames_toolbar_controls[8]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_INSERT_BEFORE_BUTTON] = frames_toolbar_controls[9]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_INSERT_AFTER_BUTTON] = frames_toolbar_controls[10]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_MOVE_LEFT_BUTTON] = frames_toolbar_controls[11]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_MOVE_RIGHT_BUTTON] = frames_toolbar_controls[12]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_DELETE_BUTTON] = frames_toolbar_controls[13]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_FRAME_DURATION] = frames_toolbar_controls[14]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_ZOOM_OUT_BUTTON] = frames_toolbar_controls[15]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_ZOOM_RESET_BUTTON] = frames_toolbar_controls[16]
+	_node_access_cache[EditorNodes.SPRITEFRAMES_FRAMES_TOOLBAR_ZOOM_IN_BUTTON] = frames_toolbar_controls[17]
+
+	#
 
 	return true
 
 
-## Populates references for the TileSet and TileMap editors.
+## Populates references for the TileMap editor.
 ##
-## Call this after the user has selected a TileMapLayer node. The TileMap and
-## TileSet editors are added dynamically to the Godot editor starting in version
-## 4.6 so we also need to get them dynamically.
+## Returns true if successful, false if the editor is not available.
+## The result is cached, and after a successful execution all
+## subsequent calls immediately return true.
 ##
-## Returns true if successful, false if the editor is not yet available.
-##
-## Also, this function caches the nodes and just returns true after successfully
-## getting all the nodes.
-func populate_tilemap_and_tileset_editors() -> bool:
-	if _dynamic_nodes[DynamicEditorNodes.TILEMAP] != null:
+## The editor is only visible after the user has selected a
+## TileMapLayer node.
+
+func populate_tilemap_editor() -> bool:
+	if _node_access_cache[EditorNodes.TILEMAP] != null:
 		return true
 
-	var tilemap := Utils.find_child_by_type(bottom_panels_container, "TileMapLayerEditor", false)
-	var tileset := Utils.find_child_by_type(bottom_panels_container, "TileSetEditor", false)
-	if tilemap == null or tileset == null:
-		push_warning(
-			"The TileMap or TileSet editor could not be found. " +
-			"Make sure a TileMapLayer node is selected before calling populate_tilemap_and_tileset_editors(). " +
-			"These editors are only dynamically added to the Godot editor starting in version 4.6, " +
-			"so you need to access and cache references to them when a TileMapLayer node is selected in the Scene dock.",
-		)
+	var tilemap := Utils.find_child_by_type_multi([ bottom_panels_container, hidden_docks_container ], "TileMapLayerEditor", false)
+	if tilemap == null:
+		# push_warning(
+		# 	"The TileMap editor could not be found in any known location. " +
+		# 	"Bad heuristics?",
+		# )
 		return false
 
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP] = tilemap
-	_dynamic_nodes[DynamicEditorNodes.TILESET] = tileset
+	_node_access_cache[EditorNodes.TILEMAP] = tilemap
 
-	# TileMap Editor
-	var tilemap_flow_container: HFlowContainer = Utils.find_child_by_type(tilemap, "HFlowContainer", false)
-	print("[DEBUG] TileMap flow_container children: %d" % tilemap_flow_container.get_child_count())
-	for i in tilemap_flow_container.get_child_count():
-		var child = tilemap_flow_container.get_child(i)
-		print("[DEBUG]   FlowContainer[%d]: %s" % [i, child.get_class()])
+	# In 4.6 The first child of the tilemap is a grid container. It contains the
+	# toolbar and the Tiles, Patterns and Terrains, editors below the toolbar,
+	# depending on the selected tab.
+	var tilemap_layout_container := tilemap.get_child(0)
+	# The flow container contains the tool icons for selecting, drawing, turning
+	# tiles and changing tile map layers. This flow container contains the
+	# different toolbars for the three tabs, but The tiles and patterns toolbar
+	# is different from the terrain toolbar.
+	var tilemap_toolbar_container = Utils.find_child_by_type(tilemap_layout_container, "FlowContainer", false)
 
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TABS] = tilemap_flow_container.get_child(0)
-	print("[DEBUG] tilemap_tabs: %s" % _dynamic_nodes[DynamicEditorNodes.TILEMAP_TABS].get_class())
+	_node_access_cache[EditorNodes.TILEMAP_TABS] = tilemap_toolbar_container.get_child(0).get_child(0)
 
-	var tilemap_flow_layers_hbox := tilemap_flow_container.get_child(4)
-	print("[DEBUG] tilemap_flow_layers_hbox: %s (children: %d)" % [tilemap_flow_layers_hbox.get_class(), tilemap_flow_layers_hbox.get_child_count()])
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_LAYERS_BUTTON] = tilemap_flow_layers_hbox.get_child(0)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_PREVIOUS_BUTTON] = tilemap_flow_layers_hbox.get_child(1)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_NEXT_BUTTON] = tilemap_flow_layers_hbox.get_child(2)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_HIGHLIGHT_BUTTON] = tilemap_flow_container.get_child(5)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_GRID_BUTTON] = tilemap_flow_container.get_child(7)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_MENU_BUTTON] = tilemap_flow_container.get_child(8)
+	# In 4.6 the toolbar is split into multiple, sometimes nested containers. Instead
+	# of relying on node order we can check a couple of things to match buttons with
+	# their purpose. Icons give a good clue, but between the Tiles toolbar and the
+	# Terrains toolbar they can repeat. So, in addition, we use callables connected
+	# to button signals which point us towards the owner class.
+	# This works for most, but not all buttons, so we also track the "context" as we
+	# iterate. Thankfully the first button in every context is reliably locatable.
 
-	print("[DEBUG] TileMap children count: %d" % tilemap.get_child_count())
-	var tilemap_tiles_panel := tilemap.get_child(2)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_PANEL] = tilemap_tiles_panel
-	print("[DEBUG] tilemap_tiles_panel: %s" % tilemap_tiles_panel.get_class())
+	var editor_theme := EditorInterface.get_editor_theme()
+	var editor_icon_names := editor_theme.get_icon_list("EditorIcons")
 
-	var tilemap_tiles_hsplitcontainer: HSplitContainer = Utils.find_child_by_type(tilemap_tiles_panel, "HSplitContainer", false)
-	print("[DEBUG] tilemap_tiles_hsplitcontainer: %s (children: %d)" % [tilemap_tiles_hsplitcontainer.get_class(), tilemap_tiles_hsplitcontainer.get_child_count()])
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES] = Utils.find_child_by_type(tilemap_tiles_hsplitcontainer.get_child(0), "ItemList")
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLS_SORT_BUTTON] = tilemap_tiles_hsplitcontainer.get_child(0).get_child(1).get_child(0)
+	var toolbar_buttons := tilemap_toolbar_container.find_children("", "Button", true, false)
+	var toolbar_context := ""
+	var toolbar_signals: Array[String] = [ "pressed", "toggled", "item_selected", "id_pressed", ]
 
-	var tilemap_tiles_toolbar := tilemap_flow_container.get_child(1)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR] = tilemap_tiles_toolbar
-	print("[DEBUG] tilemap_tiles_toolbar: %s" % tilemap_tiles_toolbar.get_class())
+	var tilemap_layers_buttons: Dictionary[String, Button] = {}
+	var tilemap_tiles_buttons: Dictionary[String, Button] = {}
+	var tilemap_terrains_buttons: Dictionary[String, Button] = {}
 
-	var tilemap_toolbar_buttons := tilemap_tiles_toolbar.find_children("", "Button", true, false)
-	print("[DEBUG] TileMap tiles toolbar buttons found: %d (need 13)" % tilemap_toolbar_buttons.size())
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_SELECT_BUTTON] = tilemap_toolbar_buttons[0]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_PAINT_BUTTON] = tilemap_toolbar_buttons[1]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_LINE_BUTTON] = tilemap_toolbar_buttons[2]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_RECT_BUTTON] = tilemap_toolbar_buttons[3]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_BUCKET_BUTTON] = tilemap_toolbar_buttons[4]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_PICKER_BUTTON] = tilemap_toolbar_buttons[5]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_ERASER_BUTTON] = tilemap_toolbar_buttons[6]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_ROTATE_LEFT_BUTTON] = tilemap_toolbar_buttons[7]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_ROTATE_RIGHT_BUTTON] = tilemap_toolbar_buttons[8]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_FLIP_H_BUTTON] = tilemap_toolbar_buttons[9]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_FLIP_V_BUTTON] = tilemap_toolbar_buttons[10]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_CONTIGUOUS_BUTTON] = tilemap_toolbar_buttons[11]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_TOOLBAR_RANDOM_BUTTON] = tilemap_toolbar_buttons[12]
+	for button: Button in toolbar_buttons:
+		# Resolve button key for reference.
+		# First, check the icon against the theme.
+		var button_key := ""
+		if button.icon:
+			for icon_name in editor_icon_names:
+				if editor_theme.get_icon(icon_name, "EditorIcons") == button.icon:
+					button_key = icon_name
+					break
+		# Then handle special cases.
+		if button is CheckBox:
+			button_key = "Contiguous"
+		if button is OptionButton:
+			button_key = "Layers"
 
-	var tilemap_tiles_atlas_view := Utils.find_child_by_type(tilemap_tiles_hsplitcontainer, "TileAtlasView", false)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_ATLAS_VIEW] = tilemap_tiles_atlas_view
-	var tilemap_tiles_atlas_view_zoom_widget := Utils.find_child_by_type(tilemap_tiles_atlas_view, "EditorZoomWidget")
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_ATLAS_VIEW_ZOOM_WIDGET] = tilemap_tiles_atlas_view_zoom_widget
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_ATLAS_VIEW_ZOOM_OUT_BUTTON] = tilemap_tiles_atlas_view_zoom_widget.get_child(0)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_ATLAS_VIEW_ZOOM_RESET_BUTTON] = tilemap_tiles_atlas_view_zoom_widget.get_child(1)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_ATLAS_VIEW_ZOOM_IN_BUTTON] = tilemap_tiles_atlas_view_zoom_widget.get_child(2)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_ATLAS_VIEW_CENTER_BUTTON] = tilemap_tiles_atlas_view.get_child(2)
+		# Resolve context name for reference.
+		# Find the owner class via signal connections.
+		var context_key := ""
+		var signal_connections: Array[Dictionary] = []
+		for signal_name in toolbar_signals:
+			if button.has_signal(signal_name):
+				signal_connections.append_array(button[signal_name].get_connections())
 
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_PATTERNS_PANEL] = tilemap.get_child(3)
+		for connection_info in signal_connections:
+			var related_object := (connection_info.callable as Callable).get_object()
+			var related_type := related_object.get_class()
+			if related_type.begins_with("TileMap"):
+				context_key = related_type
+				break
 
-	var tilemap_terrains_panel := tilemap.get_child(4)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_PANEL] = tilemap_terrains_panel
-	print("[DEBUG] tilemap_terrains_panel: %s (children: %d)" % [tilemap_terrains_panel.get_class(), tilemap_terrains_panel.get_child_count()])
+		if not context_key.is_empty():
+			toolbar_context = context_key
 
-	var tilemap_terrains_hsplitcontainer: HSplitContainer = tilemap_terrains_panel.get_child(0)
-	print("[DEBUG] tilemap_terrains_hsplitcontainer: %s" % tilemap_terrains_hsplitcontainer.get_class())
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_TREE] = Utils.find_child_by_type(tilemap_terrains_hsplitcontainer, "Tree")
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_TILES] = Utils.find_child_by_type(tilemap_terrains_hsplitcontainer, "ItemList")
+		match toolbar_context:
+			"TileMapLayerEditor":
+				tilemap_layers_buttons[button_key] = button
 
-	var tilemap_terrains_toolbar := tilemap_flow_container.get_child(2)
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_TOOLBAR] = tilemap_terrains_toolbar
-	print("[DEBUG] tilemap_terrains_toolbar: %s" % tilemap_terrains_toolbar.get_class())
+			"TileMapLayerEditorTilesPlugin":
+				tilemap_tiles_buttons[button_key] = button
 
-	var tilemap_terrains_buttons := tilemap_terrains_toolbar.find_children("", "Button", true, false)
-	print("[DEBUG] TileMap terrains toolbar buttons found: %d (need 7)" % tilemap_terrains_buttons.size())
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_TOOLBAR_PAINT_BUTTON] = tilemap_terrains_buttons[0]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_TOOLBAR_LINE_BUTTON] = tilemap_terrains_buttons[1]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_TOOLBAR_RECT_BUTTON] = tilemap_terrains_buttons[2]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_TOOLBAR_BUCKET_BUTTON] = tilemap_terrains_buttons[3]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_TOOLBAR_PICKER_BUTTON] = tilemap_terrains_buttons[4]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_TOOLBAR_ERASER_BUTTON] = tilemap_terrains_buttons[5]
-	_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_TOOLBAR_CONTIGUOUS_BUTTON] = tilemap_terrains_buttons[6]
+			"TileMapLayerEditorTerrainsPlugin":
+				tilemap_terrains_buttons[button_key] = button
 
-	# TileSet Editor
-	print("[DEBUG] TileSet children count: %d" % tileset.get_child_count())
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TABS] = Utils.find_child_by_type(tileset, "TabBar")
-	print("[DEBUG] tileset_tabs: %s" % _dynamic_nodes[DynamicEditorNodes.TILESET_TABS].get_class())
+	_node_access_cache[EditorNodes.TILEMAP_PREVIOUS_BUTTON]  = tilemap_layers_buttons["MoveUp"]
+	_node_access_cache[EditorNodes.TILEMAP_NEXT_BUTTON]      = tilemap_layers_buttons["MoveDown"]
+	_node_access_cache[EditorNodes.TILEMAP_LAYERS_BUTTON]    = tilemap_layers_buttons["FileList"]
+	_node_access_cache[EditorNodes.TILEMAP_HIGHLIGHT_BUTTON] = tilemap_layers_buttons["TileMapHighlightSelected"]
+	_node_access_cache[EditorNodes.TILEMAP_GRID_BUTTON]      = tilemap_layers_buttons["Grid"]
+	_node_access_cache[EditorNodes.TILEMAP_MENU_BUTTON]      = tilemap_layers_buttons["Tools"]
 
-	print("[DEBUG] TileSet.get_child(0) children: %d" % tileset.get_child(0).get_child_count())
-	var tileset_tiles_panel := tileset.get_child(0).get_child(1)
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_PANEL] = tileset_tiles_panel
-	print("[DEBUG] tileset_tiles_panel: %s (children: %d)" % [tileset_tiles_panel.get_class(), tileset_tiles_panel.get_child_count()])
+	# FIXME: This is now represented by multiple nodes. How should we track this?
+	#_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR] = tilemap_tiles_toolbar
 
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES] = Utils.find_child_by_type(tileset_tiles_panel.get_child(0), "ItemList", false)
-	var tileset_tiles_tools := Utils.find_child_by_type(tileset_tiles_panel.get_child(0), "HBoxContainer", false)
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_TOOLS] = tileset_tiles_tools
-	print("[DEBUG] tileset_tiles_tools: %s (children: %d)" % [tileset_tiles_tools.get_class(), tileset_tiles_tools.get_child_count()])
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_SELECT_BUTTON]       = tilemap_tiles_buttons["ToolSelect"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_PAINT_BUTTON]        = tilemap_tiles_buttons["Edit"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_LINE_BUTTON]         = tilemap_tiles_buttons["Line"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_RECT_BUTTON]         = tilemap_tiles_buttons["Rectangle"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_BUCKET_BUTTON]       = tilemap_tiles_buttons["Bucket"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_PICKER_BUTTON]       = tilemap_tiles_buttons["ColorPick"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_ERASER_BUTTON]       = tilemap_tiles_buttons["Eraser"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_ROTATE_LEFT_BUTTON]  = tilemap_tiles_buttons["RotateLeft"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_ROTATE_RIGHT_BUTTON] = tilemap_tiles_buttons["RotateRight"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_FLIP_H_BUTTON]       = tilemap_tiles_buttons["MirrorX"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_FLIP_V_BUTTON]       = tilemap_tiles_buttons["MirrorY"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_RANDOM_BUTTON]       = tilemap_tiles_buttons["RandomNumberGenerator"]
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLBAR_CONTIGUOUS_BUTTON]   = tilemap_tiles_buttons["Contiguous"]
 
-	var tileset_tiles_tool_buttons := tileset_tiles_tools.get_children()
-	print("[DEBUG] TileSet tiles tool buttons: %d (need 4)" % tileset_tiles_tool_buttons.size())
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_TOOLS_DELETE_BUTTON] = tileset_tiles_tool_buttons[0]
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_TOOLS_ADD_BUTTON] = tileset_tiles_tool_buttons[1]
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_TOOLS_MENU_BUTTON] = tileset_tiles_tool_buttons[2]
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_TOOLS_SORT_BUTTON] = tileset_tiles_tool_buttons[3]
+	# FIXME: This is now represented by multiple nodes. How should we track this?
+	#_node_access_cache[EditorNodes.TILEMAP_TERRAINS_TOOLBAR] = tilemap_terrains_toolbar
 
-	var tileset_tiles_atlas_editor := Utils.find_child_by_type(tileset_tiles_panel, "TileSetAtlasSourceEditor")
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR] = tileset_tiles_atlas_editor
-	print("[DEBUG] tileset_tiles_atlas_editor: %s (children: %d)" % [tileset_tiles_atlas_editor.get_class(), tileset_tiles_atlas_editor.get_child_count()])
+	_node_access_cache[EditorNodes.TILEMAP_TERRAINS_TOOLBAR_PAINT_BUTTON]      = tilemap_terrains_buttons["Edit"]
+	_node_access_cache[EditorNodes.TILEMAP_TERRAINS_TOOLBAR_LINE_BUTTON]       = tilemap_terrains_buttons["Line"]
+	_node_access_cache[EditorNodes.TILEMAP_TERRAINS_TOOLBAR_RECT_BUTTON]       = tilemap_terrains_buttons["Rectangle"]
+	_node_access_cache[EditorNodes.TILEMAP_TERRAINS_TOOLBAR_BUCKET_BUTTON]     = tilemap_terrains_buttons["Bucket"]
+	_node_access_cache[EditorNodes.TILEMAP_TERRAINS_TOOLBAR_PICKER_BUTTON]     = tilemap_terrains_buttons["ColorPick"]
+	_node_access_cache[EditorNodes.TILEMAP_TERRAINS_TOOLBAR_ERASER_BUTTON]     = tilemap_terrains_buttons["Eraser"]
+	_node_access_cache[EditorNodes.TILEMAP_TERRAINS_TOOLBAR_CONTIGUOUS_BUTTON] = tilemap_terrains_buttons["Contiguous"]
 
-	print("[DEBUG] atlas_editor.get_child(0) children: %d" % tileset_tiles_atlas_editor.get_child(0).get_child_count())
-	var tileset_tiles_atlas_editor_tools := tileset_tiles_atlas_editor.get_child(0).get_child(0)
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_TOOLS] = tileset_tiles_atlas_editor_tools
-	print("[DEBUG] tileset_tiles_atlas_editor_tools: %s (children: %d)" % [tileset_tiles_atlas_editor_tools.get_class(), tileset_tiles_atlas_editor_tools.get_child_count()])
+	# Here go content roots of editor tabs.
 
-	var tileset_tiles_atlas_editor_tool_buttons := tileset_tiles_atlas_editor_tools.get_children()
-	print("[DEBUG] Atlas editor tool buttons: %d (need 3)" % tileset_tiles_atlas_editor_tool_buttons.size())
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_TOOLS_SETUP_BUTTON] = tileset_tiles_atlas_editor_tool_buttons[0]
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_TOOLS_SELECT_BUTTON] = tileset_tiles_atlas_editor_tool_buttons[1]
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_TOOLS_PAINT_BUTTON] = tileset_tiles_atlas_editor_tool_buttons[2]
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_SETUP] = tileset_tiles_atlas_editor.get_child(0).get_child(4)
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_SELECT] = tileset_tiles_atlas_editor.get_child(0).get_child(1)
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_PAINT] = tileset_tiles_atlas_editor.get_child(0).get_child(3)
+	_node_access_cache[EditorNodes.TILEMAP_TILES_PANEL] = tilemap_layout_container.get_node("Tiles")
+	_node_access_cache[EditorNodes.TILEMAP_PATTERNS_PANEL] = tilemap_layout_container.get_node("Patterns")
+	_node_access_cache[EditorNodes.TILEMAP_TERRAINS_PANEL] = tilemap_layout_container.get_node("Terrains")
 
-	print("[DEBUG] Accessing tileset_tiles_atlas_editor.get_child(1)")
-	var tileset_tiles_atlas_editor_right: VBoxContainer = tileset_tiles_atlas_editor.get_child(1)
-	print("[DEBUG] tileset_tiles_atlas_editor_right: %s (children: %d)" % [tileset_tiles_atlas_editor_right.get_class(), tileset_tiles_atlas_editor_right.get_child_count()])
-
-	var tileset_tiles_atlas_editor_toolbar := tileset_tiles_atlas_editor_right.get_child(0)
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_TOOLBAR] = tileset_tiles_atlas_editor_toolbar
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_SETUP_TOOLBAR_ERASE_BUTTON] = tileset_tiles_atlas_editor_toolbar.get_child(1)
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_SETUP_TOOLBAR_MENU_BUTTON] = tileset_tiles_atlas_editor_toolbar.get_child(2)
-
-	var tileset_tiles_atlas_editor_atlas_view := Utils.find_child_by_type(tileset_tiles_atlas_editor_right, "TileAtlasView")
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW] = tileset_tiles_atlas_editor_atlas_view
-	var tileset_tiles_atlas_editor_atlas_view_zoom_widget := Utils.find_child_by_type(tileset_tiles_atlas_editor_atlas_view, "EditorZoomWidget")
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_ZOOM_WIDGET] = tileset_tiles_atlas_editor_atlas_view_zoom_widget
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_ZOOM_OUT_BUTTON] = tileset_tiles_atlas_editor_atlas_view_zoom_widget.get_child(0)
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_ZOOM_RESET_BUTTON] = tileset_tiles_atlas_editor_atlas_view_zoom_widget.get_child(1)
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_ZOOM_IN_BUTTON] = tileset_tiles_atlas_editor_atlas_view_zoom_widget.get_child(2)
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_CENTER_BUTTON] = tileset_tiles_atlas_editor_atlas_view.get_child(2)
-
-	var tileset_tiles_scene_editor := Utils.find_child_by_type(tileset_tiles_panel, "TileSetScenesCollectionSourceEditor")
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_SCENE_EDITOR] = tileset_tiles_scene_editor
-	print("[DEBUG] tileset_tiles_scene_editor: %s (children: %d)" % [tileset_tiles_scene_editor.get_class(), tileset_tiles_scene_editor.get_child_count()])
-	print("[DEBUG] scene_editor.get_child(0) children: %d" % tileset_tiles_scene_editor.get_child(0).get_child_count())
-
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_SCENE_EDITOR_PROPERTIES] = tileset_tiles_scene_editor.get_child(0).get_child(0)
-	var tileset_tiles_scene_editor_inspectors := tileset_tiles_scene_editor.find_children("", "EditorInspector", true, false)
-	print("[DEBUG] Scene editor EditorInspectors found: %d (need 2)" % tileset_tiles_scene_editor_inspectors.size())
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_SCENE_EDITOR_SCENE] = tileset_tiles_scene_editor_inspectors[0]
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_SCENE_EDITOR_TILE] = tileset_tiles_scene_editor_inspectors[1]
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_SCENE_EDITOR_LIST] = tileset_tiles_scene_editor.get_child(0).get_child(1).get_child(0)
-
-	var tileset_tiles_scene_editor_list_tools := tileset_tiles_scene_editor.get_child(0).get_child(1).get_child(1)
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_SCENE_EDITOR_LIST_TOOLS] = tileset_tiles_scene_editor_list_tools
-	print("[DEBUG] tileset_tiles_scene_editor_list_tools: %s (children: %d)" % [tileset_tiles_scene_editor_list_tools.get_class(), tileset_tiles_scene_editor_list_tools.get_child_count()])
-
-	var tileset_tiles_scene_editor_list_tool_buttons := tileset_tiles_scene_editor_list_tools.get_children()
-	print("[DEBUG] Scene editor list tool buttons: %d (need 2)" % tileset_tiles_scene_editor_list_tool_buttons.size())
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_SCENE_EDITOR_LIST_TOOLS_ADD_BUTTON] = tileset_tiles_scene_editor_list_tool_buttons[0]
-	_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_SCENE_EDITOR_LIST_TOOLS_DELETE_BUTTON] = tileset_tiles_scene_editor_list_tool_buttons[1]
-
-	_dynamic_nodes[DynamicEditorNodes.TILESET_PATTERNS_PANEL] = tileset.get_child(0).get_child(2)
-
-	# Populate panels arrays for external use (used by tour.gd)
 	tilemap_panels = [
-		_dynamic_nodes[DynamicEditorNodes.TILEMAP_TILES_PANEL],
-		_dynamic_nodes[DynamicEditorNodes.TILEMAP_PATTERNS_PANEL],
-		_dynamic_nodes[DynamicEditorNodes.TILEMAP_TERRAINS_PANEL],
+		_node_access_cache[EditorNodes.TILEMAP_TILES_PANEL],
+		_node_access_cache[EditorNodes.TILEMAP_PATTERNS_PANEL],
+		_node_access_cache[EditorNodes.TILEMAP_TERRAINS_PANEL],
 	]
+
+	# The tiles tab of the TileMap editor. On the left there is a list of
+	# sources, and on the right there is a panel for viewing and selecting
+	# the tile set.
+
+	var tilemap_tiles_panel := _node_access_cache[EditorNodes.TILEMAP_TILES_PANEL]
+	var tilemap_tiles_splitcontainer: SplitContainer = Utils.find_child_by_type(tilemap_tiles_panel, "SplitContainer", false)
+
+	var tilemap_tiles_sources_view: BoxContainer = Utils.find_child_by_type(tilemap_tiles_splitcontainer, "BoxContainer", false)
+	_node_access_cache[EditorNodes.TILEMAP_TILES] = Utils.find_child_by_type(tilemap_tiles_sources_view, "TileSetSourceItemList")
+
+	var tilemap_tiles_sources_buttons := tilemap_tiles_sources_view.find_children("", "Button", true, false)
+	_node_access_cache[EditorNodes.TILEMAP_TILES_TOOLS_SORT_BUTTON] = tilemap_tiles_sources_buttons[0]
+
+	var tilemap_tiles_atlas_view := Utils.find_child_by_type(tilemap_tiles_splitcontainer, "TileAtlasView", false)
+	_node_access_cache[EditorNodes.TILEMAP_TILES_ATLAS_VIEW] = tilemap_tiles_atlas_view
+	var tilemap_tiles_atlas_view_zoom_widget := Utils.find_child_by_type(tilemap_tiles_atlas_view, "EditorZoomWidget")
+	_node_access_cache[EditorNodes.TILEMAP_TILES_ATLAS_VIEW_ZOOM_WIDGET] = tilemap_tiles_atlas_view_zoom_widget
+	_node_access_cache[EditorNodes.TILEMAP_TILES_ATLAS_VIEW_ZOOM_OUT_BUTTON] = tilemap_tiles_atlas_view_zoom_widget.get_child(0)
+	_node_access_cache[EditorNodes.TILEMAP_TILES_ATLAS_VIEW_ZOOM_RESET_BUTTON] = tilemap_tiles_atlas_view_zoom_widget.get_child(1)
+	_node_access_cache[EditorNodes.TILEMAP_TILES_ATLAS_VIEW_ZOOM_IN_BUTTON] = tilemap_tiles_atlas_view_zoom_widget.get_child(2)
+	_node_access_cache[EditorNodes.TILEMAP_TILES_ATLAS_VIEW_CENTER_BUTTON] = tilemap_tiles_atlas_view.get_child(2)
+
+	# The patterns tab of the TileMap editor. There is only the main panel
+	# in this view.
+
+	var tilemap_patterns_panel := _node_access_cache[EditorNodes.TILEMAP_PATTERNS_PANEL]
+	_node_access_cache[EditorNodes.TILEMAP_PATTERNS_LIST] = Utils.find_child_by_type(tilemap_patterns_panel, "ItemList")
+
+	# The terrains tab of the TileMap editor. On the left there is a list of
+	# terrains, and on the right there is a panel for viewing and selecting
+	# the tile set.
+
+	var tilemap_terrains_panel := _node_access_cache[EditorNodes.TILEMAP_TERRAINS_PANEL]
+	var tilemap_terrains_splitcontainer: SplitContainer = Utils.find_child_by_type(tilemap_tiles_panel, "SplitContainer", false)
+
+	_node_access_cache[EditorNodes.TILEMAP_TERRAINS_TREE] = Utils.find_child_by_type(tilemap_terrains_splitcontainer, "Tree")
+	_node_access_cache[EditorNodes.TILEMAP_TERRAINS_TILES] = Utils.find_child_by_type(tilemap_terrains_splitcontainer, "ItemList")
+
+	#
+
+	return true
+
+
+## Populates references for the TileSet editor.
+##
+## Returns true if successful, false if the editor is not available.
+## The result is cached, and after a successful execution all
+## subsequent calls immediately return true.
+##
+## The editor is only visible after the user has selected a
+## TileMapLayer node with a valid TileSet resource, or opened/expanded
+## a TileSet resource directly in the Inspector.
+
+func populate_tileset_editor() -> bool:
+	if _node_access_cache[EditorNodes.TILESET] != null:
+		return true
+
+	var tileset := Utils.find_child_by_type_multi([ bottom_panels_container, hidden_docks_container ], "TileSetEditor", false)
+	if tileset == null:
+		return false
+
+	_node_access_cache[EditorNodes.TILESET] = tileset
+
+	var tileset_layout_container := tileset.get_child(0)
+	var tileset_toolbar_container := Utils.find_child_by_type(tileset_layout_container, "HBoxContainer", false)
+
+	_node_access_cache[EditorNodes.TILESET_TABS] = Utils.find_child_by_type(tileset_toolbar_container, "TabBar")
+
+	# Here go content roots of editor tabs.
+
+	_node_access_cache[EditorNodes.TILESET_TILES_PANEL] = tileset_layout_container.get_node("Tiles")
+	_node_access_cache[EditorNodes.TILESET_PATTERNS_PANEL] = Utils.find_child_by_type(tileset_layout_container, "MarginContainer", false)
+
 	tileset_panels = [
-		_dynamic_nodes[DynamicEditorNodes.TILESET_TILES_PANEL],
-		_dynamic_nodes[DynamicEditorNodes.TILESET_PATTERNS_PANEL],
+		_node_access_cache[EditorNodes.TILESET_TILES_PANEL],
+		_node_access_cache[EditorNodes.TILESET_PATTERNS_PANEL],
 	]
+
+	# The tile sources tab of the TileSet editor. It is split into three
+	# panels. The left-most contains a list of sources, the middle one
+	# allows to select tools and configure selected source, and the right-
+	# most presents a visual mode for selecting and drawing.
+	#
+	# The second and third panels differ depending on the source kind, if
+	# it's an atlas or a scenes collection.
+
+	var tileset_tiles_panel := _node_access_cache[EditorNodes.TILESET_TILES_PANEL]
+
+	var tileset_tiles_sources := tileset_tiles_panel.get_child(0)
+	_node_access_cache[EditorNodes.TILESET_TILES] = Utils.find_child_by_type(tileset_tiles_sources, "TileSetSourceItemList", false)
+	var tileset_tiles_sources_toolbar := Utils.find_child_by_type(tileset_tiles_sources, "HBoxContainer", false)
+	_node_access_cache[EditorNodes.TILESET_TILES_TOOLS] = tileset_tiles_sources_toolbar
+
+	var tileset_tiles_sources_buttons := tileset_tiles_sources_toolbar.find_children("", "Button", false, false)
+	_node_access_cache[EditorNodes.TILESET_TILES_TOOLS_DELETE_BUTTON] = tileset_tiles_sources_buttons[0]
+	_node_access_cache[EditorNodes.TILESET_TILES_TOOLS_ADD_BUTTON]    = tileset_tiles_sources_buttons[1]
+	_node_access_cache[EditorNodes.TILESET_TILES_TOOLS_MENU_BUTTON]   = tileset_tiles_sources_buttons[2]
+	_node_access_cache[EditorNodes.TILESET_TILES_TOOLS_SORT_BUTTON]   = tileset_tiles_sources_buttons[3]
+
+	# Atlas editor.
+
+	var tileset_tiles_atlas_editor := Utils.find_child_by_type(tileset_tiles_panel.get_child(1), "TileSetAtlasSourceEditor", false)
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR] = tileset_tiles_atlas_editor
+
+	# The two panels of the atlas editor.
+	var tileset_tiles_atlas_configuration := tileset_tiles_atlas_editor.get_child(0)
+	var tileset_tiles_atlas_preview := tileset_tiles_atlas_editor.get_child(1)
+
+	# Atlas configuration panel.
+
+	var tileset_tiles_atlas_configuration_toolbar := Utils.find_child_by_type(tileset_tiles_atlas_configuration, "HBoxContainer", false)
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_TOOLS] = tileset_tiles_atlas_configuration_toolbar
+	var tileset_tiles_atlas_configuration_toolbar_buttons := tileset_tiles_atlas_configuration_toolbar.find_children("", "Button", false, false)
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_TOOLS_SETUP_BUTTON]  = tileset_tiles_atlas_configuration_toolbar_buttons[0]
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_TOOLS_SELECT_BUTTON] = tileset_tiles_atlas_configuration_toolbar_buttons[1]
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_TOOLS_PAINT_BUTTON]  = tileset_tiles_atlas_configuration_toolbar_buttons[2]
+
+	var tileset_tiles_atlas_editor_inspectors := tileset_tiles_atlas_configuration.find_children("", "EditorInspector", false, false)
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_SETUP]  = tileset_tiles_atlas_editor_inspectors[1]
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_SELECT] = tileset_tiles_atlas_editor_inspectors[0]
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_PAINT]  = Utils.find_child_by_type(tileset_tiles_atlas_configuration, "ScrollContainer", false)
+
+	# NOTE: Paint mode has internal controls which might be worth targetting.
+	# It's a button to select a paint property editor, and then there are
+	# individual editor containers for each.
+
+	# Atlas preview panel.
+
+	var tileset_tiles_atlas_preview_toolbar := Utils.find_child_by_type(tileset_tiles_atlas_preview, "HBoxContainer", false)
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_TOOLBAR] = tileset_tiles_atlas_preview_toolbar
+	var tileset_tiles_atlas_preview_toolbar_buttons := tileset_tiles_atlas_preview_toolbar.find_children("", "Button", false, false)
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_SETUP_TOOLBAR_ERASE_BUTTON] = tileset_tiles_atlas_preview_toolbar_buttons[0]
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_SETUP_TOOLBAR_MENU_BUTTON] = tileset_tiles_atlas_preview_toolbar_buttons[1]
+
+	# NOTE: When the paint mode is selected, a bunch of toolbars with buttons,
+	# one for every property editor, I think, is added to the toolbar container.
+	# Toolbars are added the moment the paint mode is selected, but become visible
+	# when property/tile data editor is selected.
+	# Toolbars stay around after they first appear, but can also be removed later.
+
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_PAINT_TOOLBARS] = Utils.find_child_by_type(tileset_tiles_atlas_preview_toolbar, "HBoxContainer", false)
+
+	var tileset_tiles_atlas_editor_atlas_view := Utils.find_child_by_type(tileset_tiles_atlas_preview, "TileAtlasView")
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW] = tileset_tiles_atlas_editor_atlas_view
+	var tileset_tiles_atlas_editor_atlas_view_zoom_widget := Utils.find_child_by_type(tileset_tiles_atlas_editor_atlas_view, "EditorZoomWidget")
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_ZOOM_WIDGET] = tileset_tiles_atlas_editor_atlas_view_zoom_widget
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_ZOOM_OUT_BUTTON] = tileset_tiles_atlas_editor_atlas_view_zoom_widget.get_child(0)
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_ZOOM_RESET_BUTTON] = tileset_tiles_atlas_editor_atlas_view_zoom_widget.get_child(1)
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_ZOOM_IN_BUTTON] = tileset_tiles_atlas_editor_atlas_view_zoom_widget.get_child(2)
+	# Center button is directly added to the atlas view. It's the only button there.
+	_node_access_cache[EditorNodes.TILESET_TILES_ATLAS_EDITOR_ATLAS_VIEW_CENTER_BUTTON] = Utils.find_child_by_type(tileset_tiles_atlas_editor_atlas_view, "Button", false)
+
+	# Scenes collection editor.
+
+	var tileset_tiles_scene_editor := Utils.find_child_by_type(tileset_tiles_panel.get_child(1), "TileSetScenesCollectionSourceEditor", false)
+	_node_access_cache[EditorNodes.TILESET_TILES_SCENE_EDITOR] = tileset_tiles_scene_editor
+
+	# The two panels of the atlas editor.
+	var tileset_tiles_scene_properties := tileset_tiles_scene_editor.get_child(0).get_child(0)
+	_node_access_cache[EditorNodes.TILESET_TILES_SCENE_EDITOR_PROPERTIES] = tileset_tiles_scene_properties
+	var tileset_tiles_scene_preview := tileset_tiles_scene_editor.get_child(0).get_child(1)
+	_node_access_cache[EditorNodes.TILESET_TILES_SCENE_EDITOR_PREVIEW] = tileset_tiles_scene_preview
+
+	# Scene properties panel.
+
+	var tileset_tiles_scene_properties_inspectors := tileset_tiles_scene_properties.get_child(0).find_children("", "EditorInspector", false, false)
+	_node_access_cache[EditorNodes.TILESET_TILES_SCENE_EDITOR_PROPERTIES_SCENE] = tileset_tiles_scene_properties_inspectors[0]
+	_node_access_cache[EditorNodes.TILESET_TILES_SCENE_EDITOR_PROPERTIES_TILE] = tileset_tiles_scene_properties_inspectors[1]
+
+	# Scene list panel.
+
+	_node_access_cache[EditorNodes.TILESET_TILES_SCENE_EDITOR_PREVIEW_LIST] = Utils.find_child_by_type(tileset_tiles_scene_preview, "ItemList", false)
+
+	var tileset_tiles_scene_editor_preview_tools := Utils.find_child_by_type(tileset_tiles_scene_preview, "HBoxContainer", false)
+	_node_access_cache[EditorNodes.TILESET_TILES_SCENE_EDITOR_PREVIEW_TOOLS] = tileset_tiles_scene_editor_preview_tools
+
+	var tileset_tiles_scene_editor_preview_tools_buttons := tileset_tiles_scene_editor_preview_tools.find_children("", "Button", false, false)
+	_node_access_cache[EditorNodes.TILESET_TILES_SCENE_EDITOR_PREVIEW_TOOLS_ADD_BUTTON] = tileset_tiles_scene_editor_preview_tools_buttons[0]
+	_node_access_cache[EditorNodes.TILESET_TILES_SCENE_EDITOR_PREVIEW_TOOLS_DELETE_BUTTON] = tileset_tiles_scene_editor_preview_tools_buttons[1]
+
+	# The patterns tab of the TileSet editor. There is only the main panel
+	# in this view.
+
+	var tileset_patterns_panel := _node_access_cache[EditorNodes.TILESET_PATTERNS_PANEL]
+	_node_access_cache[EditorNodes.TILESET_PATTERNS_LIST] = Utils.find_child_by_type(tileset_patterns_panel, "ItemList")
+
+	#
 
 	return true
 
@@ -1018,8 +1171,6 @@ func _test_buttons() -> void:
 func clean_up() -> void:
 	for window in windows:
 		window_toggle_tour_mode(window, false)
-	_editor_requests.clear()
-	_disconnect_editor_selection_changed()
 
 
 func window_toggle_tour_mode(window: ConfirmationDialog, is_in_tour: bool) -> void:
@@ -1052,10 +1203,6 @@ func unfold_tree_item(item: TreeItem) -> void:
 	while item != tree.get_root():
 		item.collapsed = false
 		item = item.get_parent()
-
-
-func is_in_scripting_context() -> bool:
-	return script_editor_window_wrapper.visible
 
 
 func check_button_icons(buttons_info: Dictionary[Button, Array]) -> void:
@@ -1112,6 +1259,10 @@ func get_bottom_tab_global_rect(tab: BottomTabs) -> Rect2:
 ## Selects the specified bottom panel tab. Returns true if successful,
 ## false if the tab was not found.
 func select_bottom_tab(tab: BottomTabs) -> bool:
+	if tab == BottomTabs.NONE:
+		bottom_panels_tab_bar.current_tab = BottomTabs.NONE
+		return true
+
 	var tab_index := get_bottom_tab_index(tab)
 	if tab_index == -1:
 		var tab_name: String = BOTTOM_TAB_TITLES.get(tab, "Unknown")
@@ -1120,6 +1271,27 @@ func select_bottom_tab(tab: BottomTabs) -> bool:
 	bottom_panels_tab_bar.current_tab = tab_index
 	return true
 
+
+## Resolves a EditorNodes enum value to its corresponding Control reference.
+## Returns null if the node is not available yet.
+func get_editor_node(editor_node_id: EditorNodes) -> Control:
+	# Note: In 4.6 initially, Some editors seemed inaccessible until some user
+	# precondition was met and I had implemented a polling system to grab them,
+	# and this function was there to help guard the user.
+	#
+	# Yuri found that actually nodes were accessible but hidden in an unnamed
+	# node branch of the editor node tree.
+	#
+	# This simplified the code and now this function is not strictly needed.
+	# It exists because the editor and how we cache node accesses might change
+	# moving forward so this allows us to change the internals without breaking
+	# tours.
+	return _node_access_cache[editor_node_id]
+
+
+func is_in_scripting_context() -> bool:
+	return script_editor_window_wrapper.visible
+	
 
 func _display_error_and_return_null():
 	# This function is here to warn about accessing unsupported nodes that need
@@ -1148,187 +1320,3 @@ func _display_error_nonexistent_and_return_null():
 		"Please review the editor interface access API to find available nodes in godot 4.6.",
 	)
 	return null
-
-# ------------------------------------------------------------------------
-# DYNAMIC EDITORS API
-# ------------------------------------------------------------------------
-#
-# These editors only appear when specific nodes are selected and may take
-# several frames to appear in the editor UI. At first these are bottom panels.
-enum DynamicEditors {
-	SPRITEFRAMES,
-	TILEMAP,
-	TILESET,
-}
-
-# Mapping of {DynamicEditors = {callback = Callable, is_polling = bool}}
-var _editor_requests: Dictionary[DynamicEditors, Dictionary] = { }
-# Tracks if the editor's selection changed signal is currently connected.
-var _is_selection_changed_connected := false
-
-## emitted when an editor access requested by calling request editor was
-## populated. This passes the editor that was made accessible as an argument.
-##
-## Usually you don't need to listen to this signal because GDTour polls node
-## references and will, for example, automatically highlight a UI node as soon
-## as it becomes available.
-signal requested_editor_was_populated(editor_type: DynamicEditors)
-
-## Call this when you need to access one of the dynamic editors. Starting in
-## version 4.6, some bottom panel editors are added to the Godot editor
-## dynamically.
-##
-## Dynamic editors (SpriteFrames, TileMap, TileSet) only appear when specific
-## nodes are selected and may take several frames to appear in the editor UI.
-##
-## Use it like that from your tour's _build() function:
-## interface.request_editor(interface.DynamicEditors.SPRITEFRAMES)
-## Optionally pass a signal to be notified when the editor is ready.
-func request_editor(editor_type: DynamicEditors) -> void:
-	if _is_editor_ready(editor_type):
-		requested_editor_was_populated.emit(editor_type)
-		return
-
-	_editor_requests[editor_type] = {
-		"is_polling": false,
-	}
-
-	var selection := EditorInterface.get_selection()
-	if not selection.selection_changed.is_connected(_on_editor_selection_changed):
-		selection.selection_changed.connect(_on_editor_selection_changed)
-		_is_selection_changed_connected = true
-
-	_check_editor_preconditions_and_poll(editor_type)
-
-
-func _is_editor_ready(editor_type: DynamicEditors) -> bool:
-	match editor_type:
-		DynamicEditors.SPRITEFRAMES:
-			return _dynamic_nodes[DynamicEditorNodes.SPRITEFRAMES] != null
-		DynamicEditors.TILEMAP:
-			return _dynamic_nodes[DynamicEditorNodes.TILEMAP] != null
-		DynamicEditors.TILESET:
-			return _dynamic_nodes[DynamicEditorNodes.TILESET] != null
-	return false
-
-
-func _disconnect_editor_selection_changed() -> void:
-	if not _is_selection_changed_connected:
-		return
-
-	var selection := EditorInterface.get_selection()
-	if selection.selection_changed.is_connected(_on_editor_selection_changed):
-		selection.selection_changed.disconnect(_on_editor_selection_changed)
-	_is_selection_changed_connected = false
-
-
-func _on_editor_selection_changed() -> void:
-	for editor_type in _editor_requests.keys():
-		_check_editor_preconditions_and_poll(editor_type)
-
-
-func _check_editor_preconditions_and_poll(editor_type: DynamicEditors) -> void:
-	var request = _editor_requests.get(editor_type)
-	if request.is_polling:
-		return
-
-	if not _check_editor_preconditions(editor_type):
-		return
-
-	request.is_polling = true
-	_start_editor_polling(editor_type)
-
-
-## This function checks if the precondition for finding one of the special
-## editors is met, which is often a combination of selecting one specific node
-## and this node having a specific resource.
-func _check_editor_preconditions(editor_type: DynamicEditors) -> bool:
-	var selected := EditorInterface.get_selection().get_selected_nodes()
-
-	if selected.size() != 1:
-		return false
-
-	var node: Node = selected[0]
-	match editor_type:
-		DynamicEditors.SPRITEFRAMES:
-			if node is AnimatedSprite2D:
-				return node.sprite_frames != null
-			return false
-		DynamicEditors.TILEMAP:
-			return node is TileMapLayer
-		DynamicEditors.TILESET:
-			if node is TileMapLayer:
-				return node.tile_set != null
-			return false
-
-	return false
-
-
-func _start_editor_polling(editor_type: DynamicEditors) -> void:
-	var editor_scene_tree := Engine.get_main_loop() as SceneTree
-
-	const POLL_INTERVAL_FRAMES := 3
-	const MAX_ATTEMPTS := 500
-
-	var attempt_count := 0
-	while attempt_count < MAX_ATTEMPTS:
-		for i in POLL_INTERVAL_FRAMES:
-			await editor_scene_tree.process_frame
-		attempt_count += 1
-
-		var request = _editor_requests.get(editor_type)
-		if request == null:
-			return
-
-		var success := false
-		match editor_type:
-			DynamicEditors.SPRITEFRAMES:
-				success = populate_spriteframes_editor()
-			DynamicEditors.TILEMAP, DynamicEditors.TILESET:
-				success = populate_tilemap_and_tileset_editors()
-
-		if success:
-			# Nathan: suppressing this for now because we only want this for
-			# tour development purposes and we don't have a mechanism to
-			# automatically suppress that when distributing to students yet.
-			#
-			# print(
-			# 	"[EditorInterfaceAccess] %s editor populated after %d attempts" % [
-			# 		DynamicEditors.keys()[editor_type],
-			# 		attempt_count,
-			# 	],
-			# )
-
-			# The user can pass their own signal to subscribe and get notified
-			# when the editor is ready.
-			_editor_requests.erase(editor_type)
-			requested_editor_was_populated.emit(editor_type)
-			break
-
-	if attempt_count >= MAX_ATTEMPTS:
-		push_warning(
-			"[EditorInterfaceAccess] Timeout waiting for %s editor to appear after %d attempts. " % [
-				DynamicEditors.keys()[editor_type],
-				MAX_ATTEMPTS,
-			] +
-			"Make sure the correct node is selected and has the required resources.",
-		)
-		_editor_requests.erase(editor_type)
-
-	if _editor_requests.is_empty():
-		_disconnect_editor_selection_changed()
-
-
-## Resolves a DynamicEditorNodes enum value to its corresponding Control reference.
-## Returns null if the node is not available yet.
-##
-## Use this function in combination with request_editor() to access dynamic
-## editor nodes that may not be available at tour build time.
-func get_dynamic_editor_node(node_enum: DynamicEditorNodes) -> Control:
-	return _dynamic_nodes[node_enum]
-
-
-## Returns true if the specified dynamic editor node is currently available.
-func is_dynamic_editor_node_available(node_enum: DynamicEditorNodes) -> bool:
-	var node := get_dynamic_editor_node(node_enum)
-	return node != null and node.is_inside_tree()

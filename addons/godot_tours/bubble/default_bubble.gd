@@ -152,6 +152,11 @@ func _ready() -> void:
 
 
 func _on_next_button_pressed() -> void:
+	# In debug mode we bypass any tasks and force going to the next step
+	if is_debug_mode:
+		next_button_pressed.emit()
+		return
+
 	if next_button.theme_type_variation == "GrayButton":
 		Utils.update_locale(translation_service, { info_rich_text_label: { text = COMMIT_MESSAGE } })
 		buttons_panel_container.visible = false
@@ -347,12 +352,32 @@ func update_step_count_display(current_step_index: int) -> void:
 	step_count_label.visible = current_step_index != 0 and current_step_index != step_count - 1
 
 
-func _add_debug_shortcuts() -> void:
-	next_button.shortcut = load("res://addons/godot_tours/bubble/shortcut_debug_button_next.tres")
-	back_button.shortcut = load("res://addons/godot_tours/bubble/shortcut_debug_button_back.tres")
-	button_close_yes.shortcut = load("res://addons/godot_tours/bubble/shortcut_debug_button_close.tres")
+## The debug mode allows to quickly flip through the bubbles. This adds
+## shortcuts to the next and back buttons. 
+func set_is_debug_mode(is_enabled: bool) -> void:
+	if is_enabled:
+		var shortcut_next := Shortcut.new()
+		var event_next := InputEventKey.new()
+		event_next.keycode = KEY_N
+		event_next.ctrl_pressed = true
+		event_next.alt_pressed = true
+		shortcut_next.events = [event_next]
+		next_button.shortcut = shortcut_next
+
+		var shortcut_back := Shortcut.new()
+		var event_back := InputEventKey.new()
+		event_back.keycode = KEY_B
+		event_back.ctrl_pressed = true
+		event_next.alt_pressed = true
+		shortcut_back.events = [event_back]
+		back_button.shortcut = shortcut_back
+	else:
+		next_button.shortcut = null
+		back_button.shortcut = null
 
 
-## [b]Virtual[/b] method to change the text of the next button.
+## This function is used to change the text of the next button in the last step
+## of a tour. For example, to say "continue to the next tour" or "keep learning
+## on GDQuest"
 func set_finish_button_text(text: String) -> void:
 	finish_button.text = text

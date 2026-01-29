@@ -1,6 +1,8 @@
 @tool
 extends EditorPlugin
 
+signal debug_mode_toggled(enabled: bool)
+
 ## Paths to the script files from which the plugin finds and registers tours.
 ## Contains a GDTourMetadata class with code to change the GDTour settings or register tours.
 const TOUR_SCRIPT_PATHS := ["res://godot_tours.gd", "res://tours/godot_tours.gd"]
@@ -46,9 +48,17 @@ var _tour_paths: Array[String] = []
 ## The currently running tour, if any.
 var tour: Tour = null
 
+## When debug mode is active you can bypass tasks and flip through steps with
+## keyboard shortcuts.
+var is_debug_mode := false
+
 ## Button to open the tour selection menu, sitting in the editor top bar.
 ## This button only shows when there's no tour active and the welcome menu is hidden.
 var _button_top_bar: Button = null
+
+
+func _ready() -> void:
+	debug_mode_toggled.connect(func(enabled: bool) -> void: is_debug_mode = enabled)
 
 
 func _enter_tree() -> void:
@@ -99,7 +109,7 @@ func _enter_tree() -> void:
 		EditorInterface.restart_editor(false)
 
 	if Debugger.CLI_OPTION_DEBUG in OS.get_cmdline_user_args():
-		toggle_debugger()
+		toggle_debugger_dock_visible()
 
 
 ## Adds a button labeled GDTour to the editor top bar, right before the run buttons.
@@ -158,16 +168,20 @@ func _exit_tree() -> void:
 		tour.clean_up()
 
 	remove_translation_parser_plugin(translation_parser)
-	ensure_pot_generation(plugin_path, true)
 
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.keycode == KEY_F10 and event.ctrl_pressed and event.pressed:
-		toggle_debugger()
+		toggle_debugger_dock_visible()
+
+	if event is InputEventKey and event.keycode == KEY_D and event.ctrl_pressed and event.shift_pressed and event.pressed:
+		var new_debug_mode := not is_debug_mode
+		debug_mode_toggled.emit(new_debug_mode)
+		print("GDTour: Debug mode ", "enabled" if new_debug_mode else "disabled")
 
 
 ## Registers and unregisters translation files for the tours.
-func ensure_pot_generation(plugin_path: String, do_clean_up := false) -> void:
+func ensure_pot_generation(plugin_path: String) -> void:
 	if tour_metadata == null:
 		return
 
@@ -175,28 +189,35 @@ func ensure_pot_generation(plugin_path: String, do_clean_up := false) -> void:
 	var tour_base_script_file_path := plugin_path.path_join("tour.gd")
 	var pot_files_setting := ProjectSettings.get_setting(key, PackedStringArray())
 	for file_path in [tour_base_script_file_path] + _tour_paths:
-		var is_file_path_in: bool = file_path in pot_files_setting
-		if is_file_path_in and do_clean_up:
-			pot_files_setting.remove_at(pot_files_setting.find(file_path))
-		elif not is_file_path_in and not do_clean_up:
+		if file_path not in pot_files_setting:
 			pot_files_setting.push_back(file_path)
-	ProjectSettings.set_setting(key, null if pot_files_setting.is_empty() else pot_files_setting)
+	ProjectSettings.set_setting(key, pot_files_setting)
 	ProjectSettings.save()
 
 
 ## Toggles the debugger dock. If it's not present, it's added to the upper-left dock slot.
-func toggle_debugger() -> void:
+func toggle_debugger_dock_visible() -> void:
 	if debugger == null:
 		debugger = DebuggerPackedScene.instantiate()
-		debugger.setup(plugin_path, editor_interface_access, overlays, translation_service, tour, _tour_paths)
+		debugger.setup(
+			plugin_path,
+			editor_interface_access,
+			overlays,
+			translation_service,
+			tour,
+			_tour_paths,
+			debug_mode_toggled,
+		)
+		debugger.set_is_debug_mode(is_debug_mode)
 
 	if debugger.is_inside_tree():
+		overlays.remove_highlights_for_control(debugger)
 		remove_control_from_docks(debugger)
 		debugger.queue_free()
 		debugger = null
-		if welcome_menu == null and tour == null:
+		if tour == null:
 			_show_welcome_menu()
-		else:
+		elif welcome_menu == null:
 			_button_top_bar.show()
 	else:
 		add_control_to_dock(DOCK_SLOT_LEFT_UL, debugger)
@@ -237,6 +258,8 @@ func start_tour(tour_index: int) -> void:
 	if _current_tour_index < tour_metadata.list.size() - 1:
 		tour.bubble.set_finish_button_text("Continue to the next tour")
 
+	tour.bubble.set_is_debug_mode(is_debug_mode)
+	debug_mode_toggled.connect(tour.bubble.set_is_debug_mode)
 	tour.closed.connect(_button_top_bar.show)
 	tour.ended.connect(_on_tour_ended)
 

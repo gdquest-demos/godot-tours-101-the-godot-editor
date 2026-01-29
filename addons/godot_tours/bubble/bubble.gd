@@ -1,6 +1,7 @@
 ## Base class for the text bubble used to display instructions to the user.
 ## Check out ["addons/godot_tours/bubble/default_bubble.gd"] for the default implementation.
 @tool
+@abstract
 extends CanvasLayer
 
 # HACK: we use this to avoid scaling theme resources multiple times, which can
@@ -45,21 +46,10 @@ enum At {
 ## Location of the Avatar along the top edge of the bubble.
 enum AvatarAt { LEFT, CENTER, RIGHT }
 
-const GROW_DIRECTIONS := {
-	At.TOP_LEFT: { h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_END },
-	At.TOP_RIGHT: { h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_END },
-	At.BOTTOM_RIGHT: { h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_BEGIN },
-	At.BOTTOM_LEFT: { h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_BEGIN },
-	At.CENTER_LEFT: { h = Control.GROW_DIRECTION_END, v = Control.GROW_DIRECTION_BOTH },
-	At.TOP_CENTER: { h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_END },
-	At.BOTTOM_CENTER: { h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_BEGIN },
-	At.CENTER_RIGHT: { h = Control.GROW_DIRECTION_BEGIN, v = Control.GROW_DIRECTION_BOTH },
-	At.CENTER: { h = Control.GROW_DIRECTION_BOTH, v = Control.GROW_DIRECTION_BOTH },
-}
-
 var _state: State = State.IDLE
 
-var is_debug := false
+var is_debug_mode := false:
+	set = set_is_debug_mode
 
 var interface: EditorInterfaceAccess = null
 var translation_service: TranslationService = null
@@ -114,6 +104,7 @@ func _process(delta: float) -> void:
 	# We call this function that updates the position and size of the bubble.
 	# RichTextLabel nodes added to the bubble can cause it to resize after 0, 1, or 2 frames. It's not reliable
 	# and depends on the computer. So, it's best to refresh every frame.
+	# TODO: review if this is still needed in Godot 4.6 and beyond.
 	refresh()
 
 
@@ -158,17 +149,30 @@ func _on_panel_container_gui_input(event: InputEvent) -> void:
 		_state = State.DRAGGING
 
 
+## [b]Virtual[/b] method called at the beginning of every tour step for clearing anything necessary.
+@abstract func clear() -> void
+
+
+## [b]Virtual[/b] method to add a task.
+@abstract func add_task(
+		description: String,
+		repeat: int,
+		repeat_callable: Callable,
+		error_predicate: Callable,
+) -> void
+
+
+## [b]Virtual[/b] method for checking if all tasks are done.
+## Returns [code]true[/code] or [code]false[/code] based on the status of all tasks.
+@abstract func check_tasks() -> bool
+
+
 ## [b]Virtual[/b] method for reacting to the tour step change. See ["addons/godot_tours/tour.gd"]
 ## [code]step_changed[/code] signal for details.
 func on_tour_step_changed(index: int) -> void:
-	if is_debug:
+	if is_debug_mode:
 		print_debug("TOUR STEP: ", index)
 	was_moved = false
-
-
-## [b]Virtual[/b] method called at the beginning of every tour step for clearing anything necessary.
-func clear() -> void:
-	pass
 
 
 ## [b]Virtual[/b] method to set the bubble title.
@@ -216,20 +220,10 @@ func set_finish_button_text(text: String) -> void:
 	pass
 
 
-## [b]Virtual[/b] method to add a task.
-func add_task(
-		description: String,
-		repeat: int,
-		repeat_callable: Callable,
-		error_predicate: Callable,
-) -> void:
-	pass
-
-
-## [b]Virtual[/b] method for checking if all tasks are done.
-## Returns [code]true[/code] or [code]false[/code] based on the status of all tasks.
-func check_tasks() -> bool:
-	return true
+## Use this to enable and disable the bubbles debug mode. This needs to be
+## overridden to in the actual bubble to provide functionality.
+func set_is_debug_mode(value: bool) -> void:
+	is_debug_mode = value
 
 
 ## Moves and anchors the bubble relative to the given control node. Check out [member at], [member margin], and
@@ -244,27 +238,55 @@ func move_and_anchor(
 	self.at = at
 	self.margin = margin
 	self.offset_vector = offset_vector
-	panel_container.grow_horizontal = GROW_DIRECTIONS[at].h
-	panel_container.grow_vertical = GROW_DIRECTIONS[at].v
+
+	match at:
+		At.TOP_LEFT:
+			panel_container.grow_horizontal = Control.GROW_DIRECTION_END
+			panel_container.grow_vertical = Control.GROW_DIRECTION_END
+		At.TOP_RIGHT:
+			panel_container.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+			panel_container.grow_vertical = Control.GROW_DIRECTION_END
+		At.BOTTOM_RIGHT:
+			panel_container.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+			panel_container.grow_vertical = Control.GROW_DIRECTION_BEGIN
+		At.BOTTOM_LEFT:
+			panel_container.grow_horizontal = Control.GROW_DIRECTION_END
+			panel_container.grow_vertical = Control.GROW_DIRECTION_BEGIN
+		At.CENTER_LEFT:
+			panel_container.grow_horizontal = Control.GROW_DIRECTION_END
+			panel_container.grow_vertical = Control.GROW_DIRECTION_BOTH
+		At.TOP_CENTER:
+			panel_container.grow_horizontal = Control.GROW_DIRECTION_BOTH
+			panel_container.grow_vertical = Control.GROW_DIRECTION_END
+		At.BOTTOM_CENTER:
+			panel_container.grow_horizontal = Control.GROW_DIRECTION_BOTH
+			panel_container.grow_vertical = Control.GROW_DIRECTION_BEGIN
+		At.CENTER_RIGHT:
+			panel_container.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+			panel_container.grow_vertical = Control.GROW_DIRECTION_BOTH
+		At.CENTER:
+			panel_container.grow_horizontal = Control.GROW_DIRECTION_BOTH
+			panel_container.grow_vertical = Control.GROW_DIRECTION_BOTH
 
 
 ## Sets the avatar location at the top of the bubble. Check [member avatar_at] for details on the parameter.
 func set_avatar_at(at := AvatarAt.LEFT) -> void:
 	avatar_at = at
 	var editor_scale := EditorInterface.get_editor_scale()
-	var at_offset := {
-		AvatarAt.LEFT: Vector2(-8.0, -8.0) * editor_scale,
-		AvatarAt.CENTER: Vector2(panel_container.size.x / 2.0, -12.0 * editor_scale),
-		AvatarAt.RIGHT: Vector2(panel_container.size.x + 3.0 * editor_scale, -8.0 * editor_scale),
-	}
-	var new_avatar_position: Vector2 = at_offset[at]
 
-	const target_rotation_degrees := {
-		AvatarAt.LEFT: -15.0,
-		AvatarAt.CENTER: -4.0,
-		AvatarAt.RIGHT: 7.5,
-	}
-	var new_avatar_rotation: float = target_rotation_degrees[at]
+	var new_avatar_position: Vector2
+	var new_avatar_rotation: float
+
+	match at:
+		AvatarAt.LEFT:
+			new_avatar_position = Vector2(-8.0, -8.0) * editor_scale
+			new_avatar_rotation = -15.0
+		AvatarAt.CENTER:
+			new_avatar_position = Vector2(panel_container.size.x / 2.0, -12.0 * editor_scale)
+			new_avatar_rotation = -4.0
+		AvatarAt.RIGHT:
+			new_avatar_position = Vector2(panel_container.size.x + 3.0 * editor_scale, -8.0 * editor_scale)
+			new_avatar_rotation = 7.5
 
 	const TWEEN_DURATION_AVATAR := 0.15
 
@@ -298,19 +320,28 @@ func refresh() -> void:
 	if was_moved or control == null:
 		return
 
-	var at_offset := {
-		At.TOP_LEFT: margin * Vector2.ONE,
-		At.TOP_CENTER: Vector2((control.size.x - panel_container.size.x) / 2.0, 0.0) + margin * Vector2.DOWN,
-		At.TOP_RIGHT: Vector2(control.size.x - panel_container.size.x, 0.0) + margin * Vector2(-1.0, 1.0),
-		At.BOTTOM_RIGHT: control.size - panel_container.size - margin * Vector2.ONE,
-		At.BOTTOM_CENTER: Vector2(0.5, 1.0) * (control.size - panel_container.size) + margin * Vector2.UP,
-		At.BOTTOM_LEFT: Vector2(0.0, control.size.y - panel_container.size.y) + margin * Vector2(1.0, -1.0),
-		At.CENTER_LEFT: Vector2(0.0, (control.size.y - panel_container.size.y) / 2.0) + margin * Vector2.RIGHT,
-		At.CENTER_RIGHT: Vector2(1.0, 0.5) * (control.size - panel_container.size) + margin * Vector2.LEFT,
-		At.CENTER: (control.size - panel_container.size) / 2.0,
-	}
+	var at_offset: Vector2
+	match at:
+		At.TOP_LEFT:
+			at_offset = margin * Vector2.ONE
+		At.TOP_CENTER:
+			at_offset = Vector2((control.size.x - panel_container.size.x) / 2.0, 0.0) + margin * Vector2.DOWN
+		At.TOP_RIGHT:
+			at_offset = Vector2(control.size.x - panel_container.size.x, 0.0) + margin * Vector2(-1.0, 1.0)
+		At.BOTTOM_RIGHT:
+			at_offset = control.size - panel_container.size - margin * Vector2.ONE
+		At.BOTTOM_CENTER:
+			at_offset = Vector2(0.5, 1.0) * (control.size - panel_container.size) + margin * Vector2.UP
+		At.BOTTOM_LEFT:
+			at_offset = Vector2(0.0, control.size.y - panel_container.size.y) + margin * Vector2(1.0, -1.0)
+		At.CENTER_LEFT:
+			at_offset = Vector2(0.0, (control.size.y - panel_container.size.y) / 2.0) + margin * Vector2.RIGHT
+		At.CENTER_RIGHT:
+			at_offset = Vector2(1.0, 0.5) * (control.size - panel_container.size) + margin * Vector2.LEFT
+		At.CENTER:
+			at_offset = (control.size - panel_container.size) / 2.0
 
-	var new_global_position: Vector2 = control.global_position + at_offset[at] + offset_vector
+	var new_global_position := control.global_position + at_offset + offset_vector
 	if not panel_container.global_position.is_equal_approx(new_global_position):
 		if tween != null:
 			tween.kill()

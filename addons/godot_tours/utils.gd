@@ -59,6 +59,29 @@ static func find_child_by_type(from: Node, type: String, is_recursive := true, p
 	return null if result.is_empty() else result[0]
 
 
+static func find_child_by_type_multi(from_arr: Array[Node], type: String, is_recursive := true, predicate := Helper.noop) -> Node:
+	var result: Node = null
+
+	for from in from_arr:
+		result = find_child_by_type(from, type, is_recursive, predicate)
+		if result != null:
+			break
+
+	return result
+
+
+static func find_child_by_children(from: Node, child_type: String) -> Node:
+	if from == null:
+		return null
+
+	for child_node in from.get_children():
+		var result := child_node.find_children("", child_type, false, false)
+		if not result.is_empty():
+			return child_node
+
+	return null
+
+
 static func get_tree_item_path(item: TreeItem, column: int = 0) -> String:
 	var partial_result: Array[String] = [item.get_text(column)]
 	var parent: TreeItem = item.get_parent()

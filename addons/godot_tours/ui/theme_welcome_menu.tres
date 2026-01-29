@@ -7,6 +7,18 @@
 [ext_resource type="FontFile" uid="uid://cowlnwvq0rikj" path="res://addons/godot_tours/assets/fonts/poppins_italic.ttf" id="5_jtekx"]
 [ext_resource type="FontFile" uid="uid://c3xincxynype7" path="res://addons/godot_tours/assets/fonts/hasklug_nerd_mono.otf" id="6_42au4"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1lkr"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t2qdf"]
 content_margin_left = -5.0625
 content_margin_top = -5.0625
@@ -33,14 +45,6 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c3hyd"]
-bg_color = Color(0.172549, 0.337255, 0.584314, 1)
-border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_soutw"]
 bg_color = Color(0.172549, 0.337255, 0.584314, 1)
 border_width_left = 3
@@ -48,6 +52,14 @@ border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.396078, 0.733333, 0.960784, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c3hyd"]
+bg_color = Color(0.172549, 0.337255, 0.584314, 1)
+border_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -166,10 +178,12 @@ default_font_size = 16
 Button/colors/font_color = Color(1, 1, 1, 1)
 Button/font_sizes/font_size = 16
 Button/fonts/font = ExtResource("1_dub3d")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_p1lkr")
 ButtonSelectableTour/base_type = &"Button"
 ButtonSelectableTour/styles/disabled = SubResource("StyleBoxFlat_t2qdf")
 ButtonSelectableTour/styles/focus = SubResource("StyleBoxEmpty_xr3iv")
 ButtonSelectableTour/styles/hover = SubResource("StyleBoxFlat_03y0t")
+ButtonSelectableTour/styles/hover_pressed = SubResource("StyleBoxFlat_soutw")
 ButtonSelectableTour/styles/normal = SubResource("StyleBoxFlat_c3hyd")
 ButtonSelectableTour/styles/pressed = SubResource("StyleBoxFlat_soutw")
 CloseButton/base_type = &"Button"

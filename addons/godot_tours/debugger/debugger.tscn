@@ -57,6 +57,24 @@ text = "Bubble"
 layout_mode = 2
 theme_override_constants/separation = 12
 
+[node name="LabelDebugMode" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Debug Mode"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="DebugModeCheckButton" type="CheckButton" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+tooltip_text = "Enable debug mode to bypass tasks and use Ctrl+B (back) and Ctrl+N (next) shortcuts.
+Toggle with Ctrl+Shift+D."
+text = "Enable Debug Mode"
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
 [node name="LabelTours" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 text = "Tours"

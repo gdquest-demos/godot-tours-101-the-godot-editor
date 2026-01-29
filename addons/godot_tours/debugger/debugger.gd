@@ -39,15 +39,20 @@ var tour_paths: Array[String] = []
 @onready var jump_spin_box: SpinBox = %JumpSpinBox
 @onready var button_toggle_tour_visible: CheckButton = %ButtonToggleTourVisible
 @onready var button_start_tour: Button = %ButtonStartTour
+@onready var debug_mode_check_button: CheckButton = %DebugModeCheckButton
+
+var _debug_mode_toggled_signal: Signal
 
 
-func setup(plugin_path: String, interface: EditorInterfaceAccess, overlays: Overlays, translation_service: TranslationService, tour: Tour, tour_paths: Array[String]) -> void:
+func setup(plugin_path: String, interface: EditorInterfaceAccess, overlays: Overlays, translation_service: TranslationService, tour: Tour, tour_paths: Array[String], debug_mode_toggled_signal: Signal) -> void:
 	self.plugin_path = plugin_path
 	self.interface = interface
 	self.overlays = overlays
 	self.translation_service = translation_service
 	self.tour = tour
 	self.tour_paths = tour_paths
+	_debug_mode_toggled_signal = debug_mode_toggled_signal
+	debug_mode_toggled_signal.connect(set_is_debug_mode)
 
 
 func _ready() -> void:
@@ -67,6 +72,10 @@ func _ready() -> void:
 	button_start_tour.pressed.connect(_start_selected_tour)
 	dimmers_alpha_h_slider.value_changed.connect(_on_overlay_alpha_h_slider_value_changed)
 	jump_button.pressed.connect(_jump_to_step)
+	debug_mode_check_button.toggled.connect(
+		func(is_toggled: bool) -> void:
+			_debug_mode_toggled_signal.emit(is_toggled)
+	)
 
 	dimmers_alpha_h_slider.editable = toggle_dimmers_check_button.button_pressed
 	overlays.add_highlight_to_control(self)
@@ -79,10 +88,7 @@ func _ready() -> void:
 func _exit_tree() -> void:
 	overlays.cleaned_up.disconnect(overlays.add_highlight_to_control)
 	_on_overlay_alpha_h_slider_value_changed(1.0)
-	for child in overlays.ensure_get_dimmer_for(self).get_children():
-		if child is Highlight and child.control == self:
-			child.queue_free()
-			break
+	overlays.remove_highlights_for_control(self)
 
 
 func _start_selected_tour() -> void:
@@ -99,6 +105,9 @@ func _start_selected_tour() -> void:
 	toggle_bubble_check_button.button_pressed = true
 	tour.toggle_visible(true)
 	_update_spinbox_step_count()
+
+	tour.bubble.set_is_debug_mode(debug_mode_check_button.button_pressed)
+	_debug_mode_toggled_signal.connect(tour.bubble.set_is_debug_mode)
 
 
 func _on_tours_item_list_item_selected(index: int) -> void:
@@ -132,3 +141,8 @@ func _update_spinbox_step_count() -> void:
 
 func _jump_to_step() -> void:
 	tour.index = int(jump_spin_box.value - 1)
+
+
+func set_is_debug_mode(enabled: bool) -> void:
+	if debug_mode_check_button != null:
+		debug_mode_check_button.button_pressed = enabled
