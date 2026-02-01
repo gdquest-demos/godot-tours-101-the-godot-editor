@@ -1,12 +1,12 @@
 # Godot Tours: 101 - The Godot Editor
 
-*Updated to Godot 4.4.1*
+*Updated to Godot 4.6*
 
 A free and open-source tour using the [Godot Tours](https://github.com/GDQuest/godot-tours/) add-on.
 
 If you're new to gamedev and you want to download the tour and run it, head over to the [GDQuest website](http://gdquest.com/tutorial/godot/learning-paths/godot-tours-101/) for detailed instructions.
 
-**Minimum required Godot version: Godot 4.4**
+**Minimum required Godot version: Godot 4.6**
 
 ![Screenshot of one of the first steps of the tour, showing the running game and a bubble inviting you to run the game.](readme/tour-101-screenshot-01.webp)
 
