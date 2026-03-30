@@ -480,7 +480,7 @@ func steps_050_signals() -> void:
 		],
 	)
 	bubble_add_task(
-		gtr("Double-click the signal connection in the node dock."),
+		gtr("Double-click the signal connection in the signals dock."),
 		1,
 		func task_open_health_changed_signal_connection(task: Task) -> int:
 			if not interface.is_in_scripting_context():
