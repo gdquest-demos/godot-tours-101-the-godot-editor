@@ -1380,6 +1380,42 @@ func editor_reset_layout() -> void:
 	)
 
 
+## Resets editor components to their default state. At this time, this only
+## includes resetting all dock containers to their default positions.  Can also
+## run additional commands supplied via the [param extra_callback].
+func editor_reset_state(extra_callback: Callable = Callable()) -> void:
+	# TODO: Consider other elements of the editor that can be reset for every tour.
+
+	queue_command(func() -> void:
+		# Reset all dock containers. Close the bottom one, set others to their
+		# first tab.
+
+		_close_bottom_panel()
+
+		var dock_container_points: Array[EditorNodePoints] = [
+			EditorNodePoints.LAYOUT_DOCK_LEFT_LEFT_TOP,
+			EditorNodePoints.LAYOUT_DOCK_LEFT_LEFT_BOTTOM,
+			EditorNodePoints.LAYOUT_DOCK_LEFT_RIGHT_TOP,
+			EditorNodePoints.LAYOUT_DOCK_LEFT_RIGHT_BOTTOM,
+			EditorNodePoints.LAYOUT_DOCK_RIGHT_LEFT_TOP,
+			EditorNodePoints.LAYOUT_DOCK_RIGHT_LEFT_BOTTOM,
+			EditorNodePoints.LAYOUT_DOCK_RIGHT_RIGHT_TOP,
+			EditorNodePoints.LAYOUT_DOCK_RIGHT_RIGHT_BOTTOM,
+		]
+		for point in dock_container_points:
+			var dock_container: TabContainer = EditorInterfaceAccess.get_node(point)
+			if dock_container and dock_container.get_tab_count() > 0:
+				dock_container.current_tab = 0
+			elif dock_container:
+				dock_container.current_tab = -1
+
+		# Call user callback last.
+
+		if extra_callback.is_valid():
+			extra_callback.call()
+	)
+
+
 ## Switch the editor to a specific main screen context.
 ## You can use the specific context_set functions, like [context_set_2d], [context_set_3d], etc. instead.
 ##
@@ -2004,7 +2040,7 @@ func bbcode_wrap_font_size(text: String, size_pixels: int) -> String:
 	return "[font_size=%s]" % size_scaled + text + "[/font_size]"
 
 
-## Closes the bottom panel in the editor by setting the output button to unpressed.
+## Closes the bottom panel in the editor by unsetting the current tab.
 func _close_bottom_panel() -> void:
 	var bottom_dock_container: TabContainer = EditorInterfaceAccess.get_node(EditorNodePoints.LAYOUT_DOCK_MIDDLE_BOTTOM)
 	bottom_dock_container.current_tab = -1

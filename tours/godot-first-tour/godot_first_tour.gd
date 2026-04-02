@@ -2,20 +2,6 @@ extends "res://addons/godot_tours/tour.gd"
 
 const Gobot := preload("res://addons/godot_tours/bubble/gobot/gobot.gd")
 
-const LEVEL_RECT := Rect2(Vector2.ZERO, Vector2(1920, 1080))
-const LEVEL_CENTER_AT := Vector2(960, 540)
-
-# TODO: rather than being constant, these should probably scale with editor scale, and probably.
-# be calculated relative to the position of some docks etc. in Godot. So that regardless of their
-# resolution, people get the windows roughly in the same place.
-# We should write a function for that.
-#
-# Position we set to popup windows relative to the editor's top-left. This helps to keep the popup
-# windows outside of the bubble's area.
-const POPUP_WINDOW_POSITION := Vector2i(150, 150)
-# We limit the size of popup windows
-const POPUP_WINDOW_MAX_SIZE := Vector2i(860, 720)
-
 const ICONS_MAP = {
 	node_position_unselected = "res://assets/icon_editor_position_unselected.svg",
 	node_position_selected = "res://assets/icon_editor_position_selected.svg",
@@ -47,14 +33,13 @@ var script_chest := "res://levels/rooms/chests/chest.gd"
 func _build() -> void:
 	ended.connect(OS.shell_open.bind("https://school.gdquest.com/courses/learn_2d_gamedev_godot_4/learn_gdscript/learn_gdscript_app"))
 
-	# TODO: figure out resetting the UI at the beginning of the tour. Consider adding function in
-	# tour API to normalize the editor UI (close any open bottom tab, etc.) or just verify we apply
-	# the default layout.
 	editor_reset_layout()
-	queue_command(
+	editor_reset_state(
 		func reset_editor_state_for_tour():
-			interface.canvas_item_editor_toolbar_grid_button.button_pressed = false
-			interface.canvas_item_editor_toolbar_smart_snap_button.button_pressed = false
+			var grid_button: Button = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR_MAIN_TOOLBAR_GRID_BUTTON)
+			grid_button.button_pressed = false
+			var smart_snap_button: Button = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR_MAIN_TOOLBAR_SMART_SNAP_BUTTON)
+			smart_snap_button.button_pressed = false
 	)
 
 	steps_bookends()
@@ -96,13 +81,16 @@ func steps_bookends() -> void:
 
 
 func steps_010_intro() -> void:
+	var canvas_item_editor: Control = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR)
+	var run_bar_play_button: Button = EditorInterfaceAccess.get_node(EditorNodePoints.RUN_BAR_PLAY_BUTTON)
+
 	# 0010: First look at game you'll make
 	context_set_2d()
 	scene_open(scene_completed_project)
-	highlight_controls([interface.run_bar_play_button], true)
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
+	highlight_editor_nodes([EditorNodePoints.RUN_BAR_PLAY_BUTTON], true)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
-	bubble_add_task_press_button(interface.run_bar_play_button)
+	bubble_add_task_press_button(run_bar_play_button)
 	bubble_set_title(atr("Try the game"))
 	bubble_add_text(
 		[
@@ -114,23 +102,27 @@ func steps_010_intro() -> void:
 	complete_step()
 
 	# 0020: Start of editor tour
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("Editor tour"))
 	bubble_add_text(
 		[atr("Great! Now let's take a quick tour of the editor.")],
 	)
-	# TODO: restore, add necessary API to framework to toggle bottom panel buttons
-	# queue_command(func():
-	# 	interface.bottom_output_button.button_pressed = false
-	# )
+	queue_command(func close_bottom_dock_container():
+		var bottom_dock_container: TabContainer = EditorInterfaceAccess.get_node(EditorNodePoints.LAYOUT_DOCK_MIDDLE_BOTTOM)
+		bottom_dock_container.current_tab = -1
+	)
 	complete_step()
 
 
 func steps_020_first_look() -> void:
+	var canvas_item_editor: Control = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR)
+	var inspector_dock: Control = EditorInterfaceAccess.get_node(EditorNodePoints.INSPECTOR_DOCK)
+	var local_scene_tree: Tree = EditorInterfaceAccess.get_node(EditorNodePoints.SCENE_TREE_LOCAL_TREE)
+
 	# 0040: central viewport
-	highlight_controls([interface.canvas_item_editor])
-	bubble_move_and_anchor(interface.inspector_dock, Bubble.At.BOTTOM_RIGHT)
+	highlight_editor_nodes([EditorNodePoints.CANVAS_ITEM_EDITOR])
+	bubble_move_and_anchor(inspector_dock, Bubble.At.BOTTOM_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title(atr("The viewport"))
 	bubble_add_text(
@@ -139,7 +131,7 @@ func steps_020_first_look() -> void:
 	complete_step()
 
 	# 0041: scene explanation
-	highlight_controls([interface.canvas_item_editor])
+	highlight_editor_nodes([EditorNodePoints.CANVAS_ITEM_EDITOR])
 	bubble_set_title(atr("A scene is a reusable template"))
 	bubble_add_text(
 		[
@@ -150,17 +142,15 @@ func steps_020_first_look() -> void:
 	complete_step()
 
 	# 0041: looking around
-	highlight_controls(
-		[
-			interface.scene_dock,
-			interface.filesystem_dock,
-			interface.inspector_dock,
-			interface.context_switcher,
-			interface.run_bar,
-			interface.bottom_panels_tab_bar,
-		],
-	)
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
+	highlight_editor_nodes([
+		EditorNodePoints.SCENE_DOCK,
+		EditorNodePoints.FILE_SYSTEM_DOCK,
+		EditorNodePoints.INSPECTOR_DOCK,
+		EditorNodePoints.MAIN_VIEW_SWITCHER,
+		EditorNodePoints.RUN_BAR,
+		EditorNodePoints.LAYOUT_DOCK_MIDDLE_BOTTOM,
+	])
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("Let's look around"))
 	bubble_add_text(
@@ -169,16 +159,16 @@ func steps_020_first_look() -> void:
 	complete_step()
 
 	# 0042: playback controls/game preview buttons
-	highlight_controls([interface.run_bar], true)
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
+	highlight_editor_nodes([EditorNodePoints.RUN_BAR], true)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("Runner Buttons"))
 	bubble_add_text([atr("Those buttons in the top-right are the Runner Buttons. You can [b]play[/b] and [b]stop[/b] the game with them.")])
 	complete_step()
 
 	# 0042: main screen buttons / "context switcher"
-	highlight_controls([interface.context_switcher], true)
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_CENTER)
+	highlight_editor_nodes([EditorNodePoints.MAIN_VIEW_SWITCHER], true)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("Context Switcher"))
 	bubble_add_text(
@@ -191,8 +181,8 @@ func steps_020_first_look() -> void:
 
 	# 0042: scene dock
 	context_set_2d()
-	highlight_controls([interface.scene_dock])
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
+	highlight_editor_nodes([EditorNodePoints.SCENE_DOCK])
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title(atr("Scene Dock"))
 	bubble_add_text(
@@ -206,15 +196,15 @@ func steps_020_first_look() -> void:
 	complete_step()
 
 	# 0042: Filesystem dock
-	highlight_controls([interface.filesystem_dock])
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.BOTTOM_LEFT)
+	highlight_editor_nodes([EditorNodePoints.FILE_SYSTEM_DOCK])
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.BOTTOM_LEFT)
 	bubble_set_title(atr("FileSystem Dock"))
 	bubble_add_text([atr("At the bottom-left, you can see the [b]FileSystem Dock[/b]. It lists all the files used in your project (all the scenes, images, scripts...).")])
 	complete_step()
 
 	# 0044: inspector dock
-	highlight_controls([interface.inspector_dock])
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER_RIGHT)
+	highlight_editor_nodes([EditorNodePoints.INSPECTOR_DOCK])
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.CENTER_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("The Inspector"))
 	bubble_add_text(
@@ -226,8 +216,8 @@ func steps_020_first_look() -> void:
 
 	# 0045: inspector test
 	scene_deselect_all_nodes()
-	highlight_controls([interface.inspector_dock, interface.scene_dock])
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
+	highlight_editor_nodes([EditorNodePoints.INSPECTOR_DOCK, EditorNodePoints.SCENE_DOCK])
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	queue_command(
 		func set_avatar_surprised() -> void:
@@ -241,20 +231,20 @@ func steps_020_first_look() -> void:
 	)
 	mouse_click()
 	mouse_move_by_callable(
-		get_tree_item_center_by_path.bind(interface.scene_tree, ("Main")),
-		get_tree_item_center_by_path.bind(interface.scene_tree, ("Main/Bridges")),
+		get_tree_item_center_by_path.bind(local_scene_tree, ("Main")),
+		get_tree_item_center_by_path.bind(local_scene_tree, ("Main/Bridges")),
 	)
 	mouse_click()
 	mouse_move_by_callable(
-		get_tree_item_center_by_path.bind(interface.scene_tree, ("Main/Bridges")),
-		get_tree_item_center_by_path.bind(interface.scene_tree, ("Main/Player")),
+		get_tree_item_center_by_path.bind(local_scene_tree, ("Main/Bridges")),
+		get_tree_item_center_by_path.bind(local_scene_tree, ("Main/Player")),
 	)
 	mouse_click()
 	complete_step()
 
 	# 0046: bottom panels
-	highlight_controls([interface.debugger, interface.bottom_panels_tab_bar])
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.BOTTOM_CENTER)
+	highlight_editor_nodes([EditorNodePoints.DEBUGGER_DOCK, EditorNodePoints.LAYOUT_DOCK_MIDDLE_BOTTOM])
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.BOTTOM_CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("The Bottom Panels"))
 	bubble_add_text(
@@ -268,7 +258,10 @@ func steps_020_first_look() -> void:
 
 
 func steps_030_opening_scene() -> void:
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
+	var canvas_item_editor: Control = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR)
+	var inspector_dock: Control = EditorInterfaceAccess.get_node(EditorNodePoints.INSPECTOR_DOCK)
+
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	highlight_scene_nodes_by_path(["Main", "Main/Bridges", "Main/InvisibleWalls", "Main/UILayer"])
 	bubble_set_title(atr("The complete scene's nodes"))
@@ -280,7 +273,7 @@ func steps_030_opening_scene() -> void:
 	)
 	complete_step()
 
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	highlight_scene_nodes_by_path(["Main/Player"])
 	bubble_set_title(atr("Scene instances"))
@@ -294,7 +287,7 @@ func steps_030_opening_scene() -> void:
 	bubble_add_task(
 		(atr("Open the Player scene.")),
 		1,
-		func task_open_start_scene(task: Task) -> int:
+		func task_open_start_scene(_task: Task) -> int:
 			var scene_root: Node = EditorInterface.get_edited_scene_root()
 			if scene_root == null:
 				return 0
@@ -305,8 +298,8 @@ func steps_030_opening_scene() -> void:
 	context_set_2d()
 	canvas_item_editor_center_at(Vector2.ZERO)
 	canvas_item_editor_zoom_reset()
-	highlight_controls([interface.scene_dock, interface.canvas_item_editor])
-	bubble_move_and_anchor(interface.inspector_dock, Bubble.At.BOTTOM_RIGHT)
+	highlight_editor_nodes([EditorNodePoints.SCENE_DOCK, EditorNodePoints.CANVAS_ITEM_EDITOR])
+	bubble_move_and_anchor(inspector_dock, Bubble.At.BOTTOM_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title(atr("The Player scene"))
 	bubble_add_text(
@@ -319,7 +312,10 @@ func steps_030_opening_scene() -> void:
 
 
 func steps_040_scripts() -> void:
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
+	var canvas_item_editor: Control = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR)
+	var inspector_dock: Control = EditorInterfaceAccess.get_node(EditorNodePoints.INSPECTOR_DOCK)
+
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("Scripts bring nodes to life"))
 	bubble_add_text(
@@ -332,7 +328,7 @@ func steps_040_scripts() -> void:
 	complete_step()
 
 	highlight_scene_nodes_by_path(["Player"])
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("Open the Player script"))
 	bubble_add_text(
@@ -344,16 +340,16 @@ func steps_040_scripts() -> void:
 	bubble_add_task(
 		atr("Open the script attached to the [b]Player[/b] node."),
 		1,
-		func(task: Task) -> int:
-			if not interface.is_in_scripting_context():
+		func(_task: Task) -> int:
+			if not EditorInterfaceAccess.is_script_editor_active():
 				return 0
 			var open_script: String = EditorInterface.get_script_editor().get_current_script().resource_path
 			return 1 if open_script == script_player else 0,
 	)
 	complete_step()
 
-	highlight_controls([interface.script_editor_code_panel])
-	bubble_move_and_anchor(interface.inspector_dock, Bubble.At.BOTTOM_RIGHT)
+	highlight_editor_nodes([EditorNodePoints.SCRIPT_EDITOR_CONTAINER])
+	bubble_move_and_anchor(inspector_dock, Bubble.At.BOTTOM_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title(atr("The scripting context"))
 	bubble_add_text(
@@ -367,7 +363,7 @@ func steps_040_scripts() -> void:
 	complete_step()
 
 	highlight_scene_nodes_by_path(["Player", "Player/GodotArmor", "Player/WeaponHolder", "Player/ShakingCamera2D"])
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_LEFT)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_LEFT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title(atr("Any node can have a script"))
 	bubble_add_text(
@@ -380,8 +376,13 @@ func steps_040_scripts() -> void:
 
 
 func steps_050_signals() -> void:
-	highlight_controls([interface.context_switcher], true)
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_CENTER)
+	var canvas_item_editor: Control = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR)
+	var inspector_dock: Control = EditorInterfaceAccess.get_node(EditorNodePoints.INSPECTOR_DOCK)
+	var signals_dock: Control = EditorInterfaceAccess.get_node(EditorNodePoints.SIGNALS_DOCK)
+	var run_bar_play_button: Button = EditorInterfaceAccess.get_node(EditorNodePoints.RUN_BAR_PLAY_BUTTON)
+
+	highlight_editor_nodes([EditorNodePoints.MAIN_VIEW_SWITCHER], true)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("Go back to the 2D view"))
 	bubble_add_text(
@@ -394,14 +395,14 @@ func steps_050_signals() -> void:
 	bubble_add_task(
 		atr("Navigate to the [b]2D[/b] view."),
 		1,
-		func task_navigate_to_2d_view(task: Task) -> int:
-			return 1 if interface.canvas_item_editor.visible else 0
+		func task_navigate_to_2d_view(_task: Task) -> int:
+			return 1 if canvas_item_editor.visible else 0
 	)
 	complete_step()
 
 	context_set_2d()
-	highlight_controls([interface.main_screen_tabs], true)
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_CENTER)
+	highlight_editor_nodes([EditorNodePoints.SCENE_TABS], true)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title(atr("Change the active scene"))
 	bubble_add_text(
@@ -413,7 +414,7 @@ func steps_050_signals() -> void:
 	bubble_add_task(
 		atr("Navigate to the Completed Project scene."),
 		1,
-		func task_open_completed_project_scene(task: Task) -> int:
+		func task_open_completed_project_scene(_task: Task) -> int:
 			var scene_root: Node = EditorInterface.get_edited_scene_root()
 			if scene_root == null:
 				return 0
@@ -423,7 +424,7 @@ func steps_050_signals() -> void:
 
 	context_set_2d()
 	scene_open(scene_completed_project)
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("Signals"))
 	bubble_add_text(
@@ -436,8 +437,8 @@ func steps_050_signals() -> void:
 	complete_step()
 
 	highlight_scene_nodes_by_path(["Main/Player"])
-	highlight_controls([interface.signals_dock])
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
+	highlight_editor_nodes([EditorNodePoints.SIGNALS_DOCK])
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("Click the signal icon"))
 	bubble_add_text(
@@ -447,11 +448,11 @@ func steps_050_signals() -> void:
 			atr("Click the icon to open the [b]Signals Dock[/b] at the right of the editor."),
 		],
 	)
-	bubble_add_task_set_tab_by_control(interface.signals_dock, atr("Click the signal emission icon next to the [b]Player[/b] node and open the [b]Signals Dock[/b]."))
+	bubble_add_task_set_tab_by_control(signals_dock, atr("Click the signal emission icon next to the [b]Player[/b] node and open the [b]Signals Dock[/b]."))
 	complete_step()
 
-	highlight_controls([interface.signals_dock], true)
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER_RIGHT)
+	highlight_editor_nodes([EditorNodePoints.SIGNALS_DOCK], true)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.CENTER_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("The Signals Dock"))
 	bubble_add_text(
@@ -463,7 +464,7 @@ func steps_050_signals() -> void:
 	complete_step()
 
 	highlight_signals(["health_changed"], true)
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("The health_changed signal"))
 	bubble_add_text(
@@ -476,7 +477,7 @@ func steps_050_signals() -> void:
 
 	# Highlights the signal connection line
 	highlight_signals(["../UILayer"], true)
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("The signal connection"))
 	bubble_add_text(
@@ -489,8 +490,8 @@ func steps_050_signals() -> void:
 	bubble_add_task(
 		atr("Double-click the signal connection in the signals dock."),
 		1,
-		func task_open_health_changed_signal_connection(task: Task) -> int:
-			if not interface.is_in_scripting_context():
+		func task_open_health_changed_signal_connection(_task: Task) -> int:
+			if not EditorInterfaceAccess.is_script_editor_active():
 				return 0
 			var open_script: String = EditorInterface.get_script_editor().get_current_script().resource_path
 			return 1 if open_script == script_health_bar else 0,
@@ -498,7 +499,7 @@ func steps_050_signals() -> void:
 	complete_step()
 
 	highlight_code(17, 24)
-	bubble_move_and_anchor(interface.inspector_dock, Bubble.At.BOTTOM_RIGHT)
+	bubble_move_and_anchor(inspector_dock, Bubble.At.BOTTOM_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title(atr("The connected code"))
 	bubble_add_text(
@@ -512,7 +513,7 @@ func steps_050_signals() -> void:
 	# Highlight the set_health function, don't re-center on it to avoid a jump after the previous
 	# slide.
 	highlight_code(17, 17, 0, false, false)
-	bubble_move_and_anchor(interface.inspector_dock, Bubble.At.BOTTOM_RIGHT)
+	bubble_move_and_anchor(inspector_dock, Bubble.At.BOTTOM_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
 	bubble_set_title(atr("The set_health function"))
 	bubble_add_text(
@@ -524,10 +525,10 @@ func steps_050_signals() -> void:
 	)
 	complete_step()
 
-	highlight_controls([interface.run_bar_play_button], true)
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
+	highlight_editor_nodes([EditorNodePoints.RUN_BAR_PLAY_BUTTON], true)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.TOP_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
-	bubble_add_task_press_button(interface.run_bar_play_button)
+	bubble_add_task_press_button(run_bar_play_button)
 	bubble_set_title(atr("Run the game"))
 	bubble_add_text(
 		[
@@ -540,8 +541,10 @@ func steps_050_signals() -> void:
 
 
 func steps_090_conclusion() -> void:
+	var canvas_item_editor: Control = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR)
+
 	context_set_2d()
-	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
+	bubble_move_and_anchor(canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("In summary"))
 	bubble_add_text(
