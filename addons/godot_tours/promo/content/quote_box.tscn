@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://ttophfqi3e11"]
+
+[ext_resource type="Script" uid="uid://yag2wpamej4n" path="res://addons/godot_tours/promo/content/quote_box.gd" id="1_m8kr0"]
+[ext_resource type="Texture2D" uid="uid://p7yjuq6bdb8d" path="res://addons/godot_tours/promo/assets/speech_bubble_tail.svg" id="2_i1wyh"]
+
+[node name="QuoteBox" type="VBoxContainer" unique_id=1564916418]
+custom_minimum_size = Vector2(200, 0)
+theme_type_variation = &"PromoQuoteBox"
+script = ExtResource("1_m8kr0")
+
+[node name="QuoteContainer" type="MarginContainer" parent="." unique_id=1111276394]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="QuotePanel" type="PanelContainer" parent="QuoteContainer" unique_id=916099668]
+layout_mode = 2
+theme_type_variation = &"PromoQuotePanel"
+
+[node name="QuoteContent" type="RichTextLabel" parent="QuoteContainer/QuotePanel" unique_id=1494548561]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PromoQuoteContent"
+bbcode_enabled = true
+fit_content = true
+shortcut_keys_enabled = false
+
+[node name="TailAnchor" type="Control" parent="QuoteContainer" unique_id=39272183]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="Tail" type="TextureRect" parent="QuoteContainer/TailAnchor" unique_id=362747133]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 1
+anchors_preset = -1
+offset_left = 40.0
+texture = ExtResource("2_i1wyh")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AuthorBox" type="HBoxContainer" parent="." unique_id=1227837578]
+layout_mode = 2
+theme_type_variation = &"PromoQuoteAuthorBox"
+
+[node name="AuthorIconPanel" type="PanelContainer" parent="AuthorBox" unique_id=812853532]
+unique_name_in_owner = true
+clip_children = 1
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+theme_type_variation = &"PromoQuoteAuthorIcon"
+
+[node name="AuthorIcon" type="TextureRect" parent="AuthorBox/AuthorIconPanel" unique_id=1620096809]
+unique_name_in_owner = true
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AuthorInfoBox" type="VBoxContainer" parent="AuthorBox" unique_id=161366386]
+layout_mode = 2
+theme_type_variation = &"PromoQuoteAuthorSubbox"
+alignment = 1
+
+[node name="AuthorName" type="Label" parent="AuthorBox/AuthorInfoBox" unique_id=1638024253]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PromoQuoteAuthorName"
+
+[node name="AuthorTitle" type="Label" parent="AuthorBox/AuthorInfoBox" unique_id=199133517]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PromoQuoteAuthorTitle"

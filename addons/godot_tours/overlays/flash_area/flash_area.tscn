@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://d3cgblhg1sbn"]
+[gd_scene format=3 uid="uid://d3cgblhg1sbn"]
 
 [ext_resource type="Script" uid="uid://hh2sx8hpqx87" path="res://addons/godot_tours/overlays/flash_area/flash_area.gd" id="1_tncox"]
 
@@ -40,7 +40,7 @@ _data = {
 &"flash": SubResource("Animation_mndg1")
 }
 
-[node name="FlashArea" type="ColorRect"]
+[node name="FlashArea" type="ColorRect" unique_id=2027982129]
 top_level = true
 z_index = 4096
 offset_right = 1816.0
@@ -49,7 +49,5 @@ mouse_filter = 2
 color = Color(1, 1, 1, 0.258824)
 script = ExtResource("1_tncox")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_o58va")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=356601216]
+libraries/ = SubResource("AnimationLibrary_o58va")

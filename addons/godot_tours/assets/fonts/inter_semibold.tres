@@ -1,0 +1,10 @@
+[gd_resource type="FontVariation" format=3 uid="uid://xu3tcc3nsmlx"]
+
+[ext_resource type="FontFile" uid="uid://cvxww2ll5bv7h" path="res://addons/godot_tours/assets/fonts/inter_variable.ttf" id="1_p5ldg"]
+
+[resource]
+base_font = ExtResource("1_p5ldg")
+variation_opentype = {
+1869640570: 16,
+2003265652: 600
+}

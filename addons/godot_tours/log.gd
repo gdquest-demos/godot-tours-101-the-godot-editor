@@ -28,6 +28,11 @@ func reopen() -> void:
 	log_file.seek_end()
 
 
+func get_log_full_path() -> String:
+	return ProjectSettings.globalize_path(LOG_FILE_PATH)
+
+# Loggers.
+
 func debug(msg: String) -> void:
 	write(Level.DEBUG, msg)
 
@@ -54,6 +59,8 @@ func write(level: Level, msg: String) -> void:
 	)
 	flush()
 
+
+# Helpers.
 
 func get_info() -> Dictionary:
 	return {

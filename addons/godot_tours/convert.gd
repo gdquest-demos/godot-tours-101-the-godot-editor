@@ -9,6 +9,9 @@ extends "../../addons/godot_tours/tour.gd"
 
 func _build() -> void:
 """
+
+# FIXME: There are a few lines here that hardcode `interface.*` as a way to access editor nodes.
+# This is not compatible with the new EditorInterfaceAccess library, so must be rewritten.
 const CALLS := {
 	generic = "\t%s(%s)",
 	bubble_move_and_anchor = "\t%s(interface.%s, Bubble.At.%s)",
@@ -17,7 +20,7 @@ const CALLS := {
 	bubble_add_task_press_button = """\t%s(interface.%s)""",
 	complete_step = "\tcomplete_step()",
 	scene_open = """\t%s("%s")""",
-	gtr = """gtr("%s")""",
+	gtr = """atr("%s")""",
 	note = "\t# %s: %s",
 }
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://bgxtydff0olev"]
+[gd_scene format=3 uid="uid://bgxtydff0olev"]
 
 [ext_resource type="Script" uid="uid://u32fh515j1s7" path="res://addons/godot_tours/bubble/gobot/gobot.gd" id="1_0v1f1"]
 [ext_resource type="Shader" uid="uid://fqp41an74fwt" path="res://addons/godot_tours/bubble/gobot/assets/gobot_material.gdshader" id="2_2ns2r"]
@@ -795,6 +795,7 @@ input_2/reset = true
 animation = &"reaction_wink"
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_n4c0l"]
+nodes/output/position = Vector2(600, -140)
 nodes/Add2/node = SubResource("AnimationNodeAdd2_7ne4x")
 nodes/Add2/position = Vector2(180, -140)
 nodes/Animation/node = SubResource("AnimationNodeAnimation_ps3b2")
@@ -811,14 +812,13 @@ nodes/Transition/node = SubResource("AnimationNodeTransition_bta4f")
 nodes/Transition/position = Vector2(20, 20)
 nodes/WinkOneShot/node = SubResource("AnimationNodeAnimation_638r0")
 nodes/WinkOneShot/position = Vector2(180, 60)
-nodes/output/position = Vector2(600, -140)
-node_connections = [&"Add2", 0, &"Animation", &"Add2", 1, &"Transition", &"OneShot", 0, &"Add2", &"OneShot", 1, &"WinkOneShot", &"Transition", 0, &"Animation 2", &"Transition", 1, &"Animation 3", &"Transition", 2, &"Animation 4", &"output", 0, &"OneShot"]
+node_connections = [&"output", 0, &"OneShot", &"Add2", 0, &"Animation", &"Add2", 1, &"Transition", &"OneShot", 0, &"Add2", &"OneShot", 1, &"WinkOneShot", &"Transition", 0, &"Animation 2", &"Transition", 1, &"Animation 3", &"Transition", 2, &"Animation 4"]
 
-[node name="Gobot" type="Node2D"]
+[node name="Gobot" type="Node2D" unique_id=852293433]
 script = ExtResource("1_0v1f1")
 metadata/_edit_vertical_guides_ = [-356.0]
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=718846258]
 material = SubResource("ShaderMaterial_fk05e")
 anchors_preset = 8
 anchor_left = 0.5
@@ -835,92 +835,90 @@ pivot_offset = Vector2(180, 180)
 mouse_filter = 2
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=689933829]
 disable_3d = true
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(360, 360)
 render_target_update_mode = 4
 
-[node name="Root" type="Node2D" parent="SubViewportContainer/SubViewport"]
+[node name="Root" type="Node2D" parent="SubViewportContainer/SubViewport" unique_id=660916718]
 position = Vector2(180, 180)
 
-[node name="BoltAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root"]
+[node name="BoltAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root" unique_id=1529877881]
 
-[node name="Bolts" type="Node2D" parent="SubViewportContainer/SubViewport/Root/BoltAnchor"]
+[node name="Bolts" type="Node2D" parent="SubViewportContainer/SubViewport/Root/BoltAnchor" unique_id=1507841161]
 unique_name_in_owner = true
 
-[node name="BoltL" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/BoltAnchor/Bolts"]
+[node name="BoltL" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/BoltAnchor/Bolts" unique_id=701446477]
 unique_name_in_owner = true
 position = Vector2(-100, 42)
 texture = ExtResource("3_ahy46")
 flip_h = true
 
-[node name="BoltR" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/BoltAnchor/Bolts"]
+[node name="BoltR" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/BoltAnchor/Bolts" unique_id=772931246]
 unique_name_in_owner = true
 position = Vector2(100, 42)
 texture = ExtResource("3_ahy46")
 
-[node name="HornsAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root"]
+[node name="HornsAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root" unique_id=1580596585]
 position = Vector2(0, -26)
 
-[node name="Horns" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/HornsAnchor"]
+[node name="Horns" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/HornsAnchor" unique_id=875513778]
 unique_name_in_owner = true
 texture = ExtResource("4_03njk")
 
-[node name="Head" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root"]
+[node name="Head" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root" unique_id=1249895349]
 clip_children = 2
 position = Vector2(0, 16)
 texture = ExtResource("5_pcg2e")
 
-[node name="JawAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root/Head"]
+[node name="JawAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root/Head" unique_id=134181094]
 position = Vector2(0, 83)
 
-[node name="Jaw" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/Head/JawAnchor"]
+[node name="Jaw" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/Head/JawAnchor" unique_id=1157287935]
 unique_name_in_owner = true
 texture = ExtResource("6_selbd")
 
-[node name="EyeRAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root"]
+[node name="EyeRAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root" unique_id=10855926]
 position = Vector2(43, 13)
 
-[node name="EyeR" type="Node2D" parent="SubViewportContainer/SubViewport/Root/EyeRAnchor"]
+[node name="EyeR" type="Node2D" parent="SubViewportContainer/SubViewport/Root/EyeRAnchor" unique_id=1186492563]
 unique_name_in_owner = true
 
-[node name="Eye" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/EyeRAnchor/EyeR"]
+[node name="Eye" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/EyeRAnchor/EyeR" unique_id=1813674402]
 texture = ExtResource("7_4dwtu")
 
-[node name="Eyebrow" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/EyeRAnchor/EyeR"]
+[node name="Eyebrow" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/EyeRAnchor/EyeR" unique_id=1381769859]
 position = Vector2(-4, -42)
 texture = ExtResource("8_pjvjr")
 
-[node name="EyeLAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root"]
+[node name="EyeLAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root" unique_id=1501984259]
 position = Vector2(-43, 13)
 
-[node name="EyeL" type="Node2D" parent="SubViewportContainer/SubViewport/Root/EyeLAnchor"]
+[node name="EyeL" type="Node2D" parent="SubViewportContainer/SubViewport/Root/EyeLAnchor" unique_id=728774082]
 unique_name_in_owner = true
 
-[node name="Eye" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/EyeLAnchor/EyeL"]
+[node name="Eye" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/EyeLAnchor/EyeL" unique_id=661238938]
 texture = ExtResource("7_4dwtu")
 flip_h = true
 
-[node name="Eyebrow" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/EyeLAnchor/EyeL"]
+[node name="Eyebrow" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/EyeLAnchor/EyeL" unique_id=693054742]
 position = Vector2(4, -42)
 texture = ExtResource("8_pjvjr")
 flip_h = true
 
-[node name="NoseAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root"]
+[node name="NoseAnchor" type="Node2D" parent="SubViewportContainer/SubViewport/Root" unique_id=896812499]
 position = Vector2(0, 28)
 
-[node name="Nose" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/NoseAnchor"]
+[node name="Nose" type="Sprite2D" parent="SubViewportContainer/SubViewport/Root/NoseAnchor" unique_id=757301376]
 unique_name_in_owner = true
 texture = ExtResource("9_2wekc")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/SubViewport"]
-libraries = {
-"": SubResource("AnimationLibrary_axgnh")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/SubViewport" unique_id=541491907]
+libraries/ = SubResource("AnimationLibrary_axgnh")
 
-[node name="AnimationTree" type="AnimationTree" parent="SubViewportContainer/SubViewport"]
+[node name="AnimationTree" type="AnimationTree" parent="SubViewportContainer/SubViewport" unique_id=1300061032]
 unique_name_in_owner = true
 root_node = NodePath("%AnimationTree/..")
 tree_root = SubResource("AnimationNodeBlendTree_n4c0l")
@@ -933,12 +931,12 @@ parameters/Transition/current_state = "neutral"
 parameters/Transition/transition_request = ""
 parameters/Transition/current_index = 0
 
-[node name="Reference" type="Sprite2D" parent="."]
+[node name="Reference" type="Sprite2D" parent="." unique_id=1161527591]
 visible = false
 modulate = Color(1, 1, 1, 0.462745)
 texture = ExtResource("2_d0rrb")
 
-[node name="StarSprite" type="Sprite2D" parent="."]
+[node name="StarSprite" type="Sprite2D" parent="." unique_id=1587717399]
 visible = false
 position = Vector2(69, -19)
 texture = ExtResource("10_bvh8p")

@@ -1,16 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://da21jw8o5wja8"]
+[gd_scene format=3 uid="uid://da21jw8o5wja8"]
 
 [ext_resource type="StyleBox" uid="uid://yhcqrnstbm8b" path="res://addons/godot_tours/overlays/highlight/highlight.tres" id="1_w38oa"]
 [ext_resource type="Script" uid="uid://bdbq1kubd7l74" path="res://addons/godot_tours/overlays/highlight/highlight.gd" id="2_f4v3v"]
 [ext_resource type="PackedScene" uid="uid://d3cgblhg1sbn" path="res://addons/godot_tours/overlays/flash_area/flash_area.tscn" id="3_18uqt"]
 
-[node name="Highlight" type="Panel" groups=["highlight"]]
+[node name="Highlight" type="Panel" unique_id=1356739022 groups=["highlight"]]
 z_index = 999
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("1_w38oa")
 script = ExtResource("2_f4v3v")
 
-[node name="FlashArea" parent="." instance=ExtResource("3_18uqt")]
+[node name="FlashArea" parent="." unique_id=1447886072 instance=ExtResource("3_18uqt")]
 unique_name_in_owner = true
 visible = false
 top_level = false
