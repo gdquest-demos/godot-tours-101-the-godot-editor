@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://xx2ch6m6mdl8"]
+
+[ext_resource type="Script" uid="uid://ct28o1c13vuqj" path="res://addons/godot_tours/promo/content/course_box.gd" id="1_ea8q8"]
+[ext_resource type="Script" uid="uid://b30ltl333rhu4" path="res://addons/godot_tours/promo/content/course_button.gd" id="2_ea8q8"]
+[ext_resource type="Texture2D" uid="uid://bk6qaeahfhs1k" path="res://addons/godot_tours/promo/assets/chevron_right.svg" id="3_akso3"]
+
+[node name="CourseBox" type="VBoxContainer" unique_id=226568740]
+theme_type_variation = &"PromoCourseBox"
+script = ExtResource("1_ea8q8")
+
+[node name="CourseCover" type="TextureRect" parent="." unique_id=1704418718]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 242)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CourseButton" type="LinkButton" parent="." unique_id=1731983655]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(221, 21)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_type_variation = &"PromoActionButton"
+script = ExtResource("2_ea8q8")
+icon = ExtResource("3_akso3")
+icon_size = Vector2(8, 13)
+icon_separation = 9.0

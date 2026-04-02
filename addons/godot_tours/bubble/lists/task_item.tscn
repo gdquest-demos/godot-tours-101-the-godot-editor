@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://b5junnl76yqmo"]
+
+[ext_resource type="Script" uid="uid://c3rhgpaenn0t2" path="res://addons/godot_tours/bubble/lists/task_item.gd" id="2_edua8"]
+[ext_resource type="Texture2D" uid="uid://mk5pq7g1vapi" path="res://addons/godot_tours/bubble/lists/assets/check.svg" id="3_3o3go"]
+[ext_resource type="Texture2D" uid="uid://dcjtqpica5cvo" path="res://addons/godot_tours/bubble/lists/assets/exclamation.svg" id="4_cjk6q"]
+
+[node name="TaskItem" type="PanelContainer" unique_id=339217804]
+custom_minimum_size = Vector2(256, 0)
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 28.0
+grow_horizontal = 2
+theme_type_variation = &"TaskItemContainer"
+script = ExtResource("2_edua8")
+
+[node name="Layout" type="HBoxContainer" parent="." unique_id=1668251810]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Checkbox" type="Panel" parent="Layout" unique_id=1972865338]
+unique_name_in_owner = true
+self_modulate = Color(0.3372549, 0.4392157, 0.6, 1)
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 1
+theme_type_variation = &"TaskCheckboxPanel"
+
+[node name="CheckIcon" type="TextureRect" parent="Layout/Checkbox" unique_id=728638214]
+unique_name_in_owner = true
+modulate = Color(0.18431373, 0.24313726, 0.36862746, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -6.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_3o3go")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ErrorIcon" type="TextureRect" parent="Layout/Checkbox" unique_id=1414493960]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = -4.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_cjk6q")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ContentBox" type="VBoxContainer" parent="Layout" unique_id=1894593092]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="DescriptionBox" type="HBoxContainer" parent="Layout/ContentBox" unique_id=1580372145]
+layout_mode = 2
+
+[node name="DescriptionLabel" type="RichTextLabel" parent="Layout/ContentBox/DescriptionBox" unique_id=1191051372]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+bbcode_enabled = true
+text = "Task"
+fit_content = true
+scroll_active = false
+
+[node name="RepeatLabel" type="Label" parent="Layout/ContentBox/DescriptionBox" unique_id=478618288]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_type_variation = &"TaskRepeatLabel"
+text = "0 / 1"
+vertical_alignment = 1
+
+[node name="ErrorLabel" type="Label" parent="Layout/ContentBox" unique_id=745455164]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"TaskErrorLabel"
+autowrap_mode = 3

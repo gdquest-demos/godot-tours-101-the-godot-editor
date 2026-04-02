@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://bamc73s6u1t8q"]
+
+[ext_resource type="Script" uid="uid://0kxawxkwnd7s" path="res://addons/godot_tours/bubble/layout/confirm_drawer.gd" id="1_dr2nb"]
+[ext_resource type="Texture2D" uid="uid://b6gede2rayspi" path="res://addons/godot_tours/assets/icons/warning.svg" id="2_s6y34"]
+
+[node name="ConfirmDrawer" type="PanelContainer" unique_id=2011202035]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+size_flags_vertical = 10
+theme_type_variation = &"DrawerPanel"
+script = ExtResource("1_dr2nb")
+
+[node name="Layout" type="VBoxContainer" parent="." unique_id=2007684022]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MessageContainer" type="MarginContainer" parent="Layout" unique_id=968761262]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DrawerMessageContainer"
+
+[node name="MessageBox" type="HBoxContainer" parent="Layout/MessageContainer" unique_id=1792230084]
+layout_mode = 2
+
+[node name="MessageIcon" type="TextureRect" parent="Layout/MessageContainer/MessageBox" unique_id=1444516166]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("2_s6y34")
+expand_mode = 4
+stretch_mode = 4
+
+[node name="MessageLabel" type="RichTextLabel" parent="Layout/MessageContainer/MessageBox" unique_id=388635836]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "Message for [b]this action[/b]."
+shortcut_keys_enabled = false
+
+[node name="Buttons" type="HBoxContainer" parent="Layout" unique_id=816686415]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+
+[node name="LeftButton" type="Button" parent="Layout/Buttons" unique_id=1246320450]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+shortcut_in_tooltip = false
+text = "LEFT"
+flat = true
+
+[node name="RightButton" type="Button" parent="Layout/Buttons" unique_id=1386018875]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+focus_mode = 0
+mouse_default_cursor_shape = 2
+shortcut_in_tooltip = false
+text = "RIGHT"
+flat = true

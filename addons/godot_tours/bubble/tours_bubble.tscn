@@ -1,0 +1,266 @@
+[gd_scene format=3 uid="uid://b80agv7oiit7f"]
+
+[ext_resource type="Script" uid="uid://b2kloa32m346l" path="res://addons/godot_tours/bubble/tours_bubble.gd" id="1_akpwd"]
+[ext_resource type="PackedScene" uid="uid://du36q21yaiva" path="res://addons/godot_tours/bubble/layout/content_container.tscn" id="3_6jngd"]
+[ext_resource type="PackedScene" uid="uid://xuhf4p8ngsfh" path="res://addons/godot_tours/bubble/lists/tours_container.tscn" id="4_akpwd"]
+[ext_resource type="PackedScene" uid="uid://wx14mj2xaysx" path="res://addons/godot_tours/bubble/layout/gdquest_footer.tscn" id="5_bra82"]
+[ext_resource type="PackedScene" uid="uid://bkkj0n573ksfy" path="res://addons/godot_tours/bubble/layout/inform_drawer.tscn" id="6_akpwd"]
+[ext_resource type="PackedScene" uid="uid://bamc73s6u1t8q" path="res://addons/godot_tours/bubble/layout/confirm_drawer.tscn" id="6_vnbru"]
+[ext_resource type="Texture2D" uid="uid://bidxqlunyylhn" path="res://addons/godot_tours/assets/icons/close.svg" id="7_2v3i2"]
+[ext_resource type="PackedScene" uid="uid://bgxtydff0olev" path="res://addons/godot_tours/bubble/gobot/gobot.tscn" id="8_fdkni"]
+[ext_resource type="PackedScene" uid="uid://dh30hsnkht3rx" path="res://addons/godot_tours/promo/gdschool_promo.tscn" id="8_hslr8"]
+
+[node name="ToursBubble" type="CanvasLayer" unique_id=1550107765]
+script = ExtResource("1_akpwd")
+
+[node name="BubbleAnchor" type="Control" parent="." unique_id=207531751]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="BubbleContainer" type="PanelContainer" parent="BubbleAnchor" unique_id=1740512783]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(684, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -256.0
+offset_top = -66.5
+offset_right = 256.0
+offset_bottom = 66.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"BubbleContainer"
+
+[node name="Background" type="MarginContainer" parent="BubbleAnchor/BubbleContainer" unique_id=957049528]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="ViewLayout" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer" unique_id=1589008680]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="ViewContainer" type="MarginContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout" unique_id=1877533233]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="WelcomeView" type="MarginContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer" unique_id=470057976]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"WelcomeViewContainer"
+
+[node name="Layout" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView" unique_id=1853462324]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="WelcomeInner" type="MarginContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout" unique_id=1808744063]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"WelcomeInnerContainer"
+
+[node name="LayoutInner" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner" unique_id=1777288681]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TitleBox" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner" unique_id=1150340567]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="WelcomeTitle" type="Label" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner/TitleBox" unique_id=1028842415]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"WelcomeTitle"
+text = "Series Title"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="WelcomeSubtitle" type="Label" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner/TitleBox" unique_id=1351870067]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"WelcomeSubtitle"
+text = "Series More Specific Subtitle"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="WelcomeContent" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner" unique_id=784426162 instance=ExtResource("3_6jngd")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+paragraph_separation = 16
+
+[node name="WelcomeTourList" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner" unique_id=1578690608 instance=ExtResource("4_akpwd")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="WelcomeButton" type="Button" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner" unique_id=275420191]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
+theme_type_variation = &"WelcomeButton"
+disabled = true
+text = "LET'S GO!"
+
+[node name="WelcomeFiller" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner" unique_id=771798091]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="WelcomeFooter" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout" unique_id=1450701284 instance=ExtResource("5_bra82")]
+unique_name_in_owner = true
+modulate = Color(0.3372549, 0.4392157, 0.6, 0.6)
+layout_mode = 2
+
+[node name="Filler" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout" unique_id=1301111349]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ViewOverlay" type="PanelContainer" parent="BubbleAnchor/BubbleContainer" unique_id=14420407]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"BubbleViewOverlay"
+metadata/_edit_lock_ = true
+
+[node name="DrawerLayout" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer" unique_id=185083044]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="Filler" type="Control" parent="BubbleAnchor/BubbleContainer/DrawerLayout" unique_id=1460013249]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="DrawerContainer" type="PanelContainer" parent="BubbleAnchor/BubbleContainer/DrawerLayout" unique_id=1194979340]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 10
+mouse_filter = 2
+theme_type_variation = &"BubbleDrawerContainer"
+
+[node name="Layout" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer" unique_id=923649578]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ResetTourMessage" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout" unique_id=2011202035 instance=ExtResource("6_vnbru")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+left_button_text = "YES, RESET"
+right_button_text = "NO, CANCEL"
+message = "[b]Do you wish to reset this tour?[/b]
+[color=#FF8A00]This will erase all the changes you've made as part of it.[/color] You may have to repeat the tour to proceed in the series with the expected results."
+
+[node name="ResetSuccessMessage" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout" unique_id=1317500268 instance=ExtResource("6_akpwd")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+accept_button_text = "OK, GOT IT"
+message = "[b]Done. Tour has been reset![/b]
+[color=#FF8A00]You many need to close and reopen scenes to see the changes.[/color]"
+
+[node name="ResetFailureMessage" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout" unique_id=1237871930 instance=ExtResource("6_akpwd")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+accept_button_text = "OK, GOT IT"
+message = "[b]There was a problem![/b]
+[color=#FF8A00]Try closing and reopening Godot or restarting your computer and try resetting again.[/color] If the problem persists, please check the errors in the Output bottom panel and let us know!"
+
+[node name="CloseAnchor" type="Control" parent="BubbleAnchor/BubbleContainer" unique_id=1143696151]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="CloseButton" type="Button" parent="BubbleAnchor/BubbleContainer/CloseAnchor" unique_id=742636997]
+unique_name_in_owner = true
+modulate = Color(0.3372549, 0.4392157, 0.6, 1)
+custom_minimum_size = Vector2(19, 19)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 18.0
+offset_right = -18.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_default_cursor_shape = 2
+theme_type_variation = &"BubbleCloseButton"
+icon = ExtResource("7_2v3i2")
+flat = true
+icon_alignment = 1
+expand_icon = true
+
+[node name="PromoRail" type="Control" parent="BubbleAnchor/BubbleContainer" unique_id=801797966]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+
+[node name="PromoPanel" parent="BubbleAnchor/BubbleContainer/PromoRail" unique_id=180802051 instance=ExtResource("8_hslr8")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_bottom = 0.0
+grow_vertical = 2
+
+[node name="OutlineRounded" type="PanelContainer" parent="BubbleAnchor/BubbleContainer" unique_id=618563798]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"BubbleOutlinePanel"
+metadata/_edit_lock_ = true
+
+[node name="OutlineStraight" type="PanelContainer" parent="BubbleAnchor/BubbleContainer" unique_id=1499323637]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"BubbleOutlineStraightPanel"
+metadata/_edit_lock_ = true
+
+[node name="AvatarRail" type="Control" parent="BubbleAnchor/BubbleContainer" unique_id=2100375633]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="AvatarAnchor" type="Control" parent="BubbleAnchor/BubbleContainer/AvatarRail" unique_id=858746160]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="Avatar" parent="BubbleAnchor/BubbleContainer/AvatarRail/AvatarAnchor" unique_id=852293433 instance=ExtResource("8_fdkni")]
+unique_name_in_owner = true
+position = Vector2(0, -32)
+rotation = -0.106814146
+scale = Vector2(0.5, 0.5)

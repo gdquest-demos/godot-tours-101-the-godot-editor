@@ -1,129 +1,218 @@
-[gd_scene load_steps=8 format=3 uid="uid://b3tpnkc5xu2o"]
+[gd_scene format=3 uid="uid://b3tpnkc5xu2o"]
 
 [ext_resource type="Script" uid="uid://cc03vs652r0sh" path="res://addons/godot_tours/bubble/default_bubble.gd" id="1_q308r"]
-[ext_resource type="Theme" uid="uid://cx2cxgbadh7fg" path="res://addons/godot_tours/bubble/assets/bubble_theme.tres" id="2_mkok2"]
-[ext_resource type="Texture2D" uid="uid://bidxqlunyylhn" path="res://addons/godot_tours/bubble/assets/close.svg" id="3_y6crt"]
-[ext_resource type="PackedScene" uid="uid://wd822miy3aij" path="res://addons/godot_tours/bubble/rich_text_label/rich_text_label.tscn" id="4_ev3jl"]
-[ext_resource type="Script" uid="uid://c08x426gupagy" path="res://addons/godot_tours/bubble/rich_text_label/rich_text_label.gd" id="6_iitqn"]
-[ext_resource type="Texture2D" uid="uid://b6gede2rayspi" path="res://addons/godot_tours/bubble/assets/warning.svg" id="7_1p2ej"]
+[ext_resource type="Texture2D" uid="uid://7tmh3lio748i" path="res://addons/godot_tours/bubble/assets/bookends/background_gradient.svg" id="3_g7cgr"]
+[ext_resource type="Texture2D" uid="uid://bidxqlunyylhn" path="res://addons/godot_tours/assets/icons/close.svg" id="3_y6crt"]
+[ext_resource type="Texture2D" uid="uid://b0pagn8e500hp" path="res://addons/godot_tours/bubble/assets/bookends/pattern_top.svg" id="4_m3laq"]
+[ext_resource type="Texture2D" uid="uid://cv6r8njoa6udm" path="res://addons/godot_tours/bubble/assets/bookends/pattern_bottom.svg" id="5_43wx6"]
+[ext_resource type="PackedScene" uid="uid://cb1uxd5qxtyks" path="res://addons/godot_tours/bubble/lists/tasks_container.tscn" id="5_g7cgr"]
+[ext_resource type="PackedScene" uid="uid://du36q21yaiva" path="res://addons/godot_tours/bubble/layout/content_container.tscn" id="5_m3laq"]
+[ext_resource type="Texture2D" uid="uid://crioeqjcsskr0" path="res://addons/godot_tours/assets/icons/gdquest_icon.svg" id="6_fud30"]
+[ext_resource type="PackedScene" uid="uid://bamc73s6u1t8q" path="res://addons/godot_tours/bubble/layout/confirm_drawer.tscn" id="8_m3laq"]
 [ext_resource type="PackedScene" uid="uid://bgxtydff0olev" path="res://addons/godot_tours/bubble/gobot/gobot.tscn" id="8_oayod"]
+[ext_resource type="PackedScene" uid="uid://wx14mj2xaysx" path="res://addons/godot_tours/bubble/layout/gdquest_footer.tscn" id="8_w8m43"]
+[ext_resource type="PackedScene" uid="uid://crdx35gl003v2" path="res://addons/godot_tours/bubble/layout/shrinkable_container.tscn" id="9_rhi0o"]
 
-[node name="Bubble" type="CanvasLayer"]
+[node name="Bubble" type="CanvasLayer" unique_id=1807474985]
 script = ExtResource("1_q308r")
-paragraph_separation = 4
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="BubbleAnchor" type="Control" parent="." unique_id=1408856809]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="BubbleContainer" type="PanelContainer" parent="BubbleAnchor" unique_id=56702438]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(512, 0)
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -292.0
-offset_top = -151.5
-offset_right = 220.0
-offset_bottom = 18.5
+offset_left = -256.0
+offset_top = -66.5
+offset_right = 256.0
+offset_bottom = 66.5
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2_mkok2")
+theme_type_variation = &"BubbleContainer"
 
-[node name="BackgroundPanelContainer" type="PanelContainer" parent="PanelContainer"]
+[node name="Background" type="MarginContainer" parent="BubbleAnchor/BubbleContainer" unique_id=1590218957]
 layout_mode = 2
-mouse_filter = 2
-theme_type_variation = &"OutlinePanelContainer"
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
-[node name="BackgroundTextureRect" type="TextureRect" parent="PanelContainer/BackgroundPanelContainer"]
+[node name="BookendBackground" type="Control" parent="BubbleAnchor/BubbleContainer/Background" unique_id=1697261638]
 unique_name_in_owner = true
-show_behind_parent = true
-layout_mode = 2
-mouse_filter = 2
-expand_mode = 1
-stretch_mode = 6
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
-layout_mode = 2
-theme_type_variation = &"PrimaryVBoxContainer"
-
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
-layout_mode = 2
-mouse_filter = 2
-theme_type_variation = &"MainMarginContainer"
-
-[node name="ViewContent" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent"]
+visible = false
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"LabelTitle"
-text = "The missing \"walls\""
-autowrap_mode = 2
-
-[node name="ButtonClose" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 0
-mouse_default_cursor_shape = 2
-flat = true
-
-[node name="CloseTextureRect" type="TextureRect" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent/HBoxContainer/ButtonClose"]
-unique_name_in_owner = true
+[node name="ColorFill" type="ColorRect" parent="BubbleAnchor/BubbleContainer/Background/BookendBackground" unique_id=1911614107]
+clip_contents = true
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = -3.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("3_y6crt")
+color = Color(0, 0.21568628, 0.9882353, 1)
+
+[node name="Gradient" type="TextureRect" parent="BubbleAnchor/BubbleContainer/Background/BookendBackground/ColorFill" unique_id=1500152397]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 512.0
+grow_horizontal = 2
+texture = ExtResource("3_g7cgr")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="PatternTop" type="TextureRect" parent="BubbleAnchor/BubbleContainer/Background/BookendBackground/ColorFill" unique_id=323948556]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = -5.0
+offset_right = 38.0
+offset_bottom = 190.5
+grow_horizontal = 2
+texture = ExtResource("4_m3laq")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="PatternBottom" type="TextureRect" parent="BubbleAnchor/BubbleContainer/Background/BookendBackground/ColorFill" unique_id=2133221329]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = -117.5
+offset_right = 6.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("5_43wx6")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HeaderRichTextLabel" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent" instance=ExtResource("4_ev3jl")]
+[node name="ViewLayout" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer" unique_id=1613105183]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="ViewContainer" type="MarginContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout" unique_id=2069933645]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="BookendView" type="MarginContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer" unique_id=801198667]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-mouse_filter = 2
-text = "The player can move [b]outside of the bridges![/b]
-This is normal. In a game, what you see and the physical limits of the world live in two separate layers.
-Computer games use simple geometric shapes to control where a character can move, which greatly improves performance.
-We call these collision shapes, and our bridge currently doesn't have any."
+theme_type_variation = &"BookendViewContainer"
 
-[node name="MainVBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent"]
-unique_name_in_owner = true
+[node name="Layout" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView" unique_id=1335602650]
 layout_mode = 2
-mouse_filter = 2
-theme_type_variation = &"MainVBoxContainer"
-theme_override_constants/separation = 8
 
-[node name="TasksMarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent"]
+[node name="Padding" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=847442535]
+layout_mode = 2
+
+[node name="GDQuestLogo" type="TextureRect" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=1321574258]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("6_fud30")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BookendTitle" type="Label" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=417575798]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"BookendTitle"
+text = "Welcome to Godot!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="BookendContent" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=784426162 instance=ExtResource("5_m3laq")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_type_variation = &"TasksMarginContainer"
+paragraph_separation = 24
 
-[node name="TasksVBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent/TasksMarginContainer"]
+[node name="BookendButton" type="Button" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=464814697]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
+theme_type_variation = &"BookendButton"
+text = "PROCEED"
+
+[node name="Padding2" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=688944061]
+layout_mode = 2
+
+[node name="GDQuestFooter" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=1450701284 instance=ExtResource("8_w8m43")]
+layout_mode = 2
+
+[node name="StepView" type="MarginContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer" unique_id=837451813]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
+theme_type_variation = &"StepViewContainer"
 
-[node name="ButtonsPanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent"]
+[node name="Layout" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView" unique_id=555654165]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="StepTitle" type="Label" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout" unique_id=827462404]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"StepTitle"
+text = "Bubble step title"
+autowrap_mode = 2
+
+[node name="StepContentShrink" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout" unique_id=122140716 instance=ExtResource("9_rhi0o")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="StepContent" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout/StepContentShrink/ScrollContainer/Content" parent_id_path=PackedInt32Array(122140716, 1354353740) index="0" unique_id=509336820 instance=ExtResource("5_m3laq")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+paragraph_separation = 4
+
+[node name="StepTaskList" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout/StepContentShrink/ScrollContainer/Content" parent_id_path=PackedInt32Array(122140716, 1354353740) index="1" unique_id=2000878233 instance=ExtResource("5_g7cgr")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="StepNavigation" type="MarginContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout" unique_id=1399804068]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
 mouse_filter = 2
-theme_type_variation = &"ButtonsPanelContainer"
+theme_override_constants/margin_left = -8
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = -8
+theme_override_constants/margin_bottom = 0
 
-[node name="BackButton" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent/ButtonsPanelContainer"]
+[node name="StepBackButton" type="Button" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout/StepNavigation" unique_id=301301005]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -134,246 +223,169 @@ shortcut_in_tooltip = false
 text = "BACK"
 flat = true
 
-[node name="NextButton" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent/ButtonsPanelContainer"]
+[node name="StepNextButton" type="Button" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout/StepNavigation" unique_id=1948572627]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
 focus_mode = 0
 mouse_default_cursor_shape = 2
-theme_type_variation = &"NextButton"
+theme_type_variation = &"StepActiveButton"
 shortcut_in_tooltip = false
 text = "NEXT"
 
-[node name="FinishButton" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent/ButtonsPanelContainer"]
+[node name="Filler" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout" unique_id=1868297411]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ViewOverlay" type="PanelContainer" parent="BubbleAnchor/BubbleContainer" unique_id=1357737146]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-mouse_default_cursor_shape = 2
-theme_type_variation = &"BoxButton"
-text = "END TOUR AND CONTINUE LEARNING"
+theme_type_variation = &"BubbleViewOverlay"
+metadata/_edit_lock_ = true
 
-[node name="FooterSpacer" type="Control" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent"]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-
-[node name="FooterRichTextLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer/MarginContainer/ViewContent"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_type_variation = &"FooterRichTextLabel"
-bbcode_enabled = true
-text = "Test text"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-script = ExtResource("6_iitqn")
-
-[node name="ViewClose" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-alignment = 1
-
-[node name="LabelCloseTour" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/ViewClose"]
+[node name="DrawerLayout" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer" unique_id=972109503]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"LabelTitle"
-text = "Close the tour?"
-horizontal_alignment = 1
-autowrap_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
 
-[node name="LabelProgressLost" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/ViewClose"]
+[node name="Filler" type="Control" parent="BubbleAnchor/BubbleContainer/DrawerLayout" unique_id=1733659086]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="DrawerContainer" type="PanelContainer" parent="BubbleAnchor/BubbleContainer/DrawerLayout" unique_id=1827188582]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"ProgressLostLabel"
-text = "Your progress will be lost."
-horizontal_alignment = 1
-autowrap_mode = 2
+size_flags_vertical = 10
+mouse_filter = 2
+theme_type_variation = &"BubbleDrawerContainer"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/ViewClose"]
+[node name="Layout" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer" unique_id=1508303109]
 layout_mode = 2
-size_flags_vertical = 8
-theme_type_variation = &"CloseHBoxContainer"
-alignment = 1
+theme_override_constants/separation = 0
 
-[node name="ButtonCloseNo" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/ViewClose/HBoxContainer"]
+[node name="Footer" type="HBoxContainer" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout" unique_id=1819803314]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_default_cursor_shape = 2
-text = "NO"
-flat = true
+theme_type_variation = &"BubbleDrawerFooter"
 
-[node name="ButtonCloseYes" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/ViewClose/HBoxContainer"]
+[node name="HelpButton" type="LinkButton" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout/Footer" unique_id=151399217]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_default_cursor_shape = 2
-theme_type_variation = &"BoxButton"
-shortcut_in_tooltip = false
-text = "YES"
+size_flags_horizontal = 2
+theme_type_variation = &"BubbleDrawerButton"
+text = "Help"
 
-[node name="BottomPanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer"]
+[node name="StepCountLabel" type="Label" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout/Footer" unique_id=1836607076]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"BottomPanelContainer"
-
-[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/BottomPanelContainer"]
-layout_mode = 2
-theme_type_variation = &"BottomMarginPanelContainer"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer"]
-layout_mode = 2
-
-[node name="StepCountLabel" type="Label" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
+size_flags_horizontal = 6
 size_flags_vertical = 6
 theme_type_variation = &"StepCountLabel"
 text = "5 / 40"
 horizontal_alignment = 1
 
-[node name="InfoVBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/VBoxContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/VBoxContainer/InfoVBoxContainer"]
-layout_mode = 2
-
-[node name="InfoTextureRect" type="TextureRect" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/VBoxContainer/InfoVBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 0)
-layout_mode = 2
-texture = ExtResource("7_1p2ej")
-expand_mode = 4
-stretch_mode = 4
-
-[node name="InfoRichTextLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/VBoxContainer/InfoVBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-bbcode_enabled = true
-text = "INFO"
-
-[node name="CommitHBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/VBoxContainer/InfoVBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 35)
-layout_mode = 2
-
-[node name="SkipStepButton" type="Button" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/VBoxContainer/InfoVBoxContainer/CommitHBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme_type_variation = &"GrayButton"
-shortcut_in_tooltip = false
-text = "SKIP STEP"
-flat = true
-
-[node name="TryAgainButton" type="Button" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/VBoxContainer/InfoVBoxContainer/CommitHBoxContainer"]
+[node name="SkipButton" type="LinkButton" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout/Footer" unique_id=1368396757]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
-focus_mode = 0
-mouse_default_cursor_shape = 2
-shortcut_in_tooltip = false
-text = "TRY AGAIN"
-flat = true
+theme_type_variation = &"BubbleDrawerButton"
+text = "Skip"
 
-[node name="LogsHBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/VBoxContainer/InfoVBoxContainer"]
+[node name="CloseTourMessage" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout" unique_id=2011202035 instance=ExtResource("8_m3laq")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
+left_button_text = "NO, CANCEL"
+right_button_text = "YES, QUIT"
+message = "[b]Quit this tour?[/b]
+[color=#FF8A00]You will lose your progress in the tour.[/color]"
 
-[node name="CloseInfoButton" type="Button" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/VBoxContainer/InfoVBoxContainer/LogsHBoxContainer"]
+[node name="GetHelpMessage" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout" unique_id=475344045 instance=ExtResource("8_m3laq")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
-size_flags_horizontal = 0
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme_type_variation = &"GrayButton"
-shortcut_in_tooltip = false
-text = "CLOSE"
-flat = true
+left_button_text = "FIND LOG"
+right_button_text = "CLOSE"
+message = "[color=#FF8A00][b]GDTour[/b] is an experimental Edtech that evolves with the Godot engine and requires ongoing testing. It's not uncommon to encounter bugs.[/color]
+Please be patient and try the following:
 
-[node name="FindLogButton" type="Button" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/VBoxContainer/InfoVBoxContainer/LogsHBoxContainer"]
+[indent]1. Check that you're using the recommended version of Godot. For this tour it's Godot 4.3.[/indent]
+
+[indent]2. Go back one step in the Tour.[/indent]
+
+[indent]3. Note down the tasks then try skipping the step and doing them before you start the following steps.[/indent]
+
+[indent]4. Let GDQuest know by writing to [color=#FF8A00]support@gdquest.com[/color].[/indent]
+
+[ul]  Describe the problem
+  Download and attach the Godot file [color=#FFD500]tour.log[/color].
+  If possible, attach a screenshot.[/ul]
+
+[indent]5. There are video fall backs available for these tours. You can watch them and follow along in your editor.[/indent]"
+
+[node name="SkipStepMessage" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout" unique_id=397306386 instance=ExtResource("8_m3laq")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
-size_flags_horizontal = 10
-focus_mode = 0
-mouse_default_cursor_shape = 2
-shortcut_in_tooltip = false
-text = "FIND LOG"
-flat = true
+left_button_text = "SKIP STEP"
+right_button_text = "TRY AGAIN"
+message = "[b]It seems you're not done with this step![/b]
+[color=#FF8A00]You may get stuck later on in the Tour if you skip ahead without completing all the tasks.[/color] You can try going back one step before skipping.
 
-[node name="BottomHBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer"]
-unique_name_in_owner = true
+If you decide to skip the step, note down the tasks and do them before you start the following steps."
+
+[node name="CloseAnchor" type="Control" parent="BubbleAnchor/BubbleContainer" unique_id=1480961955]
 layout_mode = 2
-theme_type_variation = &"BottomHBoxContainer"
+size_flags_horizontal = 8
+size_flags_vertical = 0
+mouse_filter = 2
 
-[node name="HelpButton" type="Button" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/BottomHBoxContainer"]
+[node name="CloseButton" type="Button" parent="BubbleAnchor/BubbleContainer/CloseAnchor" unique_id=1762189996]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_default_cursor_shape = 2
-theme_type_variation = &"BottomButton"
-flat = true
-alignment = 0
-
-[node name="HelpRichTextLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/BottomHBoxContainer/HelpButton"]
-unique_name_in_owner = true
+modulate = Color(0.3372549, 0.4392157, 0.6, 1)
+custom_minimum_size = Vector2(19, 19)
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
+anchors_preset = -1
+anchor_left = 1.0
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -10.0
-offset_bottom = 10.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_type_variation = &"BottomRichTextLabel"
-bbcode_enabled = true
-text = "[u]Help[/u]"
-fit_content = true
-
-[node name="SkipButton" type="Button" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/BottomHBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
+offset_top = 18.0
+offset_right = -18.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+size_flags_vertical = 0
 mouse_default_cursor_shape = 2
-theme_type_variation = &"BottomButton"
+theme_type_variation = &"BubbleCloseButton"
+icon = ExtResource("3_y6crt")
 flat = true
-alignment = 2
+icon_alignment = 1
+expand_icon = true
 
-[node name="SkipRichTextLabel" type="RichTextLabel" parent="PanelContainer/VBoxContainer/BottomPanelContainer/PanelContainer/BottomHBoxContainer/SkipButton"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -10.0
-offset_bottom = 10.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_type_variation = &"BottomRichTextLabel"
-bbcode_enabled = true
-text = "[right][u]Skip[/u][/right]"
-fit_content = true
-
-[node name="OutlinePanelContainer" type="PanelContainer" parent="PanelContainer"]
+[node name="Outline" type="PanelContainer" parent="BubbleAnchor/BubbleContainer" unique_id=2023106991]
 layout_mode = 2
 mouse_filter = 2
-theme_type_variation = &"OutlinePanelContainer"
+theme_type_variation = &"BubbleOutlinePanel"
 metadata/_edit_lock_ = true
 
-[node name="Avatar" parent="PanelContainer" instance=ExtResource("8_oayod")]
+[node name="AvatarRail" type="Control" parent="BubbleAnchor/BubbleContainer" unique_id=1717859008]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="AvatarAnchor" type="Control" parent="BubbleAnchor/BubbleContainer/AvatarRail" unique_id=1760960382]
 unique_name_in_owner = true
-rotation = -0.261799
+layout_mode = 1
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="Avatar" parent="BubbleAnchor/BubbleContainer/AvatarRail/AvatarAnchor" unique_id=1213091673 instance=ExtResource("8_oayod")]
+unique_name_in_owner = true
+position = Vector2(-8, -8)
+rotation = -0.2617994
 scale = Vector2(0.35, 0.35)
+
+[editable path="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout/StepContentShrink"]
