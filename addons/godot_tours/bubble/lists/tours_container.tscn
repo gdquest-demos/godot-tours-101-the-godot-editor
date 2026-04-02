@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://xuhf4p8ngsfh"]
+
+[ext_resource type="Script" uid="uid://gv1kok44ldmk" path="res://addons/godot_tours/bubble/lists/tours_container.gd" id="1_60tvf"]
+
+[node name="ToursContainer" type="MarginContainer" unique_id=1578690608]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ToursContainer"
+script = ExtResource("1_60tvf")
+
+[node name="List" type="VBoxContainer" parent="." unique_id=1816462674]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2

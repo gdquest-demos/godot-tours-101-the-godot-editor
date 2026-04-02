@@ -1,0 +1,8 @@
+[gd_resource type="FontVariation" format=3 uid="uid://b2yetvyix6g8p"]
+
+[ext_resource type="FontFile" uid="uid://bjq86aqg4fjdu" path="res://addons/godot_tours/assets/fonts/mukta_semibold.ttf" id="1_x6r63"]
+
+[resource]
+base_font = ExtResource("1_x6r63")
+spacing_top = -15
+spacing_bottom = -5

@@ -28,6 +28,23 @@ var _scale_start := scale
 @onready var bolt_r: Sprite2D = %BoltR
 
 
+func _notification(what: int) -> void:
+	# NOTE: When instantiated from a scene, these nodes can be resolved immediately,
+	# without the need to wait for ready. But the engine does not provide nice hooks
+	# for that.
+	if what == NOTIFICATION_SCENE_INSTANTIATED:
+		animation_tree = %AnimationTree
+
+		eye_r = %EyeR
+		eye_l = %EyeL
+		nose = %Nose
+		jaw = %Jaw
+		horns = %Horns
+		bolts = %Bolts
+		bolt_l = %BoltL
+		bolt_r = %BoltR
+
+
 func _ready() -> void:
 	if Engine.is_editor_hint() and (not EditorInterface.get_edited_scene_root() in [self, owner]):
 		scale *= EditorInterface.get_editor_scale()

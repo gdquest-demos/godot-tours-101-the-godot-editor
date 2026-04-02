@@ -1,0 +1,9 @@
+[gd_resource type="FontVariation" format=3 uid="uid://ckxqll31cmxmu"]
+
+[ext_resource type="FontFile" uid="uid://b6jaomd4pw4gj" path="res://addons/godot_tours/assets/fonts/montserrat_variable.ttf" id="1_2wiem"]
+
+[resource]
+base_font = ExtResource("1_2wiem")
+variation_opentype = {
+2003265652: 900
+}

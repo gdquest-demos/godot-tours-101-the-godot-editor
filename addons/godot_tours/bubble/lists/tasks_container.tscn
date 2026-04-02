@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cb1uxd5qxtyks"]
+
+[ext_resource type="Script" uid="uid://n34kgxhjixwa" path="res://addons/godot_tours/bubble/lists/tasks_container.gd" id="1_1hv37"]
+
+[node name="TasksContainer" type="MarginContainer" unique_id=2000878233]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"TasksContainer"
+script = ExtResource("1_1hv37")
+
+[node name="List" type="VBoxContainer" parent="." unique_id=989181919]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2

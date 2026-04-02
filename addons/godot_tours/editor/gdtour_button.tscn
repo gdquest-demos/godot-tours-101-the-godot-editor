@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://boy5tvkasxato"]
+
+[ext_resource type="Script" uid="uid://cyt2aldaosg5o" path="res://addons/godot_tours/editor/gdtour_button.gd" id="1_m0m61"]
+
+[node name="UIButtonGodotTours" type="Button" unique_id=599327502]
+unique_name_in_owner = true
+mouse_default_cursor_shape = 2
+theme_type_variation = &"GDTourButton"
+text = "GDTOUR"
+script = ExtResource("1_m0m61")
