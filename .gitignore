@@ -5,6 +5,10 @@
 *~
 *#
 
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
 # Godot 4+ ignores
 .godot/
 
@@ -13,6 +17,7 @@
 
 # Imported translations (automatically generated from CSV files)
 *.translation
+*.mo
 
 # Mono-specific ignores
 .mono/
@@ -22,5 +27,5 @@ data_*/
 .glam.d/
 
 # Other
-godot_tours.log
+godot_tours.log*
 .plugged/
