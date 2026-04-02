@@ -8,12 +8,12 @@ func _init() -> void:
 
 	title = "Welcome to GDTour!"
 	subtitle = "Getting Started with Godot"
-	description.push_back("TOUR SERIES DESCRIPTION")
+	description.push_back("[center]TOUR SERIES DESCRIPTION[/center]")
 
 	register_tour(
 		"getting_started_101_the_godot_editor",
 		"101. The Godot Editor",
-		32,
+		30,
 		"res://tours/godot-first-tour/godot_first_tour.gd",
 	)
 	register_tour(

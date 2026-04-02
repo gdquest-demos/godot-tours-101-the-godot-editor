@@ -53,6 +53,10 @@ func _remove_all_dimmers() -> void:
 			dimmer.get_parent().remove_child(dimmer)
 		dimmer.queue_free()
 
+	for data in _dimmer_highlights:
+		if data.ref_control and data.ref_control.visibility_changed.is_connected(queue_update_dimmers):
+			data.ref_control.visibility_changed.disconnect(queue_update_dimmers)
+
 	_dimmer_map.clear()
 	_dimmer_highlights.clear()
 	_dimmer_update_queued = false
@@ -206,7 +210,7 @@ class HighlightData:
 
 	func get_area(unclamped: bool = false) -> Rect2:
 		var base := get_ref_control()
-		if not base:
+		if not base or not base.is_visible_in_tree():
 			return Rect2()
 
 		var area := Rect2()
@@ -250,6 +254,9 @@ func add_highlight_to_control(control: Control, rect_getter := Callable(), clamp
 	_dimmer_highlights.push_back(data)
 	queue_update_dimmers()
 
+	if data.ref_control:
+		data.ref_control.visibility_changed.connect(queue_update_dimmers)
+
 	return data
 
 
@@ -274,6 +281,9 @@ func remove_highlights_from_control(control: Control) -> void:
 	while i >= 0:
 		var data := _dimmer_highlights[i]
 		if data.ref_control == control:
+			if data.ref_control.visibility_changed.is_connected(queue_update_dimmers):
+				data.ref_control.visibility_changed.disconnect(queue_update_dimmers)
+
 			_dimmer_highlights.remove_at(i)
 
 		i -= 1

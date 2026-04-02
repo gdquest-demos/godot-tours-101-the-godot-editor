@@ -15,6 +15,7 @@ const STATUS_COLORS: Array[Color] = [ Color("#567099"), Color("#4bff2e"), Color(
 
 var _repeat_callable := Callable()
 var _error_predicate := Callable()
+var _connected_callables: Dictionary[Signal, Array] = {}
 
 var _current_status: Status = Status.NOT_DONE
 var _current_repeat: int = 0
@@ -40,6 +41,11 @@ func _notification(what: int) -> void:
 		_description_label = %DescriptionLabel
 		_repeat_label = %RepeatLabel
 		_error_label = %ErrorLabel
+
+	elif what == NOTIFICATION_PREDELETE:
+		for connected_signal in _connected_callables:
+			for callable: Callable in _connected_callables[connected_signal]:
+				connected_signal.disconnect(callable)
 
 
 func _ready() -> void:
@@ -144,3 +150,12 @@ func set_current_status(value: Status) -> void:
 
 func is_done() -> bool:
 	return _current_status == Status.DONE
+
+
+## Tracks a relationship between a signal and a callable, so that the callable
+## can be automatically disconnected when the task is destroyed.
+func set_connected_callable(signal_obj: Signal, callable: Callable) -> void:
+	if not _connected_callables.has(signal_obj):
+		_connected_callables[signal_obj] = []
+
+	_connected_callables[signal_obj].push_back(callable)

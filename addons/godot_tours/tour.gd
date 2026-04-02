@@ -523,15 +523,17 @@ func bubble_add_task_press_button(button: Button, description := "") -> void:
 	text = text.replace(".", "")
 	description = atr("Press the [b]%s[/b] button.") % text
 
+	var meta_name := "button_pressed_%d_count" % [ button.get_instance_id() ]
+
 	var setup_func := func(task: Task) -> void:
-		button.pressed.connect(func() -> void:
-			var meta_name := "button_pressed_%d_count" % [ button.get_instance_id() ]
+		var button_press_counter := func() -> void:
 			var meta_value := task.get_meta(meta_name, 0)
 			task.set_meta(meta_name, meta_value + 1)
-		)
+
+		button.pressed.connect(button_press_counter)
+		task.set_connected_callable(button.pressed, button_press_counter)
 
 	var check_func := func(task: Task) -> int:
-		var meta_name := "button_pressed_%d_count" % [ button.get_instance_id() ]
 		var meta_value := task.get_meta(meta_name, 0)
 
 		return 1 if meta_value > 0 or button.button_pressed else 0
