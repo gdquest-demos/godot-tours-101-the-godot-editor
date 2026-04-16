@@ -20,7 +20,7 @@ msgid "Getting Started with Godot"
 msgstr ""
 
 #: tours/godot_tours.gd:11
-msgid "[center]%TOUR_SERIES_DESCRIPTION%[/center]"
+msgid "%TOUR_SERIES_DESCRIPTION%"
 msgstr ""
 
 #: tours/godot_tours.gd:16

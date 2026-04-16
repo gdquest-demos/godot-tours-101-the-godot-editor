@@ -40,13 +40,13 @@ func steps_welcome() -> void:
 	bubble_set_welcome_title(atr("Welcome to Godot"))
 	bubble_set_welcome_button_text(atr("LET'S GET STARTED!"))
 	bubble_add_welcome_text([
-		atr("[center]In this tour, you take your first steps in the [b]Godot editor[/b].[/center]"),
+		"[center]" + atr("In this tour, you take your first steps in the [b]Godot editor[/b].") + "[/center]",
 	], Bubble.BookendTextStyle.RECAP)
 	bubble_add_welcome_text([
-		atr("[center]You get an overview of the engine's four pillars: [b]Scenes[/b], [b]Nodes[/b], [b]Scripts[/b], and [b]Signals[/b].[/center]"),
+		"[center]" + atr("You get an overview of the engine's four pillars: [b]Scenes[/b], [b]Nodes[/b], [b]Scripts[/b], and [b]Signals[/b].") + "[/center]",
 	], Bubble.BookendTextStyle.KEY)
 	bubble_add_welcome_text([
-		atr("[center]In the next tour, you'll get to assemble your first game from premade parts and put all this into practice.[/center]"),
+		"[center]" + atr("In the next tour, you'll get to assemble your first game from premade parts and put all this into practice.") + "[/center]",
 	], Bubble.BookendTextStyle.INFO)
 	queue_welcome_command(func() -> void: bubble._avatar.do_wink())
 
@@ -55,14 +55,14 @@ func steps_finale() -> void:
 	bubble_set_finale_title(atr("Congratulations on your first Godot Tour!"))
 	bubble_set_finale_button_text(atr("CONTINUE LEARNING ON GDSCHOOL"))
 	bubble_add_finale_text([
-		atr("[center]That's it for your first steps with the Godot editor. Ready to keep learning?[/center]"),
+		"[center]" + atr("That's it for your first steps with the Godot editor. Ready to keep learning?") + "[/center]",
 	], Bubble.BookendTextStyle.RECAP)
 	bubble_add_finale_text([
-		atr("[center]If you haven't already, check out the free app [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It teaches you the basics of coding through 20+ lessons with dozens of interactive exercises where you can immediately practice what you've learned.[/center]"),
-		atr("[center]You can also explore our courses to [color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]Pick Up Gamedev From Zero[/url][/b][/color], which offer a comprehensive path to build a game developer's mindset and become independent.[/center]"),
+		"[center]" + atr("If you haven't already, check out the free app [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It teaches you the basics of coding through 20+ lessons with dozens of interactive exercises where you can immediately practice what you've learned.") + "[/center]",
+		"[center]" + atr("You can also explore our courses to [color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]Pick Up Gamedev From Zero[/url][/b][/color], which offer a comprehensive path to build a game developer's mindset and become independent.") + "[/center]",
 	], Bubble.BookendTextStyle.KEY)
 	bubble_add_finale_text([
-		atr("[center][b]I hope to see you around the GDQuest community![/b][/center]"),
+		"[center][b]" + atr("I hope to see you around the GDQuest community!") + "[/b][/center]",
 	], Bubble.BookendTextStyle.INFO)
 	queue_finale_command(func() -> void: bubble._avatar.set_expression(Gobot.Expressions.HAPPY))
 
@@ -475,7 +475,7 @@ func steps_050_signals() -> void:
 		],
 	)
 	bubble_add_task(
-		atr("Double-click the signal connection in the signals dock."),
+		atr("Double-click the signal connection in the Signals dock."),
 		1,
 		func task_open_health_changed_signal_connection(_task: Task) -> int:
 			if not EditorInterfaceAccess.is_script_editor_active():

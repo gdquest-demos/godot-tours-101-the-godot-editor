@@ -8,7 +8,7 @@ func _define() -> void:
 
 	title = tr("Welcome to GDTour!")
 	subtitle = tr("Getting Started with Godot")
-	description.push_back(tr("[center]%TOUR_SERIES_DESCRIPTION%[/center]"))
+	description.push_back("[center]" + tr("%TOUR_SERIES_DESCRIPTION%") + "[/center]")
 
 	register_tour(
 		"getting_started_101_the_godot_editor",
