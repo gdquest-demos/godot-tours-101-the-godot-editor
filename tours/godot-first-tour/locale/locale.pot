@@ -1,4 +1,4 @@
-# LANGUAGE translation for M2. Getting to Know Godot (Interactive Tours) for the following files:
+# LANGUAGE translation for M2. Get to Know Godot (Interactive Tours) for the following files:
 # res://addons/godot_tours/tour.gd
 # res://tours/godot-first-tour/godot_first_tour.gd
 #
@@ -7,7 +7,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: M2. Getting to Know Godot (Interactive Tours)\n"
+"Project-Id-Version: M2. Get to Know Godot (Interactive Tours)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
