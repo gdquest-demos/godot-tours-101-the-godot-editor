@@ -2,11 +2,6 @@ extends "res://addons/godot_tours/tour.gd"
 
 const Gobot := preload("res://addons/godot_tours/bubble/gobot/gobot.gd")
 
-const TEXTURE_BUBBLE_BACKGROUND := preload("res://assets/bubble-background.png")
-const TEXTURE_GDQUEST_LOGO := preload("res://assets/gdquest-logo.svg")
-
-const CREDITS_FOOTER_GDQUEST := "[center]Godot Interactive Tours · Made by [url=https://www.gdquest.com/][b]GDQuest[/b][/url] · [url=https://github.com/GDQuest][b]Github page[/b][/url][/center]"
-
 const LEVEL_RECT := Rect2(Vector2.ZERO, Vector2(1920, 1080))
 const LEVEL_CENTER_AT := Vector2(960, 540)
 
@@ -61,37 +56,51 @@ func _build() -> void:
 			interface.canvas_item_editor_toolbar_smart_snap_button.button_pressed = false
 	)
 
+	steps_welcome()
 	steps_010_intro()
 	steps_020_first_look()
 	steps_030_opening_scene()
 	steps_040_scripts()
 	steps_050_signals()
 	steps_090_conclusion()
+	steps_finale()
+
+
+func steps_welcome() -> void:
+	bubble_set_welcome_title(atr("Welcome to Godot"))
+	bubble_set_welcome_button_text(atr("LET'S GET STARTED!"))
+	bubble_add_welcome_text([
+		atr("[center]In this tour, you take your first steps in the [b]Godot editor[/b].[/center]"),
+	], Bubble.BookendTextStyle.RECAP)
+	bubble_add_welcome_text([
+		atr("[center]You get an overview of the engine's four pillars: [b]Scenes[/b], [b]Nodes[/b], [b]Scripts[/b], and [b]Signals[/b].[/center]"),
+	], Bubble.BookendTextStyle.KEY)
+	bubble_add_welcome_text([
+		atr("[center]In the next tour, you'll get to assemble your first game from premade parts and put all this into practice.[/center]"),
+	], Bubble.BookendTextStyle.INFO)
+	queue_welcome_command(func() -> void: bubble._avatar.do_wink())
+
+
+func steps_finale() -> void:
+	bubble_set_finale_title(atr("Congratulations on your first Godot Tour!"))
+	bubble_set_finale_button_text(atr("CONTINUE LEARNING ON GDSCHOOL"))
+	bubble_add_finale_text([
+		atr("[center]That's it for your first steps with the Godot editor. Ready to keep learning?[/center]"),
+	], Bubble.BookendTextStyle.RECAP)
+	bubble_add_finale_text([
+		atr("[center]If you haven't already, check out the free app [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It teaches you the basics of coding through 20+ lessons with dozens of interactive exercises where you can immediately practice what you've learned.[/center]"),
+		atr("[center]You can also explore our courses to [color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]Pick Up Gamedev From Zero[/url][/b][/color], which offer a comprehensive path to build a game developer's mindset and become independent.[/center]"),
+	], Bubble.BookendTextStyle.KEY)
+	bubble_add_finale_text([
+		atr("[center][b]I hope to see you around the GDQuest community![/b][/center]"),
+	], Bubble.BookendTextStyle.INFO)
+	queue_finale_command(func() -> void: bubble._avatar.set_expression(Gobot.Expressions.HAPPY))
 
 
 func steps_010_intro() -> void:
-	# 0010: introduction
+	# 0010: First look at game you'll make
 	context_set_2d()
 	scene_open(scene_completed_project)
-	bubble_move_and_anchor(interface.base_control, Bubble.At.CENTER)
-	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
-	bubble_set_background(TEXTURE_BUBBLE_BACKGROUND)
-	bubble_add_texture(TEXTURE_GDQUEST_LOGO)
-	bubble_set_title("")
-	bubble_add_text([bbcode_wrap_font_size(atr("[center][b]Welcome to Godot[/b][/center]"), 32)])
-	bubble_add_text(
-		[
-			atr("[center]In this tour, you take your first steps in the [b]Godot editor[/b].[/center]"),
-			atr("[center]You get an overview of the engine's four pillars: [b]Scenes[/b], [b]Nodes[/b], [b]Scripts[/b], and [b]Signals[/b].[/center]"),
-			atr("[center]In the next tour, you'll get to assemble your first game from premade parts and put all this into practice.[/center]"),
-			atr("[center][b]Let's get started![/b][/center]"),
-		],
-	)
-	bubble_set_footer(CREDITS_FOOTER_GDQUEST)
-	queue_command(func avatar_wink(): bubble.avatar.do_wink())
-	complete_step()
-
-	# 0020: First look at game you'll make
 	highlight_controls([interface.run_bar_play_button], true)
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.TOP_RIGHT)
 	bubble_set_avatar_at(Bubble.AvatarAt.LEFT)
@@ -106,7 +115,7 @@ func steps_010_intro() -> void:
 	)
 	complete_step()
 
-	# 0030: Start of editor tour
+	# 0020: Start of editor tour
 	bubble_move_and_anchor(interface.canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("Editor tour"))
@@ -545,30 +554,5 @@ func steps_090_conclusion() -> void:
 			atr("[b]Scripts[/b] are text files that give instructions to the computer. You can attach them to nodes to control their behavior."),
 			atr("And [b]Signals[/b] are events that nodes emit to report what's happening in the game. You can connect signals to scripts to run code when an event occurs."),
 		],
-	)
-	complete_step()
-
-	bubble_move_and_anchor(interface.main_screen)
-	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
-	queue_command(
-		func set_avatar_happy() -> void:
-			bubble.avatar.set_expression(Gobot.Expressions.HAPPY)
-	)
-	bubble_set_background(TEXTURE_BUBBLE_BACKGROUND)
-	bubble_add_texture(TEXTURE_GDQUEST_LOGO)
-	bubble_set_title("")
-	bubble_add_text([bbcode_wrap_font_size(atr("[center][b]Congratulations on your first Godot Tour![/b][/center]"), 32)])
-	bubble_add_text(
-		[
-			atr("[center]That's it for your first steps with the Godot editor. Ready to keep learning?[/center]"),
-			atr("[center]If you haven't already, check out the free app [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It teaches you the basics of coding through 20+ lessons with dozens of interactive exercises where you can immediately practice what you've learned.[/center]"),
-			atr("[center]You can also explore our courses to [color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]Pick Up Gamedev From Zero[/url][/b][/color], which offer a comprehensive path to build a game developer's mindset and become independent.[/center]"),
-			atr("[center][b]I hope to see you around the GDQuest community![/b][/center]"),
-		],
-	)
-	bubble_set_footer((CREDITS_FOOTER_GDQUEST))
-	queue_command(
-		func bubble_set_finish_text() -> void:
-			bubble.set_finish_button_text(atr("CONTINUE LEARNING ON GDSCHOOL"))
 	)
 	complete_step()
