@@ -15,7 +15,7 @@ func _define() -> void:
 		"101",
 		tr("The Godot Editor"),
 		30,
-		"res://tours/godot-first-tour/godot_first_tour.gd",
+		"res://tours/101_the_godot_editor/101_the_godot_editor.gd",
 	)
 	register_tour(
 		"getting_started_102_assemble_your_first_game",
