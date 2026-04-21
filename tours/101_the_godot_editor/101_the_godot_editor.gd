@@ -17,15 +17,6 @@ const SCRIPT_HEALTH_BAR := "res://interface/bars/ui_health_bar.gd"
 func _build() -> void:
 	ended.connect(OS.shell_open.bind("https://school.gdquest.com/courses/learn_2d_gamedev_godot_4/learn_gdscript/learn_gdscript_app"))
 
-	editor_reset_layout()
-	editor_reset_state(
-		func reset_editor_state_for_tour():
-			var grid_button: Button = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR_MAIN_TOOLBAR_GRID_BUTTON)
-			grid_button.button_pressed = false
-			var smart_snap_button: Button = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR_MAIN_TOOLBAR_SMART_SNAP_BUTTON)
-			smart_snap_button.button_pressed = false
-	)
-
 	steps_welcome()
 	steps_010_intro()
 	steps_020_first_look()
@@ -37,6 +28,15 @@ func _build() -> void:
 
 
 func steps_welcome() -> void:
+	editor_reset_layout()
+	editor_reset_state(
+		func reset_editor_state_for_tour():
+			var grid_button: Button = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR_MAIN_TOOLBAR_GRID_BUTTON)
+			grid_button.button_pressed = false
+			var smart_snap_button: Button = EditorInterfaceAccess.get_node(EditorNodePoints.CANVAS_ITEM_EDITOR_MAIN_TOOLBAR_SMART_SNAP_BUTTON)
+			smart_snap_button.button_pressed = false
+	)
+
 	bubble_set_welcome_title(atr("Welcome to Godot"))
 	bubble_set_welcome_button_text(atr("LET'S GET STARTED!"))
 	bubble_add_welcome_text([
@@ -49,22 +49,6 @@ func steps_welcome() -> void:
 		"[center]" + atr("In the next tour, you'll get to assemble your first game from premade parts and put all this into practice.") + "[/center]",
 	], Bubble.BookendTextStyle.INFO)
 	queue_welcome_command(func() -> void: bubble._avatar.do_wink())
-
-
-func steps_finale() -> void:
-	bubble_set_finale_title(atr("Congratulations on your first Godot Tour!"))
-	bubble_set_finale_button_text(atr("CONTINUE LEARNING ON GDSCHOOL"))
-	bubble_add_finale_text([
-		"[center]" + atr("That's it for your first steps with the Godot editor. Ready to keep learning?") + "[/center]",
-	], Bubble.BookendTextStyle.RECAP)
-	bubble_add_finale_text([
-		"[center]" + atr("If you haven't already, check out the free app [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It teaches you the basics of coding through 20+ lessons with dozens of interactive exercises where you can immediately practice what you've learned.") + "[/center]",
-		"[center]" + atr("You can also explore our courses to [color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]Pick Up Gamedev From Zero[/url][/b][/color], which offer a comprehensive path to build a game developer's mindset and become independent.") + "[/center]",
-	], Bubble.BookendTextStyle.KEY)
-	bubble_add_finale_text([
-		"[center][b]" + atr("I hope to see you around the GDQuest community!") + "[/b][/center]",
-	], Bubble.BookendTextStyle.INFO)
-	queue_finale_command(func() -> void: bubble._avatar.set_expression(Gobot.Expressions.HAPPY))
 
 
 func steps_010_intro() -> void:
@@ -544,3 +528,19 @@ func steps_090_conclusion() -> void:
 		],
 	)
 	complete_step()
+
+
+func steps_finale() -> void:
+	bubble_set_finale_title(atr("Congratulations on your first Godot Tour!"))
+	bubble_set_finale_button_text(atr("CONTINUE LEARNING ON GDSCHOOL"))
+	bubble_add_finale_text([
+		"[center]" + atr("That's it for your first steps with the Godot editor. Ready to keep learning?") + "[/center]",
+	], Bubble.BookendTextStyle.RECAP)
+	bubble_add_finale_text([
+		"[center]" + atr("If you haven't already, check out the free app [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It teaches you the basics of coding through 20+ lessons with dozens of interactive exercises where you can immediately practice what you've learned.") + "[/center]",
+		"[center]" + atr("You can also explore our courses to [color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]Pick Up Gamedev From Zero[/url][/b][/color], which offer a comprehensive path to build a game developer's mindset and become independent.") + "[/center]",
+	], Bubble.BookendTextStyle.KEY)
+	bubble_add_finale_text([
+		"[center][b]" + atr("I hope to see you around the GDQuest community!") + "[/b][/center]",
+	], Bubble.BookendTextStyle.INFO)
+	queue_finale_command(func() -> void: bubble._avatar.set_expression(Gobot.Expressions.HAPPY))

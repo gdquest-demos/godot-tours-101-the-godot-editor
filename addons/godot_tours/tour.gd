@@ -1375,8 +1375,9 @@ func play_mouse() -> void:
 #region Global editor commands.
 
 ## Applies the default layout so every tour starts from the same UI state.
+## [b]Note:[/b] This command runs on welcome bookend step.
 func editor_reset_layout() -> void:
-	queue_command(func() -> void:
+	queue_welcome_command(func() -> void:
 		var editor_layout_menu: PopupMenu = EditorInterfaceAccess.get_node(EditorNodePoints.MENU_BAR_EDITOR_LAYOUT_MENU)
 		Utils.activate_menu_option_by_shortcut(editor_layout_menu, "layout/default")
 	)
@@ -1385,10 +1386,11 @@ func editor_reset_layout() -> void:
 ## Resets editor components to their default state. At this time, this only
 ## includes resetting all dock containers to their default positions.  Can also
 ## run additional commands supplied via the [param extra_callback].
+## [b]Note:[/b] This command runs on welcome bookend step.
 func editor_reset_state(extra_callback: Callable = Callable()) -> void:
 	# TODO: Consider other elements of the editor that can be reset for every tour.
 
-	queue_command(func() -> void:
+	queue_welcome_command(func() -> void:
 		# Reset all dock containers. Close the bottom one, set others to their
 		# first tab.
 

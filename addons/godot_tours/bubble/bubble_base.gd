@@ -258,6 +258,9 @@ func _update_content_size() -> void:
 ## Moves and anchors the bubble relative to the given control node. Check out [member at],
 ## [member margin_offset], and [member extra_offset] for details on the parameters.
 func move_and_anchor(control: Control, at := At.CENTER, margin := 16.0, extra_offset := Vector2.ZERO) -> void:
+	if _state_data.ref_control:
+		_state_data.ref_control.resized.disconnect(_queue_retransition_bubble)
+
 	_state_data.ref_control = control
 	_state_data.bubble_at = at
 	_state_data.margin_offset = margin
@@ -266,6 +269,9 @@ func move_and_anchor(control: Control, at := At.CENTER, margin := 16.0, extra_of
 
 	if _state_data.ref_control == null: # Always anchor to something.
 		_state_data.ref_control = EditorInterfaceAccess.get_node(EditorNodePoints.LAYOUT_ROOT)
+
+	if _state_data.ref_control:
+		_state_data.ref_control.resized.connect(_queue_retransition_bubble)
 
 	_transition_bubble.call_deferred() # Allow the layout to settle.
 
@@ -345,11 +351,13 @@ func _transition_bubble(immediate: bool = false) -> void:
 
 	_bubble_transition_tween = create_tween()
 	_bubble_transition_tween.set_parallel(true)
-	_bubble_transition_tween.set_ease(Tween.EASE_OUT)
-	_bubble_transition_tween.set_trans(Tween.TRANS_CUBIC)
+	# We're using custom interpolation for the position here, so disabling
+	# defaults for now.
+	# _bubble_transition_tween.set_ease(Tween.EASE_OUT)
+	# _bubble_transition_tween.set_trans(Tween.TRANS_EXPO)
 	var must_tween := false
 
-	const TWEEN_DURATION := 0.25
+	const TWEEN_DURATION := 0.44
 
 	if not _bubble_anchor.position.is_equal_approx(_bubble_transition_position):
 		# NOTE: This is why we need the anchor; setting position on the container here locks its
@@ -360,12 +368,18 @@ func _transition_bubble(immediate: bool = false) -> void:
 			"position",
 			_bubble_transition_position,
 			TWEEN_DURATION,
-		)
+		).set_custom_interpolator(_interpolate_position)
 		must_tween = true
 
 	if not must_tween:
 		_bubble_transition_tween.kill()
 		_bubble_transition_tween = null
+
+
+func _interpolate_position(value: float) -> float:
+	var exp := 6.0 - value * 4.0
+	var result := 1.0 - pow(1.0 - value, exp)
+	return result
 
 
 func _queue_retransition_bubble() -> void:
@@ -379,24 +393,26 @@ func _queue_retransition_bubble() -> void:
 func _retransition_bubble() -> void:
 	_retransition_queued = false
 
-	# Move the bubble back into the editor view, if it managed to escape due to
-	# bad alignment or resize. Only do this when necessary, so we don't override
-	# manually positioned bubbles (unless they require this fix).
+	# When mid-transition, update transition to new data.
+	if _bubble_transition_tween:
+		_transition_bubble(false)
+		return
+
+	# When anchored, update to the new position with a transition, if necessary.
+	if not _state_data.was_moved:
+		_transition_bubble(false)
+		return
+
+	# When static and moved by hand, check if the bubble exceeds the editor view.
 
 	var layout_root: Control = EditorInterfaceAccess.get_node(EditorNodePoints.LAYOUT_ROOT)
 	var layout_rect := layout_root.get_global_rect()
 	var bubble_rect := _bubble_container.get_global_rect()
-	if _bubble_transition_tween: # When mid-transition, use the target position.
-		bubble_rect.position = _bubble_transition_position
-
 	# Quickly check if not the entire area is on screen.
 	if bubble_rect.intersection(layout_rect).get_area() >= bubble_rect.get_area():
 		return
 
-	if _bubble_transition_tween:
-		_transition_bubble(false)
-	else:
-		_transition_bubble(true)
+	_transition_bubble(true)
 
 
 ## Sets the avatar location at the top of the bubble. Check [member avatar_at] for details on
@@ -469,10 +485,10 @@ func _transition_avatar(immediate: bool = false) -> void:
 	_avatar_transition_tween = create_tween()
 	_avatar_transition_tween.set_parallel(true)
 	_avatar_transition_tween.set_ease(Tween.EASE_OUT)
-	_avatar_transition_tween.set_trans(Tween.TRANS_CUBIC)
+	_avatar_transition_tween.set_trans(Tween.TRANS_EXPO)
 	var must_tween := false
 
-	const TWEEN_DURATION := 0.15
+	const TWEEN_DURATION := 0.24
 
 	if not is_equal_approx(_avatar_anchor.anchor_left, new_anchor_position):
 		_avatar_transition_tween.tween_property(

@@ -255,7 +255,8 @@ func add_highlight_to_control(control: Control, rect_getter := Callable(), clamp
 	queue_update_dimmers()
 
 	if data.ref_control:
-		data.ref_control.visibility_changed.connect(queue_update_dimmers)
+		if not data.ref_control.visibility_changed.is_connected(queue_update_dimmers):
+			data.ref_control.visibility_changed.connect(queue_update_dimmers)
 
 	return data
 
