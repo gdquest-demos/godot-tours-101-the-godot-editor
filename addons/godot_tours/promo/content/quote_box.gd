@@ -11,12 +11,10 @@ extends VBoxContainer
 	set = set_quote_author_title
 
 @onready var _quote_content_label: RichTextLabel = %QuoteContent
-@onready var _tail_icon: TextureRect = %Tail
 
 @onready var _author_name_label: Label = %AuthorName
 @onready var _author_title_label: Label = %AuthorTitle
 @onready var _author_icon: TextureRect = %AuthorIcon
-@onready var _author_icon_panel: Control = %AuthorIconPanel
 
 
 func _notification(what: int) -> void:
@@ -25,24 +23,15 @@ func _notification(what: int) -> void:
 	# for that.
 	if what == NOTIFICATION_SCENE_INSTANTIATED:
 		_quote_content_label = %QuoteContent
-		_tail_icon = %Tail
 
 		_author_name_label = %AuthorName
 		_author_title_label = %AuthorTitle
 		_author_icon = %AuthorIcon
-		_author_icon_panel = %AuthorIconPanel
 
 
 func _ready() -> void:
 	_update_quote()
 	_update_author()
-
-	if not Engine.is_editor_hint() or EditorInterface.get_edited_scene_root() == self:
-		return
-
-	var editor_scale := EditorInterface.get_editor_scale()
-	_tail_icon.custom_minimum_size *= editor_scale
-	_author_icon_panel.custom_minimum_size *= editor_scale
 
 
 # Properties.

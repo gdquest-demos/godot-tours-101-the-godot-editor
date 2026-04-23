@@ -6,8 +6,8 @@ signal reset_pressed
 
 const GDTourMetadata = preload("../../gdtour_metadata.gd")
 
-const STATE_COLORS: Array[Color] = [ Color("#2f3e5e"), Color("#2c5695") ]
 const CHECK_COLORS: Array[Color] = [ Color("#567099"), Color("#4bff2e") ]
+const PROGRESS_COLORS: Array[Color] = [ Color("#c6cbd3"), Color("#ffffff"), Color("#4bff2e") ]
 const LOCK_ICONS: Array[Texture2D] = [
 	preload("assets/locked.svg"),
 	preload("assets/unlocked.svg"),
@@ -27,7 +27,6 @@ var _hovered: bool = false
 var _selected: bool = false
 
 @onready var _content_panel: PanelContainer = %Content
-@onready var _checkbox_panel: Panel = %Checkbox
 @onready var _checkbox_icon: TextureRect = %CheckIcon
 @onready var _number_label: Label = %NumberLabel
 @onready var _description_label: Label = %DescriptionLabel
@@ -44,7 +43,6 @@ func _notification(what: int) -> void:
 	# for that.
 	if what == NOTIFICATION_SCENE_INSTANTIATED:
 		_content_panel = %Content
-		_checkbox_panel = %Checkbox
 		_checkbox_icon = %CheckIcon
 		_number_label = %NumberLabel
 		_description_label = %DescriptionLabel
@@ -76,10 +74,6 @@ func _ready() -> void:
 	_reset_icon.gui_input.connect(_reset_gui_input)
 
 	_content_panel.draw.connect(_content_draw)
-
-	_checkbox_panel.custom_minimum_size *= EditorInterface.get_editor_scale()
-	_lock_icon.custom_minimum_size *= EditorInterface.get_editor_scale()
-	_reset_icon.custom_minimum_size *= EditorInterface.get_editor_scale()
 
 
 func _content_draw() -> void:
@@ -156,14 +150,12 @@ func set_selected(value: bool) -> void:
 # Helpers.
 
 func _update_checkbox() -> void:
-	_checkbox_icon.modulate = STATE_COLORS[1] if _selected else STATE_COLORS[0]
-
 	# TODO: Update the color depending on the progress.
 
-	_checkbox_panel.self_modulate = CHECK_COLORS[0]
+	_checkbox_icon.modulate = CHECK_COLORS[0]
 	_steps_label.remove_theme_color_override("font_color")
 
-	#_checkbox_panel.self_modulate = CHECK_COLORS[1]
+	#_checkbox_icon.modulate = CHECK_COLORS[1]
 	#_steps_label.add_theme_color_override("font_color", CHECK_COLORS[1])
 
 
@@ -177,6 +169,7 @@ func _update_labels() -> void:
 
 	# TODO: Update the label based on the progress.
 	_steps_label.text = "%d / %d" % [ 0, tour_metadata.step_count ]
+	_steps_label.modulate = PROGRESS_COLORS[0]
 
 
 func _update_lock() -> void:

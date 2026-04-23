@@ -25,6 +25,13 @@ func _ready() -> void:
 	_update_cover()
 	_update_link()
 
+	if not Engine.is_editor_hint() or EditorInterface.get_edited_scene_root() == self:
+		return
+
+	var editor_scale := EditorInterface.get_editor_scale()
+	_action_button.icon_size *= editor_scale
+	_action_button.icon_separation *= editor_scale
+
 
 # Properties.
 

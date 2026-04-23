@@ -37,7 +37,9 @@ var _editor_toolbar: Control = null
 @onready var _drawer_layout_filler: Control = %DrawerLayout/Filler
 @onready var _drawer_container: Control = %DrawerContainer
 @onready var _footer: Control = %Footer
+@onready var _step_count_box: Control = %StepCountBox
 @onready var _step_count_label: Label = %StepCountLabel
+@onready var _step_total_label: Label = %StepTotalLabel
 
 @onready var _close_button: Button = %CloseButton
 @onready var _help_button: LinkButton = %HelpButton
@@ -125,6 +127,7 @@ func _ready() -> void:
 	if not Engine.is_editor_hint() or EditorInterface.get_edited_scene_root() == self:
 		return
 
+	_update_get_help_message()
 	_update_step_controls()
 	_update_step_count_display()
 
@@ -151,14 +154,13 @@ func _ready() -> void:
 	_skip_step_message.left_button_pressed.connect(next_step_requested.emit)
 	_skip_step_message.right_button_pressed.connect(_hide_drawer_messages)
 
+	_get_help_message.message_meta_clicked.connect(_handle_get_help_meta_clicked)
+
 	_bookend_proceed_button.pressed.connect(_proceed_bookend_step)
 
 	_step_prev_button.pressed.connect(prev_step_requested.emit)
 	_step_next_button.pressed.connect(_try_request_next_step)
 	_step_content_shrink.resized.connect(_update_content_size)
-
-	var editor_scale := EditorInterface.get_editor_scale()
-	_close_button.custom_minimum_size *= editor_scale
 
 
 func _enter_tree() -> void:
@@ -240,8 +242,9 @@ func _update_step_count_display() -> void:
 	if not is_node_ready():
 		return
 
-	_step_count_label.text = "%s / %s" % [_current_step_index, _step_count - 2]
-	_step_count_label.visible = _current_step_index > 0 and _current_step_index < (_step_count - 1)
+	_step_count_label.text = "%s" % [_current_step_index]
+	_step_total_label.text = "%s" % [_step_count - 2]
+	_step_count_box.visible = _current_step_index > 0 and _current_step_index < (_step_count - 1)
 
 
 func _proceed_bookend_step() -> void:
@@ -311,9 +314,6 @@ func _show_drawer_message(control: ConfirmDrawer) -> void:
 
 	_update_content_size()
 
-	var layout_root: Control = EditorInterfaceAccess.get_node(EditorNodePoints.LAYOUT_ROOT)
-	move_and_anchor(layout_root, At.CENTER, _state_data.margin_offset)
-
 
 func _show_close_tour_message() -> void:
 	_show_drawer_message(_close_tour_message)
@@ -325,6 +325,27 @@ func _show_get_help_message() -> void:
 
 func _show_skip_step_message() -> void:
 	_show_drawer_message(_skip_step_message)
+
+
+func _update_get_help_message() -> void:
+	var message := _get_help_message.message
+
+	var version_info := Engine.get_version_info()
+	message = message.replace("%GODOT_VERSION%", "%d.%d" % [ version_info["major"], version_info["minor"] ])
+
+	_get_help_message.message = message
+
+
+func _handle_get_help_meta_clicked(data: Variant) -> void:
+	if typeof(data) == TYPE_STRING:
+		var meta_string := data as String
+
+		match meta_string:
+			"support@gdquest.com":
+				OS.shell_open("mailto:support@gdquest.com")
+
+			"tour.log":
+				log_requested.emit()
 
 
 # Content.

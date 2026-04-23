@@ -32,8 +32,7 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
-[node name="Tail" type="TextureRect" parent="QuoteContainer/TailAnchor" unique_id=362747133]
-unique_name_in_owner = true
+[node name="Tail" type="TextureRect" parent="QuoteContainer/TailAnchor" unique_id=362747133 groups=["_gdtour_scaled_minsize"]]
 custom_minimum_size = Vector2(12, 12)
 layout_mode = 1
 anchors_preset = -1
@@ -46,8 +45,7 @@ stretch_mode = 5
 layout_mode = 2
 theme_type_variation = &"PromoQuoteAuthorBox"
 
-[node name="AuthorIconPanel" type="PanelContainer" parent="AuthorBox" unique_id=812853532]
-unique_name_in_owner = true
+[node name="AuthorIconPanel" type="PanelContainer" parent="AuthorBox" unique_id=812853532 groups=["_gdtour_scaled_minsize"]]
 clip_children = 1
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
@@ -55,6 +53,7 @@ theme_type_variation = &"PromoQuoteAuthorIcon"
 
 [node name="AuthorIcon" type="TextureRect" parent="AuthorBox/AuthorIconPanel" unique_id=1620096809]
 unique_name_in_owner = true
+texture_filter = 4
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5

@@ -22,7 +22,7 @@ layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2
 
-[node name="BubbleContainer" type="PanelContainer" parent="BubbleAnchor" unique_id=56702438]
+[node name="BubbleContainer" type="PanelContainer" parent="BubbleAnchor" unique_id=56702438 groups=["_gdtour_scaled_minsize"]]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(512, 0)
 layout_mode = 1
@@ -75,7 +75,7 @@ texture = ExtResource("3_g7cgr")
 expand_mode = 4
 stretch_mode = 5
 
-[node name="PatternTop" type="TextureRect" parent="BubbleAnchor/BubbleContainer/Background/BookendBackground/ColorFill" unique_id=323948556]
+[node name="PatternTop" type="TextureRect" parent="BubbleAnchor/BubbleContainer/Background/BookendBackground/ColorFill" unique_id=323948556 groups=["_gdtour_scaled_offsets"]]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -88,7 +88,7 @@ texture = ExtResource("4_m3laq")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="PatternBottom" type="TextureRect" parent="BubbleAnchor/BubbleContainer/Background/BookendBackground/ColorFill" unique_id=2133221329]
+[node name="PatternBottom" type="TextureRect" parent="BubbleAnchor/BubbleContainer/Background/BookendBackground/ColorFill" unique_id=2133221329 groups=["_gdtour_scaled_offsets"]]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -126,11 +126,19 @@ theme_type_variation = &"BookendViewContainer"
 
 [node name="Layout" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView" unique_id=1335602650]
 layout_mode = 2
+theme_override_constants/separation = 0
 
-[node name="Padding" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=847442535]
+[node name="BookendInner" type="MarginContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=1304098402]
+layout_mode = 2
+theme_type_variation = &"BookendInnerContainer"
+
+[node name="LayoutInner" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout/BookendInner" unique_id=980105278]
 layout_mode = 2
 
-[node name="GDQuestLogo" type="TextureRect" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=1321574258]
+[node name="Padding" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout/BookendInner/LayoutInner" unique_id=847442535]
+layout_mode = 2
+
+[node name="GDQuestLogo" type="TextureRect" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout/BookendInner/LayoutInner" unique_id=1321574258 groups=["_gdtour_scaled_minsize"]]
 custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -138,7 +146,7 @@ texture = ExtResource("6_fud30")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BookendTitle" type="Label" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=417575798]
+[node name="BookendTitle" type="Label" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout/BookendInner/LayoutInner" unique_id=417575798]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -148,13 +156,13 @@ text = "Welcome to Godot!"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="BookendContent" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=784426162 instance=ExtResource("5_m3laq")]
+[node name="BookendContent" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout/BookendInner/LayoutInner" unique_id=784426162 instance=ExtResource("5_m3laq")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 paragraph_separation = 24
 
-[node name="BookendButton" type="Button" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=464814697]
+[node name="BookendButton" type="Button" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout/BookendInner/LayoutInner" unique_id=464814697]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
@@ -162,7 +170,8 @@ mouse_default_cursor_shape = 2
 theme_type_variation = &"BookendButton"
 text = "PROCEED"
 
-[node name="Padding2" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=688944061]
+[node name="Padding" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=1919709726 groups=["_gdtour_scaled_minsize"]]
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
 [node name="GDQuestFooter" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/BookendView/Layout" unique_id=1450701284 instance=ExtResource("8_w8m43")]
@@ -177,6 +186,7 @@ theme_type_variation = &"StepViewContainer"
 [node name="Layout" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView" unique_id=555654165]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 0
 
 [node name="StepTitle" type="Label" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout" unique_id=827462404]
 unique_name_in_owner = true
@@ -187,6 +197,10 @@ theme_type_variation = &"StepTitle"
 text = "Bubble step title"
 autowrap_mode = 2
 
+[node name="Padding" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout" unique_id=35125924 groups=["_gdtour_scaled_minsize"]]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
 [node name="StepContentShrink" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout" unique_id=122140716 instance=ExtResource("9_rhi0o")]
 unique_name_in_owner = true
 layout_mode = 2
@@ -195,11 +209,14 @@ layout_mode = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-paragraph_separation = 4
 
 [node name="StepTaskList" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout/StepContentShrink/ScrollContainer/Content" parent_id_path=PackedInt32Array(122140716, 1354353740) index="1" unique_id=2000878233 instance=ExtResource("5_g7cgr")]
 unique_name_in_owner = true
 visible = false
+layout_mode = 2
+
+[node name="Padding2" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout" unique_id=1929129938 groups=["_gdtour_scaled_minsize"]]
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 
 [node name="StepNavigation" type="MarginContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout" unique_id=1399804068]
@@ -207,10 +224,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
 mouse_filter = 2
-theme_override_constants/margin_left = -8
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = -8
-theme_override_constants/margin_bottom = 0
+theme_type_variation = &"StepNavigationContainer"
 
 [node name="StepBackButton" type="Button" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/StepView/Layout/StepNavigation" unique_id=301301005]
 unique_name_in_owner = true
@@ -280,13 +294,37 @@ size_flags_horizontal = 2
 theme_type_variation = &"BubbleDrawerButton"
 text = "Help"
 
-[node name="StepCountLabel" type="Label" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout/Footer" unique_id=1836607076]
+[node name="StepCountBox" type="HBoxContainer" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout/Footer" unique_id=1497662931]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="StepCountLabel" type="Label" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout/Footer/StepCountBox" unique_id=1836607076]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
 theme_type_variation = &"StepCountLabel"
-text = "5 / 40"
+text = "5"
+horizontal_alignment = 1
+
+[node name="StepSeparator" type="Label" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout/Footer/StepCountBox" unique_id=440418537]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme_type_variation = &"StepSeparator"
+text = " / "
+horizontal_alignment = 1
+
+[node name="StepTotalLabel" type="Label" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout/Footer/StepCountBox" unique_id=734221809]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme_type_variation = &"StepCountLabel"
+text = "40"
 horizontal_alignment = 1
 
 [node name="SkipButton" type="LinkButton" parent="BubbleAnchor/BubbleContainer/DrawerLayout/DrawerContainer/Layout/Footer" unique_id=1368396757]
@@ -311,19 +349,19 @@ visible = false
 layout_mode = 2
 left_button_text = "FIND LOG"
 right_button_text = "CLOSE"
-message = "[color=#FF8A00][b]GDTour[/b] is an experimental Edtech that evolves with the Godot engine and requires ongoing testing. It's not uncommon to encounter bugs.[/color]
-Please be patient and try the following:
+message = "[color=#FF8A00][b]GDTour[/b] is an Edtech that evolves with the Godot engine. It's not uncommon to encounter bugs.[/color]
+[b]Please be patient and try the following:[/b]
 
-[indent]1. Check that you're using the recommended version of Godot. For this tour it's Godot 4.3.[/indent]
+[indent]1. Check that you're using the recommended version of Godot. For this tour it's Godot %GODOT_VERSION%.[/indent]
 
 [indent]2. Go back one step in the Tour.[/indent]
 
 [indent]3. Note down the tasks then try skipping the step and doing them before you start the following steps.[/indent]
 
-[indent]4. Let GDQuest know by writing to [color=#FF8A00]support@gdquest.com[/color].[/indent]
+[indent]4. Let GDQuest know by writing to [color=#FF8A00][url]support@gdquest.com[/url][/color].[/indent]
 
 [ul]  Describe the problem
-  Download and attach the Godot file [color=#FFD500]tour.log[/color].
+  Download and attach the Godot file [color=#FFD500][url]tour.log[/url][/color].
   If possible, attach a screenshot.[/ul]
 
 [indent]5. There are video fall backs available for these tours. You can watch them and follow along in your editor.[/indent]"
@@ -345,7 +383,7 @@ size_flags_horizontal = 8
 size_flags_vertical = 0
 mouse_filter = 2
 
-[node name="CloseButton" type="Button" parent="BubbleAnchor/BubbleContainer/CloseAnchor" unique_id=1762189996]
+[node name="CloseButton" type="Button" parent="BubbleAnchor/BubbleContainer/CloseAnchor" unique_id=1762189996 groups=["_gdtour_scaled_minsize", "_gdtour_scaled_offsets"]]
 unique_name_in_owner = true
 modulate = Color(0.3372549, 0.4392157, 0.6, 1)
 custom_minimum_size = Vector2(19, 19)

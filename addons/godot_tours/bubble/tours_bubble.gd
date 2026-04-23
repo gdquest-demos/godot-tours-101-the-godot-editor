@@ -5,6 +5,7 @@ extends "bubble_base.gd"
 signal tour_start_requested(tour_id: String)
 signal tour_reset_requested(tour_id: String)
 
+const BigTitleLabel := preload("content/big_title.gd")
 const RichTextLabelPackedScene := preload("content/rich_text_label.tscn")
 
 const MessageDrawer := preload("layout/message_drawer.gd")
@@ -50,8 +51,7 @@ var _editor_toolbar: Control = null
 # Welcome view.
 
 @onready var _welcome_view: Control = %WelcomeView
-@onready var _welcome_title: Label = %WelcomeTitle
-@onready var _welcome_subtitle: Label = %WelcomeSubtitle
+@onready var _welcome_title: BigTitleLabel = %WelcomeTitle
 @onready var _welcome_start_button: Button = %WelcomeButton
 @onready var _welcome_footer: Control = %WelcomeFooter
 @onready var _welcome_filler: Control = %WelcomeFiller
@@ -89,7 +89,6 @@ func _notification(what: int) -> void:
 
 		_welcome_view = %WelcomeView
 		_welcome_title = %WelcomeTitle
-		_welcome_subtitle = %WelcomeSubtitle
 		_welcome_start_button = %WelcomeButton
 		_welcome_footer = %WelcomeFooter
 		_welcome_filler = %WelcomeFiller
@@ -124,10 +123,6 @@ func _ready() -> void:
 	_welcome_start_button.pressed.connect(_try_start_tour)
 	_welcome_tour_list.tour_selected.connect(_update_selected_tour)
 	_welcome_tour_list.reset_requested.connect(_show_reset_tour_message)
-
-	var editor_scale := EditorInterface.get_editor_scale()
-	_close_button.custom_minimum_size *= editor_scale
-	_welcome_filler.custom_minimum_size *= editor_scale
 
 
 func _enter_tree() -> void:
@@ -229,11 +224,11 @@ func clear() -> void:
 
 
 func set_title(value: String) -> void:
-	_welcome_title.text = value
+	_welcome_title.title_text = value
 
 
 func set_subtitle(value: String) -> void:
-	_welcome_subtitle.text = value
+	_welcome_title.subtitle_text = value
 
 
 func add_custom_element(element: Control) -> void:

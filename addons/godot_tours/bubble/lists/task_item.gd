@@ -5,6 +5,7 @@ signal status_changed
 
 enum Status { NOT_DONE, DONE, ERROR }
 const STATUS_COLORS: Array[Color] = [ Color("#567099"), Color("#4bff2e"), Color("#ff8a00") ]
+const PROGRESS_COLORS: Array[Color] = [ Color("#c6cbd3"), Color("#ffffff"), Color("#4bff2e") ]
 
 @export var description: String = "":
 	set = set_description
@@ -20,9 +21,9 @@ var _connected_callables: Dictionary[Signal, Array] = {}
 var _current_status: Status = Status.NOT_DONE
 var _current_repeat: int = 0
 
-@onready var _checkbox_panel: Panel = %Checkbox
-@onready var _checkbox_check_icon: TextureRect = %CheckIcon
-@onready var _checkbox_error_icon: TextureRect = %ErrorIcon
+@onready var _checkbox_icon: TextureRect = %CheckIcon
+@onready var _error_panel: Panel = %ErrorBox
+@onready var _error_icon: TextureRect = %ErrorIcon
 
 @onready var _description_label: RichTextLabel = %DescriptionLabel
 @onready var _repeat_label: Label = %RepeatLabel
@@ -34,9 +35,9 @@ func _notification(what: int) -> void:
 	# without the need to wait for ready. But the engine does not provide nice hooks
 	# for that.
 	if what == NOTIFICATION_SCENE_INSTANTIATED:
-		_checkbox_panel = %Checkbox
-		_checkbox_check_icon = %CheckIcon
-		_checkbox_error_icon = %ErrorIcon
+		_checkbox_icon = %CheckIcon
+		_error_panel = %ErrorBox
+		_error_icon = %ErrorIcon
 
 		_description_label = %DescriptionLabel
 		_repeat_label = %RepeatLabel
@@ -54,8 +55,6 @@ func _ready() -> void:
 	if not Engine.is_editor_hint() or EditorInterface.get_edited_scene_root() == self:
 		set_process(false) # Disable processing when editing/designing the scene.
 		return
-
-	_checkbox_panel.custom_minimum_size *= EditorInterface.get_editor_scale()
 
 
 func _process(_delta: float) -> void:
@@ -124,16 +123,29 @@ func set_error_predicate(callback: Callable) -> void:
 # Helpers.
 
 func _update_checkbox() -> void:
-	_checkbox_check_icon.visible = _current_status != Status.ERROR
-	_checkbox_error_icon.visible = _current_status == Status.ERROR
-	_checkbox_panel.self_modulate = STATUS_COLORS[_current_status]
+	if _current_status == Status.ERROR:
+		_checkbox_icon.visible = false
+		_error_panel.visible = true
+
+	else:
+		_checkbox_icon.visible = true
+		_checkbox_icon.modulate = STATUS_COLORS[_current_status]
+		_error_panel.visible = false
 
 
 func _update_repeat_label() -> void:
 	if _current_status == Status.ERROR:
 		_repeat_label.text = "? / %d" % [ repeat ]
+		_repeat_label.modulate = PROGRESS_COLORS[0]
 	else:
 		_repeat_label.text = "%d / %d" % [ _current_repeat, repeat ]
+
+		if _current_repeat == 0:
+			_repeat_label.modulate = PROGRESS_COLORS[0]
+		elif _current_repeat == repeat:
+			_repeat_label.modulate = PROGRESS_COLORS[2]
+		else:
+			_repeat_label.modulate = PROGRESS_COLORS[1]
 
 
 # Task management.

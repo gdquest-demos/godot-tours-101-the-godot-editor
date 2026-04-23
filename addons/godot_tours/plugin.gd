@@ -19,6 +19,9 @@ const TOUR_MODE_WINDOW_POINTS := [
 	EditorNodePoints.IMPORT_SCENE_SETTINGS_DIALOG,
 ]
 
+const GROUP_SCALED_MINSIZE := "_gdtour_scaled_minsize"
+const GROUP_SCALED_OFFSETS := "_gdtour_scaled_offsets"
+
 const Utils := preload("utils.gd")
 const GDTourMetadata := preload("gdtour_metadata.gd")
 const Tour := preload("tour.gd")
@@ -97,6 +100,7 @@ func _enter_tree() -> void:
 		accept_dialog.show()
 		return
 
+	get_tree().node_added.connect(_handle_editor_node_added)
 	_load_tour_series()
 
 	# There is no content for tours, so do nothing.
@@ -126,6 +130,22 @@ func _enter_tree() -> void:
 	_update_tour_list()
 
 	_add_top_bar_button()
+
+
+func _handle_editor_node_added(node: Node) -> void:
+	if node is not Control:
+		return # Only controls can be scaled, skipping.
+	if node.is_node_ready():
+		return # Ready should've been handled already, skipping.
+
+	var edited_scene := get_tree().get_edited_scene_root()
+	if edited_scene and edited_scene.is_ancestor_of(node):
+		return # Part of the edited scene, skipping.
+
+	if node.is_in_group(GROUP_SCALED_MINSIZE):
+		node.ready.connect(_scale_control_minsize.bind(node), CONNECT_ONE_SHOT)
+	if node.is_in_group(GROUP_SCALED_OFFSETS):
+		node.ready.connect(_scale_control_offsets.bind(node), CONNECT_ONE_SHOT)
 
 
 ## Adds a button labeled GDTour to the editor top bar, right before the run buttons.
@@ -456,3 +476,16 @@ func _toggle_debugger_dock_visible() -> void:
 	else:
 		add_control_to_dock(DOCK_SLOT_LEFT_UL, debugger)
 		_gdtour_button.hide()
+
+
+func _scale_control_minsize(node: Control) -> void:
+	var editor_scale := EditorInterface.get_editor_scale()
+	node.custom_minimum_size *= editor_scale
+
+
+func _scale_control_offsets(node: Control) -> void:
+	var editor_scale := EditorInterface.get_editor_scale()
+	node.offset_left *= editor_scale
+	node.offset_right *= editor_scale
+	node.offset_top *= editor_scale
+	node.offset_bottom *= editor_scale

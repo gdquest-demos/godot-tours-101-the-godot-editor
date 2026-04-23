@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b80agv7oiit7f"]
 
 [ext_resource type="Script" uid="uid://b2kloa32m346l" path="res://addons/godot_tours/bubble/tours_bubble.gd" id="1_akpwd"]
+[ext_resource type="Script" uid="uid://c8ojdg4mtu8he" path="res://addons/godot_tours/bubble/content/big_title.gd" id="2_6jngd"]
 [ext_resource type="PackedScene" uid="uid://du36q21yaiva" path="res://addons/godot_tours/bubble/layout/content_container.tscn" id="3_6jngd"]
 [ext_resource type="PackedScene" uid="uid://xuhf4p8ngsfh" path="res://addons/godot_tours/bubble/lists/tours_container.tscn" id="4_akpwd"]
 [ext_resource type="PackedScene" uid="uid://wx14mj2xaysx" path="res://addons/godot_tours/bubble/layout/gdquest_footer.tscn" id="5_bra82"]
@@ -19,7 +20,7 @@ layout_mode = 3
 anchors_preset = 0
 mouse_filter = 2
 
-[node name="BubbleContainer" type="PanelContainer" parent="BubbleAnchor" unique_id=1740512783]
+[node name="BubbleContainer" type="PanelContainer" parent="BubbleAnchor" unique_id=1740512783 groups=["_gdtour_scaled_minsize"]]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(684, 0)
 layout_mode = 1
@@ -28,10 +29,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -256.0
-offset_top = -66.5
-offset_right = 256.0
-offset_bottom = 66.5
+offset_left = -342.0
+offset_top = -122.0
+offset_right = 342.0
+offset_bottom = 115.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"BubbleContainer"
@@ -76,29 +77,20 @@ theme_type_variation = &"WelcomeInnerContainer"
 layout_mode = 2
 mouse_filter = 2
 
-[node name="TitleBox" type="VBoxContainer" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner" unique_id=1150340567]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="WelcomeTitle" type="Label" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner/TitleBox" unique_id=1028842415]
+[node name="WelcomeTitle" type="RichTextLabel" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner" unique_id=306746317]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-size_flags_horizontal = 3
 theme_type_variation = &"WelcomeTitle"
-text = "Series Title"
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="WelcomeSubtitle" type="Label" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner/TitleBox" unique_id=1351870067]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"WelcomeSubtitle"
-text = "Series More Specific Subtitle"
-horizontal_alignment = 1
-autowrap_mode = 2
+bbcode_enabled = true
+text = "[center]Series Title[/center]
+[center][color=ffd500][font_size=32]Series More Specific Title[/font_size][/color][/center]"
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
+script = ExtResource("2_6jngd")
+title_text = "Series Title"
+subtitle_text = "Series More Specific Title"
 
 [node name="WelcomeContent" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner" unique_id=784426162 instance=ExtResource("3_6jngd")]
 unique_name_in_owner = true
@@ -120,7 +112,7 @@ theme_type_variation = &"WelcomeButton"
 disabled = true
 text = "LET'S GO!"
 
-[node name="WelcomeFiller" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner" unique_id=771798091]
+[node name="WelcomeFiller" type="Control" parent="BubbleAnchor/BubbleContainer/ViewLayout/ViewContainer/WelcomeView/Layout/WelcomeInner/LayoutInner" unique_id=771798091 groups=["_gdtour_scaled_minsize"]]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 8)
@@ -196,7 +188,7 @@ size_flags_horizontal = 8
 size_flags_vertical = 0
 mouse_filter = 2
 
-[node name="CloseButton" type="Button" parent="BubbleAnchor/BubbleContainer/CloseAnchor" unique_id=742636997]
+[node name="CloseButton" type="Button" parent="BubbleAnchor/BubbleContainer/CloseAnchor" unique_id=742636997 groups=["_gdtour_scaled_minsize", "_gdtour_scaled_offsets"]]
 unique_name_in_owner = true
 modulate = Color(0.3372549, 0.4392157, 0.6, 1)
 custom_minimum_size = Vector2(19, 19)
@@ -227,6 +219,7 @@ visible = false
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
+offset_right = 360.0
 offset_bottom = 0.0
 grow_vertical = 2
 
@@ -261,6 +254,6 @@ mouse_filter = 2
 
 [node name="Avatar" parent="BubbleAnchor/BubbleContainer/AvatarRail/AvatarAnchor" unique_id=852293433 instance=ExtResource("8_fdkni")]
 unique_name_in_owner = true
-position = Vector2(0, -32)
+position = Vector2(0, -40)
 rotation = -0.106814146
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.62, 0.62)

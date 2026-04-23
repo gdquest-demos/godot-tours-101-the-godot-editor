@@ -8,16 +8,17 @@
 theme_type_variation = &"PromoCourseBox"
 script = ExtResource("1_ea8q8")
 
-[node name="CourseCover" type="TextureRect" parent="." unique_id=1704418718]
+[node name="CourseCover" type="TextureRect" parent="." unique_id=1704418718 groups=["_gdtour_scaled_minsize"]]
 unique_name_in_owner = true
+texture_filter = 4
 custom_minimum_size = Vector2(360, 242)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="CourseButton" type="LinkButton" parent="." unique_id=1731983655]
+[node name="CourseButton" type="LinkButton" parent="." unique_id=1731983655 groups=["_gdtour_scaled_minsize"]]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(221, 21)
+custom_minimum_size = Vector2(17, 13)
 layout_mode = 2
 size_flags_horizontal = 8
 theme_type_variation = &"PromoActionButton"

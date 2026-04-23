@@ -111,7 +111,6 @@ func _ready() -> void:
 		return
 
 	_bubble_container.gui_input.connect(_panel_gui_input)
-	_bubble_container.custom_minimum_size *= EditorInterface.get_editor_scale()
 	_bubble_anchor.theme = Utils.get_default_theme()
 
 	_transition_bubble(true)
@@ -305,41 +304,48 @@ func _transition_bubble(immediate: bool = false) -> void:
 	if not is_node_ready() or _state_data.ref_control == null:
 		return
 
-	var margin_offset := Vector2.ZERO
-	var anchor_offset := Vector2.ZERO
-	var control_size := _state_data.ref_control.size
+	# When moved by hand, reposition in-place, fitting into the available area.
+	if _state_data.was_moved:
+		_bubble_transition_position = _bubble_anchor.position
+		_bubble_transition_position = _fit_anchor_position(_bubble_transition_position)
 
-	match _state_data.bubble_at:
-		At.TOP_LEFT:
-			margin_offset = _state_data.margin_offset * Vector2(1.0, 1.0)
-			anchor_offset = _bubble_container.size / 2.0
-		At.TOP_CENTER:
-			margin_offset = _state_data.margin_offset * Vector2(0.0, 1.0)
-			anchor_offset = Vector2(control_size.x / 2.0, _bubble_container.size.y / 2.0)
-		At.TOP_RIGHT:
-			margin_offset = _state_data.margin_offset * Vector2(-1.0, 1.0)
-			anchor_offset = Vector2(control_size.x - _bubble_container.size.x / 2.0, _bubble_container.size.y / 2.0)
-		At.BOTTOM_RIGHT:
-			margin_offset = _state_data.margin_offset * Vector2(-1.0, -1.0)
-			anchor_offset = control_size - _bubble_container.size / 2.0
-		At.BOTTOM_CENTER:
-			margin_offset = _state_data.margin_offset * Vector2(0.0, -1.0)
-			anchor_offset = Vector2(control_size.x / 2.0, control_size.y - _bubble_container.size.y / 2.0)
-		At.BOTTOM_LEFT:
-			margin_offset = _state_data.margin_offset * Vector2(1.0, -1.0)
-			anchor_offset = Vector2(_bubble_container.size.x / 2.0, control_size.y - _bubble_container.size.y / 2.0)
-		At.CENTER_LEFT:
-			margin_offset = _state_data.margin_offset * Vector2(1.0, 0.0)
-			anchor_offset = Vector2(_bubble_container.size.x / 2.0, control_size.y / 2.0)
-		At.CENTER_RIGHT:
-			margin_offset = _state_data.margin_offset * Vector2(-1.0, 0.0)
-			anchor_offset = Vector2(control_size.x - _bubble_container.size.x / 2.0, control_size.y / 2.0)
-		At.CENTER:
-			margin_offset = Vector2.ZERO
-			anchor_offset = control_size / 2.0
+	# When anchored, find the new anchored position.
+	else:
+		var margin_offset := Vector2.ZERO
+		var anchor_offset := Vector2.ZERO
+		var control_size := _state_data.ref_control.size
 
-	_bubble_transition_position = _state_data.ref_control.global_position + margin_offset + anchor_offset + _state_data.extra_offset
-	_bubble_transition_position = _fit_anchor_position(_bubble_transition_position)
+		match _state_data.bubble_at:
+			At.TOP_LEFT:
+				margin_offset = _state_data.margin_offset * Vector2(1.0, 1.0)
+				anchor_offset = _bubble_container.size / 2.0
+			At.TOP_CENTER:
+				margin_offset = _state_data.margin_offset * Vector2(0.0, 1.0)
+				anchor_offset = Vector2(control_size.x / 2.0, _bubble_container.size.y / 2.0)
+			At.TOP_RIGHT:
+				margin_offset = _state_data.margin_offset * Vector2(-1.0, 1.0)
+				anchor_offset = Vector2(control_size.x - _bubble_container.size.x / 2.0, _bubble_container.size.y / 2.0)
+			At.BOTTOM_RIGHT:
+				margin_offset = _state_data.margin_offset * Vector2(-1.0, -1.0)
+				anchor_offset = control_size - _bubble_container.size / 2.0
+			At.BOTTOM_CENTER:
+				margin_offset = _state_data.margin_offset * Vector2(0.0, -1.0)
+				anchor_offset = Vector2(control_size.x / 2.0, control_size.y - _bubble_container.size.y / 2.0)
+			At.BOTTOM_LEFT:
+				margin_offset = _state_data.margin_offset * Vector2(1.0, -1.0)
+				anchor_offset = Vector2(_bubble_container.size.x / 2.0, control_size.y - _bubble_container.size.y / 2.0)
+			At.CENTER_LEFT:
+				margin_offset = _state_data.margin_offset * Vector2(1.0, 0.0)
+				anchor_offset = Vector2(_bubble_container.size.x / 2.0, control_size.y / 2.0)
+			At.CENTER_RIGHT:
+				margin_offset = _state_data.margin_offset * Vector2(-1.0, 0.0)
+				anchor_offset = Vector2(control_size.x - _bubble_container.size.x / 2.0, control_size.y / 2.0)
+			At.CENTER:
+				margin_offset = Vector2.ZERO
+				anchor_offset = control_size / 2.0
+
+		_bubble_transition_position = _state_data.ref_control.global_position + margin_offset + anchor_offset + _state_data.extra_offset
+		_bubble_transition_position = _fit_anchor_position(_bubble_transition_position)
 
 	if immediate:
 		_bubble_anchor.position = _bubble_transition_position
@@ -450,19 +456,19 @@ func _transition_avatar(immediate: bool = false) -> void:
 
 		AvatarAt.PRIME_LEFT:
 			new_anchor_position = 0.0
-			new_avatar_position = Vector2(42.0, 12.0)
+			new_avatar_position = Vector2(50.0, 16.0)
 			new_avatar_rotation = -6.12
-			new_avatar_scale = Vector2(0.5, 0.5)
+			new_avatar_scale = Vector2(0.62, 0.62)
 		AvatarAt.PRIME_CENTER:
 			new_anchor_position = 0.5
-			new_avatar_position = Vector2(0.0, -32.0)
+			new_avatar_position = Vector2(0.0, -40.0)
 			new_avatar_rotation = -6.12
-			new_avatar_scale = Vector2(0.5, 0.5)
+			new_avatar_scale = Vector2(0.62, 0.62)
 		AvatarAt.PRIME_RIGHT:
 			new_anchor_position = 1.0
-			new_avatar_position = Vector2(-38.0, 12.0)
+			new_avatar_position = Vector2(-46.0, 16.0)
 			new_avatar_rotation = 6.12
-			new_avatar_scale = Vector2(0.5, 0.5)
+			new_avatar_scale = Vector2(0.62, 0.62)
 
 	# Don't scale when editing in the editor.
 	if Engine.is_editor_hint() and EditorInterface.get_edited_scene_root() != self:

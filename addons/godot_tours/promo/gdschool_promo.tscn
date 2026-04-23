@@ -9,7 +9,7 @@
 [node name="GDSchoolPromo" type="PanelContainer" unique_id=180802051]
 custom_minimum_size = Vector2(400, 100)
 offset_right = 408.0
-offset_bottom = 749.0
+offset_bottom = 687.0
 theme_type_variation = &"BubblePromoPanel"
 
 [node name="Layout" type="VBoxContainer" parent="." unique_id=345836772]
@@ -32,16 +32,18 @@ theme_type_variation = &"PromoContentContainer"
 
 [node name="Content" type="VBoxContainer" parent="Layout/ContentContainer" unique_id=251303237]
 layout_mode = 2
-theme_type_variation = &"PromoContentBox"
+theme_override_constants/separation = 0
 alignment = 1
 
-[node name="PaddingStart" type="Control" parent="Layout/ContentContainer/Content" unique_id=1950962215]
+[node name="PaddingStart" type="Control" parent="Layout/ContentContainer/Content" unique_id=1950962215 groups=["_gdtour_scaled_minsize"]]
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="QuoteBox" parent="Layout/ContentContainer/Content" unique_id=1564916418 instance=ExtResource("1_7pu48")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 6
+size_flags_vertical = 4
 quote_text = "[b]The tour you selected is part of a course on GDSchool, our learning platform dedicated to gamedev education.[/b]
 We hope to make more free tours available in the future!
 [b]GDQuest sponsors free learning material using revenue from courses.[/b]"
@@ -49,32 +51,37 @@ quote_author = "Nathan"
 quote_author_icon = ExtResource("2_jfist")
 quote_author_title = "Founder and teacher at GDQuest"
 
+[node name="PaddingMiddle" type="Control" parent="Layout/ContentContainer/Content" unique_id=776102838 groups=["_gdtour_scaled_minsize"]]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_vertical = 3
+
 [node name="CourseBox" parent="Layout/ContentContainer/Content" unique_id=226568740 instance=ExtResource("1_ywoj0")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 6
+size_flags_vertical = 4
 course_cover = ExtResource("2_4331d")
 course_cta = "CHECK OUT GDSCHOOL"
 course_link = "https://school.gdquest.com/"
 
-[node name="PaddingEnd" type="Control" parent="Layout/ContentContainer/Content" unique_id=1001527727]
+[node name="PaddingEnd" type="Control" parent="Layout/ContentContainer/Content" unique_id=1001527727 groups=["_gdtour_scaled_minsize"]]
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="LogoRail" type="Control" parent="." unique_id=1444047321]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="Logo" type="TextureRect" parent="LogoRail" unique_id=1256158655]
-unique_name_in_owner = true
+[node name="Logo" type="TextureRect" parent="LogoRail" unique_id=1256158655 groups=["_gdtour_scaled_minsize", "_gdtour_scaled_offsets"]]
 custom_minimum_size = Vector2(219, 66)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = -7.0
+offset_left = -13.0
 offset_top = -43.0
-offset_right = 212.0
 offset_bottom = 23.0
 grow_vertical = 2
 texture = ExtResource("1_a0njb")

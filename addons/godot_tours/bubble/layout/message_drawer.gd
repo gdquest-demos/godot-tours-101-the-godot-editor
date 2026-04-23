@@ -1,6 +1,8 @@
 @tool
 extends PanelContainer
 
+signal message_meta_clicked(data: Variant)
+
 @export_multiline var message: String = "Message for [b]this action[/b].":
 	set = set_message
 @export_range(0.0, 100.0, 0.01, "or_greater") var maximum_message_height: float = 0.0:
@@ -10,10 +12,8 @@ var _last_message_height: float = 0.0
 
 @onready var _layout: VBoxContainer = %Layout
 @onready var _message_container: MarginContainer = %MessageContainer
-@onready var _buttons_box: Control = %Buttons
-
-@onready var _message_icon: TextureRect = %MessageIcon
 @onready var _message_label: RichTextLabel = %MessageLabel
+@onready var _buttons_box: Control = %Buttons
 
 
 func _notification(what: int) -> void:
@@ -28,6 +28,8 @@ func _ready() -> void:
 	if not Engine.is_editor_hint() or EditorInterface.get_edited_scene_root() == self:
 		return
 
+	_message_label.meta_clicked.connect(message_meta_clicked.emit)
+
 	# Monitor RTL changes and update message height limit accordingly. We need to
 	# rely on draw signals as well as finished, because finished doesn't mean the
 	# final shaping has happened. But we must avoid infinite looping, so we store
@@ -35,9 +37,6 @@ func _ready() -> void:
 	_message_label.finished.connect(_update_message_height, CONNECT_DEFERRED)
 	_message_label.draw.connect(_check_message_height)
 	_update_message_height()
-
-	var editor_scale := EditorInterface.get_editor_scale()
-	_message_icon.custom_minimum_size.x *= editor_scale
 
 
 # Properties.
