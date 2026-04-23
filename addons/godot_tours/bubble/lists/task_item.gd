@@ -1,0 +1,173 @@
+@tool
+extends PanelContainer
+
+signal status_changed
+
+enum Status { NOT_DONE, DONE, ERROR }
+const STATUS_COLORS: Array[Color] = [ Color("#567099"), Color("#4bff2e"), Color("#ff8a00") ]
+const PROGRESS_COLORS: Array[Color] = [ Color("#c6cbd3"), Color("#ffffff"), Color("#4bff2e") ]
+
+@export var description: String = "":
+	set = set_description
+@export var error: String = "":
+	set = set_error
+@export_range(1, 99, 1, "or_greater") var repeat: int = 1:
+	set = set_repeat
+
+var _repeat_callable := Callable()
+var _error_predicate := Callable()
+var _connected_callables: Dictionary[Signal, Array] = {}
+
+var _current_status: Status = Status.NOT_DONE
+var _current_repeat: int = 0
+
+@onready var _checkbox_icon: TextureRect = %CheckIcon
+@onready var _error_panel: Panel = %ErrorBox
+@onready var _error_icon: TextureRect = %ErrorIcon
+
+@onready var _description_label: RichTextLabel = %DescriptionLabel
+@onready var _repeat_label: Label = %RepeatLabel
+@onready var _error_label: Label = %ErrorLabel
+
+
+func _notification(what: int) -> void:
+	# NOTE: When instantiated from a scene, these nodes can be resolved immediately,
+	# without the need to wait for ready. But the engine does not provide nice hooks
+	# for that.
+	if what == NOTIFICATION_SCENE_INSTANTIATED:
+		_checkbox_icon = %CheckIcon
+		_error_panel = %ErrorBox
+		_error_icon = %ErrorIcon
+
+		_description_label = %DescriptionLabel
+		_repeat_label = %RepeatLabel
+		_error_label = %ErrorLabel
+
+	elif what == NOTIFICATION_PREDELETE:
+		for connected_signal in _connected_callables:
+			for callable: Callable in _connected_callables[connected_signal]:
+				connected_signal.disconnect(callable)
+
+
+func _ready() -> void:
+	_update_checkbox()
+
+	if not Engine.is_editor_hint() or EditorInterface.get_edited_scene_root() == self:
+		set_process(false) # Disable processing when editing/designing the scene.
+		return
+
+
+func _process(_delta: float) -> void:
+	if _repeat_callable.is_valid():
+		_current_repeat = _repeat_callable.call(self)
+	else:
+		_current_repeat = 0
+
+	var has_errors := false
+	if _error_predicate.is_valid():
+		has_errors = _error_predicate.call(self)
+
+	if has_errors:
+		set_current_status(Status.ERROR)
+	else:
+		set_current_status(Status.DONE if _current_repeat == repeat else Status.NOT_DONE)
+
+	_update_repeat_label()
+
+
+# Properties.
+
+func set_description(value: String) -> void:
+	if description == value:
+		return
+
+	description = value
+	_description_label.text = description
+
+
+func set_error(value: String) -> void:
+	if error == value:
+		return
+
+	error = value
+	_error_label.text = error
+	_error_label.visible = not error.is_empty()
+
+
+func set_repeat(value: int) -> void:
+	if repeat == value:
+		return
+
+	repeat = max(1, value)
+
+	_repeat_label.visible = repeat != 1
+	_update_repeat_label()
+
+
+func set_repeat_callable(callback: Callable) -> void:
+	if not callback.is_valid():
+		_repeat_callable = Callable()
+		return
+
+	_repeat_callable = callback
+
+
+func set_error_predicate(callback: Callable) -> void:
+	if not callback.is_valid():
+		_error_predicate = Callable()
+		return
+
+	_error_predicate = callback
+
+
+# Helpers.
+
+func _update_checkbox() -> void:
+	if _current_status == Status.ERROR:
+		_checkbox_icon.visible = false
+		_error_panel.visible = true
+
+	else:
+		_checkbox_icon.visible = true
+		_checkbox_icon.modulate = STATUS_COLORS[_current_status]
+		_error_panel.visible = false
+
+
+func _update_repeat_label() -> void:
+	if _current_status == Status.ERROR:
+		_repeat_label.text = "? / %d" % [ repeat ]
+		_repeat_label.modulate = PROGRESS_COLORS[0]
+	else:
+		_repeat_label.text = "%d / %d" % [ _current_repeat, repeat ]
+
+		if _current_repeat == 0:
+			_repeat_label.modulate = PROGRESS_COLORS[0]
+		elif _current_repeat == repeat:
+			_repeat_label.modulate = PROGRESS_COLORS[2]
+		else:
+			_repeat_label.modulate = PROGRESS_COLORS[1]
+
+
+# Task management.
+
+func set_current_status(value: Status) -> void:
+	if value == _current_status:
+		return
+
+	_current_status = value
+
+	_update_checkbox()
+	status_changed.emit()
+
+
+func is_done() -> bool:
+	return _current_status == Status.DONE
+
+
+## Tracks a relationship between a signal and a callable, so that the callable
+## can be automatically disconnected when the task is destroyed.
+func set_connected_callable(signal_obj: Signal, callable: Callable) -> void:
+	if not _connected_callables.has(signal_obj):
+		_connected_callables[signal_obj] = []
+
+	_connected_callables[signal_obj].push_back(callable)

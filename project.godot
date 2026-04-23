@@ -153,7 +153,7 @@ aim_down={
 
 [internationalization]
 
-locale/translations_pot_files=PackedStringArray("res://addons/godot_tours/tour.gd", "res://tours/godot-first-tour/godot_first_tour.gd", "res://tours/learn-gamedev-from-zero/assemble_path_of_sorcerers.gd")
+locale/translations_pot_files=PackedStringArray("res://addons/godot_tours/tour.gd", "res://tours/godot_tours.gd", "res://tours/101_the_godot_editor/101_the_godot_editor.gd")
 
 [layer_names]
 

@@ -4,30 +4,50 @@
 @tool
 extends Panel
 
-const Dimmer := preload("../dimmer/dimmer.gd")
+signal rect_changed
 
-var dimmer_mask: ColorRect = null
-var controls: Array[Control] = []
+# NOTE: Keep in sync with the scene.
+const HIGHLIGHT_GROUP := "highlight"
+
+# We duplicate and scale the highlight stylebox so the outline scales with the editor scale.
+# Duplicating here allows us to pass the style to each created highlight.
+const HighlightStyle := preload("highlight.tres")
+static var _highlight_style_scaled: StyleBoxFlat = HighlightStyle.duplicate(true)
+
 var rect_getters: Array[Callable] = []
 
 @onready var flash_area: ColorRect = %FlashArea
 
 
-func setup(rect_getter: Callable, dimmer: Dimmer, stylebox: StyleBoxFlat) -> void:
-	self.dimmer_mask = dimmer.add_mask()
-	self.rect_getters.push_back(rect_getter)
+static func _static_init() -> void:
+	_scale_stylebox_with_editor(_highlight_style_scaled)
+
+
+# TODO: Consider extracting into the theme utils plugin.
+static func _scale_stylebox_with_editor(stylebox: StyleBoxFlat) -> void:
+	var editor_scale := EditorInterface.get_editor_scale()
+	stylebox.border_width_bottom *= editor_scale
+	stylebox.border_width_left *= editor_scale
+	stylebox.border_width_right *= editor_scale
+	stylebox.border_width_top *= editor_scale
+
+	stylebox.corner_radius_bottom_left *= editor_scale
+	stylebox.corner_radius_bottom_right *= editor_scale
+	stylebox.corner_radius_top_left *= editor_scale
+	stylebox.corner_radius_top_right *= editor_scale
+
+	stylebox.expand_margin_left *= editor_scale
+	stylebox.expand_margin_right *= editor_scale
+	stylebox.expand_margin_top *= editor_scale
+	stylebox.expand_margin_bottom *= editor_scale
+
+
+func setup(rect_getters: Array[Callable]) -> void:
+	add_theme_stylebox_override("panel", _highlight_style_scaled)
+
+	self.rect_getters.clear()
+	self.rect_getters.append_array(rect_getters)
 	refresh.call_deferred()
-	remove_theme_stylebox_override("panel")
-	add_theme_stylebox_override("panel", stylebox)
-
-
-func _exit_tree() -> void:
-	if dimmer_mask != null:
-		dimmer_mask.queue_free()
-
-
-func _process(_delta: float) -> void:
-	refresh()
 
 
 func flash() -> void:
@@ -35,27 +55,23 @@ func flash() -> void:
 
 
 func refresh() -> void:
-	var rect := Rect2()
+	if not Engine.is_editor_hint() or EditorInterface.get_edited_scene_root() == self:
+		return
+
+	var highlight_rect := Rect2()
 	for index in range(rect_getters.size()):
-		var new_rect := rect_getters[index].call()
-		if not new_rect.position.is_zero_approx() and not new_rect.size.is_zero_approx():
-			rect = (
-				new_rect
-				if rect.position.is_zero_approx() and rect.size.is_zero_approx()
-				else rect.merge(new_rect)
-			)
-	global_position = rect.position
-	custom_minimum_size = rect.size
-	visible = rect != Rect2() and controls.any(control_is_visible_in_tree)
-	dimmer_mask.global_position = global_position
-	dimmer_mask.size = custom_minimum_size
-	dimmer_mask.visible = visible
+		var getter_rect := rect_getters[index].call()
+		if not getter_rect.has_area():
+			continue
+
+		if highlight_rect.has_area():
+			highlight_rect = highlight_rect.merge(getter_rect)
+		else:
+			highlight_rect = getter_rect
+
+	global_position = highlight_rect.position
+	custom_minimum_size = highlight_rect.size
+	visible = highlight_rect.has_area()
+	rect_changed.emit()
+
 	reset_size.call_deferred()
-
-
-func refresh_tabs(_index: int) -> void:
-	refresh()
-
-
-func control_is_visible_in_tree(c: Control) -> bool:
-	return c.is_visible_in_tree()

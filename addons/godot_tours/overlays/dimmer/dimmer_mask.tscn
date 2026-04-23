@@ -1,4 +1,4 @@
 [gd_scene format=3 uid="uid://c72o4d1oo88yv"]
 
-[node name="DimmerMask" type="ColorRect"]
+[node name="DimmerMask" type="ColorRect" unique_id=2016776905]
 mouse_filter = 2

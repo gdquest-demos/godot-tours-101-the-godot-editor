@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://wd822miy3aij"]
+
+[ext_resource type="Script" uid="uid://c08x426gupagy" path="res://addons/godot_tours/bubble/content/rich_text_label.gd" id="1_t4611"]
+
+[node name="RichTextLabel" type="RichTextLabel" unique_id=958696325]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+shortcut_keys_enabled = false
+script = ExtResource("1_t4611")
