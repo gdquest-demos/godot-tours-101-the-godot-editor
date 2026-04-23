@@ -419,7 +419,13 @@ func steps_050_signals() -> void:
 			atr("Click the icon to open the [b]Signals Dock[/b] at the right of the editor."),
 		],
 	)
-	bubble_add_task_set_tab_by_control(signals_dock, atr("Click the signal emission icon next to the [b]Player[/b] node and open the [b]Signals Dock[/b]."))
+	# TODO: Should the check instead be that the user actually activates the "signals" button in the Scene dock?
+	bubble_add_task(
+		atr("Click the signal emission icon next to the [b]Player[/b] node and open the [b]Signals Dock[/b]."),
+		1,
+		func(_task: Task) -> int:
+			return 1 if signals_dock.is_visible_in_tree() else 0
+	)
 	complete_step()
 
 	highlight_editor_nodes([EditorNodePoints.SIGNALS_DOCK], true)
