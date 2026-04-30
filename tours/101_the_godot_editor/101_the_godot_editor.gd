@@ -543,29 +543,20 @@ func steps_090_conclusion() -> void:
 
 
 func steps_finale() -> void:
-	bubble_set_finale_title(atr("Congratulations on your first Godot Tour!"))
-	bubble_set_finale_button_text(atr("CONTINUE LEARNING ON GDSCHOOL"))
+	bubble_set_finale_title(atr("Congratulations!"))
 	bubble_add_finale_text(
-		[
-			"[center]" + atr("That's it for your first steps with the Godot editor. Ready to keep learning?") + "[/center]",
-		],
+		["[center]" + atr("You should now be familiar with the Godot editor.") + "[/center]"],
 		Bubble.BookendTextStyle.RECAP,
 	)
 	bubble_add_finale_text(
-		[
-			"[center]" +
-			atr("If you haven't already, check out the free app ") +
-			"[color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]" + atr("Learn GDScript from Zero") + "[/url][/b][/color]" +
-			atr(". It teaches you the basics of coding through 20+ lessons with dozens of interactive exercises where you can immediately practice what you've learned.") + "[/center]",
-			"[center]" + atr("You can also explore our courses to ") +
-			"[color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]" + atr("Pick Up Gamedev From Zero") + "[/url][/b][/color]" +
-			atr(", which offer a comprehensive path to build a game developer's mindset and become independent.") + "[/center]",
-		],
+		["[center]" + atr("This tour is sponsored by aspiring gamedevs like you who have learned with GDQuest's curriculum!") + "[/center]"],
 		Bubble.BookendTextStyle.KEY,
 	)
 	bubble_add_finale_text(
 		[
-			"[center][b]" + atr("I hope to see you around the GDQuest community!") + "[/b][/center]",
+			"[center][b]" + atr("In the next tour, part of the course ") +
+			"[color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]" + atr("Pick Up Gamedev From Zero with Godot 4") + "[/url][/b][/color]" +
+			atr(", you put what you learned into practice and assemble your first game from premade parts") + "[/b][/center]",
 		],
 		Bubble.BookendTextStyle.INFO,
 	)
