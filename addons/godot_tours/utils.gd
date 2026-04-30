@@ -139,6 +139,23 @@ static func unfold_tree_item(item: TreeItem) -> void:
 
 # ItemList helpers.
 
+## Finds the menu option in the given [PopupMenu] associated with the editor
+## shortcut of the given [param shortcut_name]. This matching works even if
+## the shortcut has no events associated with it. Returns the option index,
+## or [code]-1[/code] if nothing was found.
+static func find_menu_option_by_shortcut(popup_menu: PopupMenu, shortcut_name: String) -> int:
+	var editor_settings = EditorInterface.get_editor_settings()
+	var editor_shortcut := editor_settings.get_shortcut(shortcut_name)
+	if not editor_shortcut:
+		return -1
+
+	for i in popup_menu.item_count:
+		if popup_menu.get_item_shortcut(i) == editor_shortcut:
+			return i
+
+	return -1
+
+
 ## Finds and activates the menu option in the given [PopupMenu] associated with
 ## the editor shortcut of the given [param shortcut_name]. This matching works
 ## even if the shortcut has no events associated with it.

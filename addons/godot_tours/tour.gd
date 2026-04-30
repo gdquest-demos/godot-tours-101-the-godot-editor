@@ -1633,30 +1633,22 @@ enum ViewportLayouts {
 func spatial_editor_change_viewport_layout(layout: ViewportLayouts) -> void:
 	queue_command(
 		func spatial_editor_change_viewport_layout() -> void:
-			# TODO: There is likely a better way to do this.
-
 			var view_button: MenuButton = EditorInterfaceAccess.get_node(EditorNodePoints.NODE_3D_EDITOR_MAIN_TOOLBAR_VIEW_OPTIONS_BUTTON)
 			var popup := view_button.get_popup()
-			var event := InputEventKey.new()
-			event.pressed = true
-			event.ctrl_pressed = true
 
-			if layout == ViewportLayouts.ONE:
-				event.keycode = KEY_1
-			elif layout == ViewportLayouts.TWO:
-				event.keycode = KEY_2
-			elif layout == ViewportLayouts.TWO_ALT:
-				event.keycode = KEY_2
-				event.alt = true
-			elif layout == ViewportLayouts.THREE:
-				event.keycode = KEY_3
-			elif layout == ViewportLayouts.THREE_ALT:
-				event.keycode = KEY_3
-				event.alt = true
-			elif layout == ViewportLayouts.FOUR:
-				event.keycode = KEY_4
-
-			popup.activate_item_by_event(event)
+			match layout:
+				ViewportLayouts.ONE:
+					Utils.activate_menu_option_by_shortcut(popup, "spatial_editor/1_viewport")
+				ViewportLayouts.TWO:
+					Utils.activate_menu_option_by_shortcut(popup, "spatial_editor/2_viewports")
+				ViewportLayouts.TWO_ALT:
+					Utils.activate_menu_option_by_shortcut(popup, "spatial_editor/2_viewports_alt")
+				ViewportLayouts.THREE:
+					Utils.activate_menu_option_by_shortcut(popup, "spatial_editor/3_viewports")
+				ViewportLayouts.THREE_ALT:
+					Utils.activate_menu_option_by_shortcut(popup, "spatial_editor/3_viewports_alt")
+				ViewportLayouts.FOUR:
+					Utils.activate_menu_option_by_shortcut(popup, "spatial_editor/4_viewports")
 	)
 
 
