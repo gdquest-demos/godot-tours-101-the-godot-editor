@@ -39,15 +39,18 @@ func steps_welcome() -> void:
 
 	bubble_set_welcome_title(atr("Welcome to Godot"))
 	bubble_set_welcome_button_text(atr("LET'S GET STARTED!"))
-	bubble_add_welcome_text([
-		"[center]" + atr("In this tour, you take your first steps in the [b]Godot editor[/b].") + "[/center]",
-	], Bubble.BookendTextStyle.RECAP)
-	bubble_add_welcome_text([
-		"[center]" + atr("You get an overview of the engine's four pillars: [b]Scenes[/b], [b]Nodes[/b], [b]Scripts[/b], and [b]Signals[/b].") + "[/center]",
-	], Bubble.BookendTextStyle.KEY)
-	bubble_add_welcome_text([
-		"[center]" + atr("In the next tour, you'll get to assemble your first game from premade parts and put all this into practice.") + "[/center]",
-	], Bubble.BookendTextStyle.INFO)
+	bubble_add_welcome_text(
+		["[center]" + atr("In this tour, you take your first steps in the [b]Godot editor[/b].") + "[/center]"],
+		Bubble.BookendTextStyle.RECAP,
+	)
+	bubble_add_welcome_text(
+		["[center]" + atr("You get an overview of the engine's four pillars: [b]Scenes[/b], [b]Nodes[/b], [b]Scripts[/b], and [b]Signals[/b].") + "[/center]"],
+		Bubble.BookendTextStyle.KEY,
+	)
+	bubble_add_welcome_text(
+		["[center]" + atr("In the next tour, you'll get to assemble your first game from premade parts and put all this into practice.") + "[/center]"],
+		Bubble.BookendTextStyle.INFO,
+	)
 	queue_welcome_command(func() -> void: bubble._avatar.do_wink())
 
 
@@ -79,9 +82,10 @@ func steps_010_intro() -> void:
 	bubble_add_text(
 		[atr("Great! Now let's take a quick tour of the editor.")],
 	)
-	queue_command(func close_bottom_dock_container():
-		var bottom_dock_container: TabContainer = EditorInterfaceAccess.get_node(EditorNodePoints.LAYOUT_DOCK_MIDDLE_BOTTOM)
-		bottom_dock_container.current_tab = -1
+	queue_command(
+		func close_bottom_dock_container():
+			var bottom_dock_container: TabContainer = EditorInterfaceAccess.get_node(EditorNodePoints.LAYOUT_DOCK_MIDDLE_BOTTOM)
+			bottom_dock_container.current_tab = -1
 	)
 	complete_step()
 
@@ -113,14 +117,16 @@ func steps_020_first_look() -> void:
 	complete_step()
 
 	# 0041: looking around
-	highlight_editor_nodes([
-		EditorNodePoints.SCENE_DOCK,
-		EditorNodePoints.FILE_SYSTEM_DOCK,
-		EditorNodePoints.INSPECTOR_DOCK,
-		EditorNodePoints.MAIN_VIEW_SWITCHER,
-		EditorNodePoints.RUN_BAR,
-		EditorNodePoints.LAYOUT_DOCK_MIDDLE_BOTTOM,
-	])
+	highlight_editor_nodes(
+		[
+			EditorNodePoints.SCENE_DOCK,
+			EditorNodePoints.FILE_SYSTEM_DOCK,
+			EditorNodePoints.INSPECTOR_DOCK,
+			EditorNodePoints.MAIN_VIEW_SWITCHER,
+			EditorNodePoints.RUN_BAR,
+			EditorNodePoints.LAYOUT_DOCK_MIDDLE_BOTTOM,
+		],
+	)
 	bubble_move_and_anchor(canvas_item_editor, Bubble.At.CENTER)
 	bubble_set_avatar_at(Bubble.AvatarAt.CENTER)
 	bubble_set_title(atr("Let's look around"))
@@ -539,14 +545,28 @@ func steps_090_conclusion() -> void:
 func steps_finale() -> void:
 	bubble_set_finale_title(atr("Congratulations on your first Godot Tour!"))
 	bubble_set_finale_button_text(atr("CONTINUE LEARNING ON GDSCHOOL"))
-	bubble_add_finale_text([
-		"[center]" + atr("That's it for your first steps with the Godot editor. Ready to keep learning?") + "[/center]",
-	], Bubble.BookendTextStyle.RECAP)
-	bubble_add_finale_text([
-		"[center]" + atr("If you haven't already, check out the free app [color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]Learn GDScript from Zero[/url][/b][/color]. It teaches you the basics of coding through 20+ lessons with dozens of interactive exercises where you can immediately practice what you've learned.") + "[/center]",
-		"[center]" + atr("You can also explore our courses to [color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]Pick Up Gamedev From Zero[/url][/b][/color], which offer a comprehensive path to build a game developer's mindset and become independent.") + "[/center]",
-	], Bubble.BookendTextStyle.KEY)
-	bubble_add_finale_text([
-		"[center][b]" + atr("I hope to see you around the GDQuest community!") + "[/b][/center]",
-	], Bubble.BookendTextStyle.INFO)
+	bubble_add_finale_text(
+		[
+			"[center]" + atr("That's it for your first steps with the Godot editor. Ready to keep learning?") + "[/center]",
+		],
+		Bubble.BookendTextStyle.RECAP,
+	)
+	bubble_add_finale_text(
+		[
+			"[center]" +
+			atr("If you haven't already, check out the free app ") +
+			"[color=#ffd500][b][url=https://gdquest.com/tutorial/godot/learning-paths/learn-gdscript-from-zero/]" + atr("Learn GDScript from Zero") + "[/url][/b][/color]" +
+			atr(". It teaches you the basics of coding through 20+ lessons with dozens of interactive exercises where you can immediately practice what you've learned.") + "[/center]",
+			"[center]" + atr("You can also explore our courses to ") +
+			"[color=#ffd500][b][url=https://school.gdquest.com/products/godot-4-early-access]" + atr("Pick Up Gamedev From Zero") + "[/url][/b][/color]" +
+			atr(", which offer a comprehensive path to build a game developer's mindset and become independent.") + "[/center]",
+		],
+		Bubble.BookendTextStyle.KEY,
+	)
+	bubble_add_finale_text(
+		[
+			"[center][b]" + atr("I hope to see you around the GDQuest community!") + "[/b][/center]",
+		],
+		Bubble.BookendTextStyle.INFO,
+	)
 	queue_finale_command(func() -> void: bubble._avatar.set_expression(Gobot.Expressions.HAPPY))
