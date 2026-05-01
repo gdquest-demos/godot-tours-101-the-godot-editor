@@ -1,0 +1,32 @@
+# LANGUAGE translation for M2. Get to Know Godot (Interactive Tours) for the following files:
+# res://tours/godot_tours.gd
+#
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: M2. Get to Know Godot (Interactive Tours)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: tours/godot_tours.gd:9
+msgid "Welcome to GDTour!"
+msgstr ""
+
+#: tours/godot_tours.gd:10
+msgid "Getting Started with Godot"
+msgstr ""
+
+#: tours/godot_tours.gd:11
+msgid "%TOUR_SERIES_DESCRIPTION%"
+msgstr ""
+
+#: tours/godot_tours.gd:16
+msgid "The Godot Editor"
+msgstr ""
+
+#: tours/godot_tours.gd:23
+msgid "Assemble Your First Game"
+msgstr ""

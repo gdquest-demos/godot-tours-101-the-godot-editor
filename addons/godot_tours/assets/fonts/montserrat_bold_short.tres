@@ -1,0 +1,10 @@
+[gd_resource type="FontVariation" format=3 uid="uid://0g8pukk5tjfb"]
+
+[ext_resource type="FontFile" uid="uid://b6jaomd4pw4gj" path="res://addons/godot_tours/assets/fonts/montserrat_variable.ttf" id="1_pot0w"]
+
+[resource]
+base_font = ExtResource("1_pot0w")
+variation_opentype = {
+2003265652: 700
+}
+spacing_bottom = -3

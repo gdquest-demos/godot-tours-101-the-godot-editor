@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://c7p26wam7ss1c"]
+
+[ext_resource type="Script" uid="uid://c0v0meinhn3f5" path="res://addons/godot_tours/bubble/lists/tour_item.gd" id="1_vpvdu"]
+[ext_resource type="Texture2D" uid="uid://d3amnc2a0khw" path="res://addons/godot_tours/bubble/lists/assets/locked.svg" id="2_3aekg"]
+[ext_resource type="Texture2D" uid="uid://edsfevrd7x4v" path="res://addons/godot_tours/bubble/lists/assets/tour_checkbox.svg" id="2_25x1b"]
+[ext_resource type="Texture2D" uid="uid://ymu6056teqq1" path="res://addons/godot_tours/bubble/lists/assets/reset.svg" id="4_25x1b"]
+
+[node name="Tour" type="MarginContainer" unique_id=960772577]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 60.0
+grow_horizontal = 2
+size_flags_vertical = 0
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+script = ExtResource("1_vpvdu")
+
+[node name="Content" type="PanelContainer" parent="." unique_id=1532955997]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_type_variation = &"TourItemContainer"
+
+[node name="Layout" type="HBoxContainer" parent="Content" unique_id=2140717434]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="CheckIcon" type="TextureRect" parent="Content/Layout" unique_id=1672390007 groups=["_gdtour_scaled_minsize"]]
+unique_name_in_owner = true
+modulate = Color(0.3372549, 0.4392157, 0.6, 1)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("2_25x1b")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DescriptionBox" type="HBoxContainer" parent="Content/Layout" unique_id=780261373]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NumberLabel" type="Label" parent="Content/Layout/DescriptionBox" unique_id=344326171]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"TourDescriptionLabel"
+text = "101."
+vertical_alignment = 1
+
+[node name="DescriptionLabel" type="Label" parent="Content/Layout/DescriptionBox" unique_id=423511996]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_type_variation = &"TourDescriptionLabel"
+text = "Tour"
+autowrap_mode = 3
+
+[node name="StepsLabel" type="Label" parent="Content/Layout" unique_id=322504514]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_type_variation = &"TourStepsLabel"
+text = "0 / 1"
+vertical_alignment = 1
+
+[node name="LockIcon" type="TextureRect" parent="Content/Layout" unique_id=812237988 groups=["_gdtour_scaled_minsize"]]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(18, 27)
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("2_3aekg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ResetAnchor" type="Control" parent="." unique_id=1750746273]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+
+[node name="ResetContainer" type="MarginContainer" parent="ResetAnchor" unique_id=592757446]
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+mouse_filter = 2
+theme_type_variation = &"TourResetContainer"
+
+[node name="ResetIcon" type="TextureRect" parent="ResetAnchor/ResetContainer" unique_id=469753421 groups=["_gdtour_scaled_minsize"]]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(27, 27)
+layout_mode = 2
+size_flags_horizontal = 8
+tooltip_text = "Reset"
+mouse_filter = 0
+mouse_default_cursor_shape = 2
+texture = ExtResource("4_25x1b")
+expand_mode = 1
+stretch_mode = 5

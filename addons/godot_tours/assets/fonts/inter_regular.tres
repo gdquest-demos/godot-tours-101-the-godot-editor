@@ -1,0 +1,6 @@
+[gd_resource type="FontVariation" format=3 uid="uid://by40dq67026e7"]
+
+[ext_resource type="FontFile" uid="uid://cvxww2ll5bv7h" path="res://addons/godot_tours/assets/fonts/inter_variable.ttf" id="1_a2w2q"]
+
+[resource]
+base_font = ExtResource("1_a2w2q")

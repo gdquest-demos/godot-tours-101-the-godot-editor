@@ -4,12 +4,9 @@
 @tool
 extends PanelContainer
 
-const EditorInterfaceAccess := preload("../editor_interface_access.gd")
-const Highlight := preload("../overlays/highlight/highlight.gd")
+const GDTourMetadata := preload("../gdtour_metadata.gd")
 const Overlays := preload("../overlays/overlays.gd")
-const TranslationService := preload("../translation/translation_service.gd")
 const Tour := preload("../tour.gd")
-const Utils := preload("../utils.gd")
 
 var ResourceInvalidator := preload("resource_invalidator.gd")
 
@@ -17,6 +14,7 @@ var ResourceInvalidator := preload("resource_invalidator.gd")
 const CLI_OPTION_DEBUG := "--tour-debug"
 const DIMMER_GROUP: StringName = "dimmer"
 
+var series_metadata: GDTourMetadata = null
 ## Reference to the currently active tour running in debug mode.
 var tour: Tour = null:
 	set(new_tour):
@@ -26,10 +24,7 @@ var tour: Tour = null:
 			button_toggle_tour_visible.toggled.connect(tour.toggle_visible)
 
 var plugin_path := ""
-var interface: EditorInterfaceAccess = null
 var overlays: Overlays = null
-var translation_service: TranslationService = null
-var tour_paths: Array[String] = []
 
 @onready var toggle_dimmers_check_button: CheckButton = %ToggleDimmersCheckButton
 @onready var toggle_bubble_check_button: CheckButton = %ToggleBubbleCheckButton
@@ -44,18 +39,19 @@ var tour_paths: Array[String] = []
 var _debug_mode_toggled_signal: Signal
 
 
-func setup(plugin_path: String, interface: EditorInterfaceAccess, overlays: Overlays, translation_service: TranslationService, tour: Tour, tour_paths: Array[String], debug_mode_toggled_signal: Signal) -> void:
+func setup(plugin_path: String, overlays: Overlays, series_metadata: GDTourMetadata, tour: Tour, debug_mode_toggled_signal: Signal) -> void:
 	self.plugin_path = plugin_path
-	self.interface = interface
 	self.overlays = overlays
-	self.translation_service = translation_service
+	self.series_metadata = series_metadata
 	self.tour = tour
-	self.tour_paths = tour_paths
 	_debug_mode_toggled_signal = debug_mode_toggled_signal
 	debug_mode_toggled_signal.connect(set_is_debug_mode)
 
 
 func _ready() -> void:
+	if not Engine.is_editor_hint() or EditorInterface.get_edited_scene_root() == self:
+		return
+
 	overlays.cleaned_up.connect(overlays.add_highlight_to_control.bind(self))
 	toggle_dimmers_check_button.button_pressed = not overlays.dimmers.is_empty()
 	toggle_dimmers_check_button.toggled.connect(
@@ -88,7 +84,7 @@ func _ready() -> void:
 func _exit_tree() -> void:
 	overlays.cleaned_up.disconnect(overlays.add_highlight_to_control)
 	_on_overlay_alpha_h_slider_value_changed(1.0)
-	overlays.remove_highlights_for_control(self)
+	overlays.remove_highlights_from_control(self)
 
 
 func _start_selected_tour() -> void:
@@ -99,8 +95,8 @@ func _start_selected_tour() -> void:
 	var index := tours_item_list.get_selected_items()[0]
 	if tour != null:
 		tour.clean_up()
-	var tour_path := tours_item_list.get_item_metadata(index)
-	tour = ResourceInvalidator.resource_force_editor_reload(tour_path).new(interface, overlays, translation_service)
+	var tour_metadata: GDTourMetadata.Tour = tours_item_list.get_item_metadata(index)
+	tour = ResourceInvalidator.resource_force_editor_reload(tour_metadata.script_path).new(tour_metadata, overlays)
 	toggle_dimmers_check_button.button_pressed = true
 	toggle_bubble_check_button.button_pressed = true
 	tour.toggle_visible(true)
@@ -121,13 +117,16 @@ func _on_overlay_alpha_h_slider_value_changed(value: float) -> void:
 
 func populate_tours_item_list() -> void:
 	tours_item_list.clear()
-	for index in range(tour_paths.size()):
-		var tour_path := tour_paths[index]
-		var tour_id := ResourceUID.text_to_id(tour_path)
-		if ResourceUID.has_id(tour_id):
-			tour_path = ResourceUID.get_id_path(tour_id)
+	for index in series_metadata.tours.size():
+		var tour_metadata := series_metadata.tours[index]
+		var tour_path := tour_metadata.script_path
+
+		var script_uid := ResourceUID.text_to_id(tour_path)
+		if ResourceUID.has_id(script_uid):
+			tour_path = ResourceUID.get_id_path(script_uid)
+
 		tours_item_list.add_item(tour_path.get_file())
-		tours_item_list.set_item_metadata(index, tour_path)
+		tours_item_list.set_item_metadata(index, tour_metadata)
 
 
 func _update_spinbox_step_count() -> void:

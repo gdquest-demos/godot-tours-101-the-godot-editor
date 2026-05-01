@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://du36q21yaiva"]
+
+[ext_resource type="Script" uid="uid://cq1baqrpwy3ox" path="res://addons/godot_tours/bubble/layout/content_container.gd" id="1_033u2"]
+
+[node name="ContentContainer" type="MarginContainer" unique_id=784426162]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+script = ExtResource("1_033u2")
+
+[node name="List" type="VBoxContainer" parent="." unique_id=509336820]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 15

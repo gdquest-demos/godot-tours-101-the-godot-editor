@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://wx14mj2xaysx"]
+
+[ext_resource type="Texture2D" uid="uid://ciwvw860xy0f3" path="res://addons/godot_tours/assets/icons/gdquest_logo.svg" id="1_lokgr"]
+[ext_resource type="Texture2D" uid="uid://8gem1db65h71" path="res://addons/godot_tours/assets/icons/copyright.svg" id="2_vjthh"]
+
+[node name="GDQuestFooter" type="HBoxContainer" unique_id=1450701284]
+modulate = Color(1, 1, 1, 0.6)
+theme_type_variation = &"GDQuestFooterBox"
+alignment = 2
+
+[node name="CreditsLabel" type="Label" parent="." unique_id=1844619539]
+layout_mode = 2
+theme_type_variation = &"GDQuestFooterLabel"
+text = "GDTour is an Edtech by"
+
+[node name="GDQuestLogo" type="TextureRect" parent="." unique_id=1915860284 groups=["_gdtour_scaled_minsize"]]
+custom_minimum_size = Vector2(104, 32)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("1_lokgr")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CopyrightIcon" type="TextureRect" parent="." unique_id=1920401846 groups=["_gdtour_scaled_minsize"]]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_vjthh")
+expand_mode = 1
+
+[node name="CopyrightLabel" type="Label" parent="." unique_id=611434401]
+layout_mode = 2
+theme_type_variation = &"GDQuestFooterBoldLabel"
+text = "2015-2026"
