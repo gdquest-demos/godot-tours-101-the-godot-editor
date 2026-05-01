@@ -9,7 +9,7 @@ extends RefCounted
 const Utils := preload("utils.gd")
 
 ## Main title of this tour series.
-var title: String = ""
+var title: String = "Welcome to GDTours"
 ## Subtitle of this tour series.
 var subtitle: String = ""
 ## Description of this tour series, as individual paragraphs.
